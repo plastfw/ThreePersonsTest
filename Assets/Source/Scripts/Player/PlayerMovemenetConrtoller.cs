@@ -5,6 +5,7 @@ public class PlayerMovementController : MonoBehaviour
 {
   [SerializeField] private Rigidbody _rigidbody;
   [SerializeField] private bool _currentActive;
+  [SerializeField] private float _speed;
 
   private PlayerInput _playerInput;
 
@@ -24,7 +25,7 @@ public class PlayerMovementController : MonoBehaviour
 
     var cameraRotation = Quaternion.Euler(0, 45, 0);
     var adjustedDirection = cameraRotation * direction.normalized;
-    _rigidbody.linearVelocity = adjustedDirection * 5f; // Скорость можно вынести в поле
+    _rigidbody.linearVelocity = adjustedDirection * _speed;
   }
 
   public void ChangeActiveState(bool state)
