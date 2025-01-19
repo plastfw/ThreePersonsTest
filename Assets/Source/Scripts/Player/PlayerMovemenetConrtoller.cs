@@ -4,9 +4,9 @@ using UnityEngine;
 public class PlayerMovementController : MonoBehaviour
 {
   [SerializeField] private Rigidbody _rigidbody;
-  [SerializeField] private bool _currentActive;
   [SerializeField] private float _speed;
 
+  private bool _currentActive;
   private PlayerInput _playerInput;
 
   [Inject]
@@ -19,7 +19,7 @@ public class PlayerMovementController : MonoBehaviour
   private void OnDisable() =>
     _playerInput.InputIsRead -= Move;
 
-  private void Move(Vector3 direction)
+  public void Move(Vector3 direction)
   {
     if (_currentActive == false) return;
 
@@ -28,8 +28,7 @@ public class PlayerMovementController : MonoBehaviour
     _rigidbody.linearVelocity = adjustedDirection * _speed;
   }
 
-  public void ChangeActiveState(bool state)
-  {
-    _currentActive = state;
-  }
+  public void ChangeActiveState(bool state) => _currentActive = state;
+
+  public void SetSpeed(float speed) => _speed = speed;
 }

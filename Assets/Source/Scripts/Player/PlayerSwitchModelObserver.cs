@@ -1,42 +1,77 @@
+using System;
+using System.Collections.Generic;
 using Reflex.Attributes;
 using UnityEngine;
 
 public class PlayerSwitchModelObserver : MonoBehaviour
 {
-  [SerializeField] private PlayerMovementController[] _playerControllers;
-
   private int _currentControllerIndex = 0;
+  private List<PlayerModel> _playerModels;
   private PlayerInput _playerInput;
   private CameraController _cameraController;
+  private PlayerHealthView _playerHealthView;
+
+  public event Action AllModelsInSafe;
 
   [Inject]
-  private void Init(PlayerInput playerInput,CameraController cameraController)
+  private void Init(PlayerInput playerInput, CameraController cameraController,
+    List<PlayerModel> playerModels, PlayerHealthView playerHealthView)
   {
     _playerInput = playerInput;
+    _playerModels = playerModels;
     _cameraController = cameraController;
-    _playerInput.SwitchButtonIsPressed += SwitchController;
+    _playerHealthView = playerHealthView;
   }
 
-  private void OnValidate()
+  private void OnEnable()
   {
-    _playerControllers = GetComponentsInChildren<PlayerMovementController>();
+    _playerInput.SwitchButtonIsPressed += SwitchController;
+
+    foreach (var model in _playerModels)
+      model.ImInSafeZone += RemoveModel;
   }
 
   private void OnDisable()
   {
     _playerInput.SwitchButtonIsPressed -= SwitchController;
+
+    foreach (var model in _playerModels)
+      model.ImInSafeZone -= RemoveModel;
+  }
+
+  private void RemoveModel(PlayerModel model)
+  {
+    _playerModels[_currentControllerIndex].ChangeMoveState(false);
+    _playerModels[_currentControllerIndex].DamageIsTake -= _playerHealthView.SetTextField;
+    _playerModels.Remove(model);
+    _currentControllerIndex = 0;
+    SwitchController();
+  }
+
+  private void Start()
+  {
+    SwitchController();
   }
 
   private void SwitchController()
   {
-    _playerControllers[_currentControllerIndex].ChangeActiveState(false);
+    if (_playerModels.Count == 0)
+    {
+      AllModelsInSafe?.Invoke();
+      return;
+    }
 
-    if (_currentControllerIndex == _playerControllers.Length - 1)
+    _playerModels[_currentControllerIndex].ChangeMoveState(false);
+
+    if (_currentControllerIndex == _playerModels.Count - 1)
       _currentControllerIndex = 0;
     else
       _currentControllerIndex++;
 
-    _playerControllers[_currentControllerIndex].ChangeActiveState(true);
-    _cameraController.SwitchFollowTarget(_playerControllers[_currentControllerIndex].transform);
+    _playerModels[_currentControllerIndex].ChangeMoveState(true);
+    _cameraController.SwitchFollowTarget(_playerModels[_currentControllerIndex].transform);
+    _playerHealthView.SetTextField(_playerModels[_currentControllerIndex].GetHealth());
+
+    _playerModels[_currentControllerIndex].DamageIsTake += _playerHealthView.SetTextField;
   }
 }

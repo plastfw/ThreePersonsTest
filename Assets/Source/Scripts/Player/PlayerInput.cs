@@ -1,17 +1,30 @@
 using System;
+using Reflex.Attributes;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, Listeners.IGameListener, Listeners.IGamePauseListener,
+  Listeners.IGameResumeListener
 {
+  private GameStateManager _gameStateManager;
   private Vector3 _movement;
+  private bool _pause = false;
 
   public event Action<Vector3> InputIsRead;
   public event Action SwitchButtonIsPressed;
+
+  [Inject]
+  private void Init(GameStateManager gameStateManager)
+  {
+    _gameStateManager = gameStateManager;
+    _gameStateManager.AddListener(this);
+  }
 
   private void Update() => ReadInput();
 
   private void ReadInput()
   {
+    if (_pause) return;
+
     ReadMoveInput();
     ReadSwitchInput();
   }
@@ -32,4 +45,8 @@ public class PlayerInput : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.Tab))
       SwitchButtonIsPressed?.Invoke();
   }
+
+  public void OnPause() => _pause = true;
+
+  public void OnResume() => _pause = false;
 }
