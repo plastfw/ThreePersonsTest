@@ -26,12 +26,10 @@ public class ObjectPool<T> where T : MonoBehaviour
 
   public T Get()
   {
-    // Найти неактивный объект в пуле
     T obj = _pool.Find(item => !item.gameObject.activeSelf);
 
     if (obj == null)
     {
-      // Если неактивных объектов нет, создаем новый
       obj = _objectFactory();
       obj.gameObject.SetActive(false);
       _pool.Add(obj); // Добавляем в пул
