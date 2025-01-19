@@ -32,7 +32,7 @@ public class ObjectPool<T> where T : MonoBehaviour
     {
       obj = _objectFactory();
       obj.gameObject.SetActive(false);
-      _pool.Add(obj); // Добавляем в пул
+      _pool.Add(obj);
     }
 
     obj.gameObject.SetActive(true);
