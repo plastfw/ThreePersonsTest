@@ -1,19 +1,21 @@
-public class Listeners
+public interface IGamePauseListener
 {
-  public interface IGamePauseListener
-  {
     void OnPause();
-  }
+}
 
-  public interface IGameResumeListener
-  {
+public interface IGameResumeListener
+{
     void OnResume();
-  }
+}
 
 
-  public interface IGameListener
-  {
+public interface IGameUpdateListener
+{
+    void OnUpdate();
+}
+
+public interface IGameListener
+{
     void OnPause();
     void OnResume();
-  }
 }

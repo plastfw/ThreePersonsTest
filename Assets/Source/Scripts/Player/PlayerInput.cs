@@ -1,52 +1,70 @@
 using System;
+using System.Collections.Generic;
 using Reflex.Attributes;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour, Listeners.IGameListener, Listeners.IGamePauseListener,
-  Listeners.IGameResumeListener
+public class PlayerInput : MonoBehaviour, IGameListener, IGamePauseListener
 {
-  private GameStateManager _gameStateManager;
-  private Vector3 _movement;
-  private bool _pause = false;
+    private const string HORIZONTAL = "Horizontal";
+    private const string VERTICAL = "Vertical";
 
-  public event Action<Vector3> InputIsRead;
-  public event Action SwitchButtonIsPressed;
+    [SerializeField] private List<MovementController> _movementControllers;
 
-  [Inject]
-  private void Init(GameStateManager gameStateManager)
-  {
-    _gameStateManager = gameStateManager;
-    _gameStateManager.AddListener(this);
-  }
+    private GameStateManager _gameStateManager;
+    private Vector3 _direction;
+    private bool _pause = false;
 
-  private void Update() => ReadInput();
+    public event Action SwitchButtonIsPressed;
+    public event Action SwitchGameStateButtonIsPressed;
 
-  private void ReadInput()
-  {
-    if (_pause) return;
+    [Inject]
+    private void Init(GameStateManager gameStateManager)
+    {
+        _gameStateManager = gameStateManager;
+        _gameStateManager.AddListener(this);
+    }
 
-    ReadMoveInput();
-    ReadSwitchInput();
-  }
+    public void Update() => ReadInput();
 
-  private void ReadMoveInput()
-  {
-    _movement = new Vector3(
-      Input.GetKey(KeyCode.D) ? 1 : Input.GetKey(KeyCode.A) ? -1 : 0,
-      0,
-      Input.GetKey(KeyCode.W) ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0
-    );
 
-    InputIsRead?.Invoke(_movement);
-  }
+    public void OnPause() => _pause = true;
 
-  private void ReadSwitchInput()
-  {
-    if (Input.GetKeyDown(KeyCode.Tab))
-      SwitchButtonIsPressed?.Invoke();
-  }
+    public void OnResume() => _pause = false;
 
-  public void OnPause() => _pause = true;
+    private void ReadInput()
+    {
+        ReadPauseButton();
 
-  public void OnResume() => _pause = false;
+        if (_pause) return;
+
+        ReadMoveInput();
+        ReadSwitchInput();
+    }
+
+    private void ReadPauseButton()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            SwitchGameStateButtonIsPressed?.Invoke();
+    }
+
+    private void ReadMoveInput()
+    {
+        _direction = new Vector3(
+            Input.GetAxisRaw("Horizontal"),
+            0,
+            Input.GetAxisRaw("Vertical")
+        );
+
+        if (_direction == Vector3.zero) return;
+
+
+        foreach (var controller in _movementControllers)
+            controller.Move(_direction);
+    }
+
+    private void ReadSwitchInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+            SwitchButtonIsPressed?.Invoke();
+    }
 }

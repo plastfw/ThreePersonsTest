@@ -5,34 +5,34 @@ using UnityEngine.SceneManagement;
 
 public class LevelObserver : MonoBehaviour
 {
-  private PlayerSwitchModelObserver _playerSwitchModelObserver;
-  private List<PlayerModel> _playerModels;
+    private SwitchModelObserver _switchModelObserver;
+    private List<PlayerModel> _playerModels;
 
-  [Inject]
-  private void Init(PlayerSwitchModelObserver playerSwitchModelObserver, List<PlayerModel> playerModels)
-  {
-    _playerSwitchModelObserver = playerSwitchModelObserver;
-    _playerModels = playerModels;
-  }
+    [Inject]
+    private void Init(SwitchModelObserver switchModelObserver, List<PlayerModel> playerModels)
+    {
+        _switchModelObserver = switchModelObserver;
+        _playerModels = playerModels;
+    }
 
-  private void OnEnable()
-  {
-    foreach (var model in _playerModels)
-      model.DeadEvent += RestartLevel;
+    private void Start()
+    {
+        foreach (var model in _playerModels)
+            model.DeadEvent += RestartLevel;
 
-    _playerSwitchModelObserver.AllModelsInSafe += RestartLevel;
-  }
+        _switchModelObserver.AllModelsInSafe += RestartLevel;
+    }
 
-  private void OnDisable()
-  {
-    foreach (var model in _playerModels)
-      model.DeadEvent += RestartLevel;
+    private void OnDestroy()
+    {
+        foreach (var model in _playerModels)
+            model.DeadEvent += RestartLevel;
 
-    _playerSwitchModelObserver.AllModelsInSafe -= RestartLevel;
-  }
+        _switchModelObserver.AllModelsInSafe -= RestartLevel;
+    }
 
-  private void RestartLevel()
-  {
-    SceneManager.LoadScene(0);
-  }
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

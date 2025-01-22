@@ -1,25 +1,37 @@
 using System.Collections.Generic;
 using Reflex.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class GameInstaller : MonoBehaviour, IInstaller
+namespace Core
 {
-  [SerializeField] private PlayerInput _playerInput;
-  [SerializeField] private CameraController _cameraController;
-  [SerializeField] private List<PlayerModel> _playerModels;
-  [SerializeField] private PlayerHealthView _playerHealthView;
-  [SerializeField] private PlayerSwitchModelObserver _playerSwitchModelObserver;
-  [SerializeField] private BulletPool _bulletPool;
-  [SerializeField] private GameStateManager _gameStateManager;
+    public class GameInstaller : MonoBehaviour, IInstaller
+    {
+        [SerializeField] private PlayerInput _playerInput;
+        [SerializeField] private CameraController _cameraController;
+        [SerializeField] private List<PlayerModel> _playerModels;
+        [FormerlySerializedAs("_playerHealthView")] [SerializeField] private HealthView _healthView;
+        [FormerlySerializedAs("_playerSwitchModelObserver")] [SerializeField] private SwitchModelObserver _switchModelObserver;
+        [SerializeField] private BulletPool _bulletPool;
 
-  public void InstallBindings(ContainerBuilder builder)
-  {
-    builder.AddSingleton(_playerModels);
-    builder.AddSingleton(_playerInput);
-    builder.AddSingleton(_cameraController);
-    builder.AddSingleton(_playerHealthView);
-    builder.AddSingleton(_playerSwitchModelObserver);
-    builder.AddSingleton(_bulletPool);
-    builder.AddSingleton(_gameStateManager);
-  }
+        public void InstallBindings(ContainerBuilder builder)
+        {
+            builder.AddSingleton(_playerInput);
+            builder.AddSingleton(_playerModels);
+            builder.AddSingleton(_cameraController);
+            builder.AddSingleton(_healthView);
+            builder.AddSingleton(_switchModelObserver);
+            builder.AddSingleton(_bulletPool);
+
+            builder.AddSingleton(container =>
+                new GameStateManager(
+                    container.Resolve<PlayerInput>()));
+
+
+            // builder.AddSingleton(container =>
+            //   new StatsController(
+            //     container.Resolve<BubblePlayer>(),
+            //     container.Resolve<StatsView>()));
+        }
+    }
 }

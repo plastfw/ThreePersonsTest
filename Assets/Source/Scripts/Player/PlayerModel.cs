@@ -1,69 +1,52 @@
 using System;
-using Reflex.Attributes;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovementController))]
+[RequireComponent(typeof(MovementController))]
 public class PlayerModel : MonoBehaviour
 {
-  [SerializeField] private PlayerData _playerData;
+    [SerializeField] private PlayerData _playerData;
 
-  private PlayerInput _playerInput;
-  private PlayerMovementController _playerMovementController;
-  private PlayerHealth _playerHealth;
+    private MovementController _movementController;
+    private Health _health;
 
-  public event Action<PlayerModel> ImInSafeZone;
-  public event Action<int> DamageIsTake;
-  public event Action DeadEvent;
+    public event Action<PlayerModel> ImInSafeZone;
+    public event Action<int> DamageIsTake;
+    public event Action DeadEvent;
 
-  [Inject]
-  private void Init(PlayerInput playerInput)
-  {
-    _playerInput = playerInput;
-    _playerInput.InputIsRead += Move;
-  }
+    private void OnValidate()
+    {
+        if (_movementController == null)
+            _movementController = transform.GetComponent<MovementController>();
+    }
 
-  private void OnValidate()
-  {
-    if (_playerMovementController == null)
-      _playerMovementController = transform.GetComponent<PlayerMovementController>();
-  }
+    private void Start() => InitializeStats();
 
-  private void OnDisable() =>
-    _playerInput.InputIsRead -= Move;
+    public int GetHealth() => _health.HealthValue;
 
-  private void Start()
-  {
-    InitializeStats();
-  }
+    public void ChangeMoveState(bool state)
+    {
+        _movementController.ChangeActiveState(state);
+    }
 
-  private void Move(Vector3 direction) => _playerMovementController.Move(direction);
+    public void StayInSafe()
+    {
+        ImInSafeZone?.Invoke(this);
+    }
 
-  private void InitializeStats()
-  {
-    _playerMovementController.SetSpeed(_playerData.Speed);
-    _playerHealth = new PlayerHealth(_playerData.Health);
+    public void TakeDamage(int damage)
+    {
+        _health.TakeDamage(damage);
+        DamageIsTake?.Invoke(_health.HealthValue);
 
-    _playerHealth.SetHealth(_playerData.Health);
-  }
+        if (_health.HealthValue <= 0)
+            DeadEvent?.Invoke();
+    }
+    
+    private void InitializeStats()
+    {
+        _movementController.SetSpeed(_playerData.Speed);
+        _health = new Health(_playerData.Health);
 
-  public int GetHealth() => _playerHealth.Health;
-
-  public void ChangeMoveState(bool state)
-  {
-    _playerMovementController.ChangeActiveState(state);
-  }
-
-  public void StayInSafe()
-  {
-    ImInSafeZone?.Invoke(this);
-  }
-
-  public void TakeDamage(int damage)
-  {
-    _playerHealth.TakeDamage(damage);
-    DamageIsTake?.Invoke(_playerHealth.Health);
-
-    if (_playerHealth.Health <= 0)
-      DeadEvent?.Invoke();
-  }
+        _health.SetHealth(_playerData.Health);
+    }
 }
