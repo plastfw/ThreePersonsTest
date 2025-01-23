@@ -1,20 +1,27 @@
+using Reflex.Attributes;
 using UnityEngine;
 
 namespace Enemies
 {
-    public class FOVEnemy : MonoBehaviour
+    public class FOVEnemy : MonoBehaviour,IGameListener, IGameUpdateListener, IGamePauseListener
     {
         [SerializeField] private ViewArea _viewArea;
         [SerializeField] private Rigidbody _rigidbody;
 
+        private GameStateManager _gameStateManager;
         private Transform _target;
         private bool _haveTarget;
         private float _speed = 5f;
         private int _damage;
 
-        private bool _isPause = false;
+        [Inject]
+        private void Init(GameStateManager gameStateManager)
+        {
+            _gameStateManager = gameStateManager;
+            _gameStateManager.AddListener(this);
+        }
 
-        public void Init(int damage, float speed)
+        public void Initialize(int damage, float speed)
         {
             _damage = damage;
             _speed = speed;
@@ -26,8 +33,6 @@ namespace Enemies
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (_isPause) return;
-
             if (collision.transform.TryGetComponent(out PlayerModel playerModel))
             {
                 playerModel.TakeDamage(_damage);
@@ -35,25 +40,15 @@ namespace Enemies
             }
         }
 
-        private void Update()
+        public void OnUpdate()
         {
-            if (_isPause) return;
             if (_haveTarget == false) return;
 
             Vector3 direction = (_target.position - transform.position).normalized;
             _rigidbody.linearVelocity = direction * _speed;
         }
 
-        public void Pause()
-        {
-            _isPause = true;
-            _rigidbody.linearVelocity = Vector3.zero;
-        }
-
-        public void Resume()
-        {
-            _isPause = false;
-        }
+        public void OnPause() => _rigidbody.linearVelocity = Vector3.zero;
 
         private void MoveToPlayer(Transform player)
         {

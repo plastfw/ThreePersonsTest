@@ -1,23 +1,29 @@
 using Core;
-using Enemies;
 using Reflex.Attributes;
 using UnityEngine;
 
 namespace Enemies
 {
-    public class ShootEnemy : MonoBehaviour
+    public class ShootEnemy : MonoBehaviour, IGameListener, IGameUpdateListener
     {
         [SerializeField] private SphereCollider _sphereCollider;
 
-        [Inject] private BulletPool _bulletPool;
-
+        private BulletPool _bulletPool;
+        private GameStateManager _gameStateManager;
         private int _damage;
         private Transform _currentTarget;
         private float _coolDown = 2f;
         private float _lastShootTime;
-        private bool _isPause = false;
 
-        public void Init(int damage, float radius)
+        [Inject]
+        private void Init(BulletPool bulletPool, GameStateManager gameStateManager)
+        {
+            _bulletPool = bulletPool;
+            _gameStateManager = gameStateManager;
+            _gameStateManager.AddListener(this);
+        }
+
+        public void Initialize(int damage, float radius)
         {
             _damage = damage;
             _sphereCollider.radius = radius;
@@ -25,32 +31,22 @@ namespace Enemies
 
         private void OnTriggerEnter(Collider collider)
         {
-            if (_isPause) return;
-
             if (collider.TryGetComponent(out PlayerModel playerModel))
                 _currentTarget = playerModel.transform;
         }
 
         private void OnTriggerExit(Collider collider)
         {
-            if (_isPause) return;
-
             if (collider.TryGetComponent(out PlayerModel playerModel))
                 _currentTarget = null;
         }
 
-        private void Update()
+        public void OnUpdate()
         {
-            if (_isPause) return;
-
             if (_currentTarget == null || Time.time - _lastShootTime < _coolDown) return;
 
             ShootAtTarget();
         }
-
-        public void Pause() => _isPause = true;
-
-        public void Resume() => _isPause = false;
 
         private void ShootAtTarget()
         {

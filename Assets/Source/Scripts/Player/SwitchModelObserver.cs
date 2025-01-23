@@ -1,47 +1,44 @@
 using System;
 using System.Collections.Generic;
-using Reflex.Attributes;
-using UnityEngine;
 
-public class SwitchModelObserver : MonoBehaviour
+public class SwitchModelObserver : IGameListener, IGameStartListener, IGameDisposeListener
 {
     private int _currentControllerIndex = 0;
     private List<PlayerModel> _playerModels;
     private PlayerInput _playerInput;
     private CameraController _cameraController;
     private HealthView _healthView;
+    private GameStateManager _gameStateManager;
 
     public event Action AllModelsInSafe;
 
-    [Inject]
-    private void Init(PlayerInput playerInput, CameraController cameraController,
-        List<PlayerModel> playerModels, HealthView healthView)
+    public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController,
+        List<PlayerModel> playerModels, HealthView healthView, GameStateManager gameStateManager)
     {
         _playerInput = playerInput;
-        _playerModels = playerModels;
         _cameraController = cameraController;
+        _playerModels = playerModels;
         _healthView = healthView;
+        _gameStateManager = gameStateManager;
+        _gameStateManager.AddListener(this);
     }
 
-    private void OnEnable()
+    public void OnStart()
     {
         _playerInput.SwitchButtonIsPressed += SwitchController;
 
         foreach (var model in _playerModels)
             model.ImInSafeZone += RemoveModel;
+
+        SwitchController();
     }
 
-    private void OnDisable()
+    public void OnDispose()
     {
         _playerInput.SwitchButtonIsPressed -= SwitchController;
 
         foreach (var model in _playerModels)
             model.ImInSafeZone -= RemoveModel;
-    }
-
-    private void Start()
-    {
-        SwitchController();
     }
 
     private void RemoveModel(PlayerModel model)

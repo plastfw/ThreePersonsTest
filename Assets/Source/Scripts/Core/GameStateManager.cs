@@ -1,48 +1,66 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Reflex.Attributes;
+using UnityEngine;
 
-public class GameStateManager : IDisposable
+public class GameStateManager : MonoBehaviour
 {
-    private PlayerInput _playerInput;
+    private PauseReader _reader;
     private List<IGameListener> _listeners = new();
     private bool _isPause;
 
-    public GameStateManager(PlayerInput playerInput)
+    [Inject]
+    private void Init(PauseReader pauseReader)
     {
-        _playerInput = playerInput;
+        _reader = pauseReader;
+    }
 
-        _playerInput.SwitchGameStateButtonIsPressed += SwitchState;
+    private void Start()
+    {
+        _reader.SwitchGameStateButtonIsPressed += SwitchState;
+
+        foreach (var listener in _listeners)
+            if (listener is IGameStartListener startListener)
+                startListener.OnStart();
+    }
+
+    public void Dispose()
+    {
+        _reader.SwitchGameStateButtonIsPressed -= SwitchState;
+
+        foreach (var listener in _listeners)
+            if (listener is IGameDisposeListener disposeListener)
+                disposeListener.OnDispose();
     }
 
     public void AddListener(IGameListener listener) => _listeners.Add(listener);
 
-    public void Dispose() => _playerInput.SwitchGameStateButtonIsPressed -= SwitchState;
-
-    private void SwitchState()
+    public void SwitchState()
     {
         _isPause = !_isPause;
 
-        if (_isPause)
-            OnPause();
-        else
-            OnResume();
-    }
-
-    public void OnPause()
-    {
-        foreach (var gameListener in _listeners)
+        foreach (var listener in _listeners)
         {
-            if (gameListener is IGamePauseListener pauseListener)
-                pauseListener.OnPause();
+            if (_isPause)
+            {
+                if (listener is IGamePauseListener pauseListener)
+                    pauseListener.OnPause();
+            }
+            else
+            {
+                if (listener is IGameResumeListener pauseListener)
+                    pauseListener.OnResume();
+            }
         }
     }
 
-    public void OnResume()
+    private void Update()
     {
-        foreach (var gameListener in _listeners)
+        if (_isPause || _listeners.Count == 0) return;
+
+        foreach (var listener in _listeners)
         {
-            if (gameListener is IGameResumeListener resumeListener)
-                resumeListener.OnResume();
+            if (listener is IGameUpdateListener updateListener)
+                updateListener.OnUpdate();
         }
     }
 }

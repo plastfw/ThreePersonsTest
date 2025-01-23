@@ -1,21 +1,23 @@
 using System.Collections.Generic;
-using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelObserver : MonoBehaviour
+public class LevelObserver : IGameListener, IGameStartListener, IGameDisposeListener
 {
     private SwitchModelObserver _switchModelObserver;
     private List<PlayerModel> _playerModels;
+    private GameStateManager _gameStateManager;
 
-    [Inject]
-    private void Init(SwitchModelObserver switchModelObserver, List<PlayerModel> playerModels)
+    public LevelObserver(SwitchModelObserver switchModelObserver, List<PlayerModel> playerModels,
+        GameStateManager gameStateManager)
     {
         _switchModelObserver = switchModelObserver;
         _playerModels = playerModels;
+        _gameStateManager = gameStateManager;
+        _gameStateManager.AddListener(this);
     }
 
-    private void Start()
+    public void OnStart()
     {
         foreach (var model in _playerModels)
             model.DeadEvent += RestartLevel;
@@ -23,16 +25,15 @@ public class LevelObserver : MonoBehaviour
         _switchModelObserver.AllModelsInSafe += RestartLevel;
     }
 
-    private void OnDestroy()
+    public void OnDispose()
     {
+        Debug.LogWarning("OnDispose");
+
         foreach (var model in _playerModels)
-            model.DeadEvent += RestartLevel;
+            model.DeadEvent -= RestartLevel;
 
         _switchModelObserver.AllModelsInSafe -= RestartLevel;
     }
 
-    private void RestartLevel()
-    {
-        SceneManager.LoadScene(0);
-    }
+    private void RestartLevel() => SceneManager.LoadScene(0);
 }

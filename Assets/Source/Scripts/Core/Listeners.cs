@@ -1,3 +1,8 @@
+public interface IGameUpdateListener
+{
+    void OnUpdate();
+}
+
 public interface IGamePauseListener
 {
     void OnPause();
@@ -8,14 +13,16 @@ public interface IGameResumeListener
     void OnResume();
 }
 
-
-public interface IGameUpdateListener
+public interface IGameStartListener
 {
-    void OnUpdate();
+    void OnStart();
+}
+
+public interface IGameDisposeListener
+{
+    void OnDispose();
 }
 
 public interface IGameListener
 {
-    void OnPause();
-    void OnResume();
 }

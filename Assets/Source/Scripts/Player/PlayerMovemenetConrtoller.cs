@@ -18,5 +18,7 @@ public class MovementController : MonoBehaviour
 
     public void ChangeActiveState(bool state) => _currentActive = state;
 
+    public void StopMove() => _rigidbody.linearVelocity = Vector3.zero;
+
     public void SetSpeed(float speed) => _speed = speed;
 }

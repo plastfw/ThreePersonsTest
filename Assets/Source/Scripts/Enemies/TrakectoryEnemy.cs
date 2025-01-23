@@ -1,26 +1,33 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Reflex.Attributes;
 using UnityEngine;
 using VInspector;
 
 namespace Enemies
 {
-    public class TrakectoryEnemy : MonoBehaviour
+    public class TrakectoryEnemy : MonoBehaviour,IGameListener, IGamePauseListener, IGameResumeListener
     {
         [SerializeField] private List<Transform> _movePoints;
         [SerializeField] private Transform _model;
         [SerializeField] private float _moveDuration;
         [SerializeField] private PathType _pathType;
 
+        private GameStateManager _gameStateManager;
         private Tween _tween;
-
         private int _damage;
 
-        public void Init(int damage)
+        [Inject]
+        private void Init(GameStateManager gameStateManager)
+        {
+            _gameStateManager = gameStateManager;
+            _gameStateManager.AddListener(this);
+        }
+
+        public void Initialize(int damage)
         {
             _damage = damage;
-
             _tween.Play();
         }
 
@@ -46,9 +53,9 @@ namespace Enemies
                 .SetLink(gameObject);
         }
 
-        public void Pause() => _tween.Pause();
+        public void OnPause() => _tween.Pause();
 
-        public void Resume() => _tween.Play();
+        public void OnResume() => _tween.Play();
 
         private void OnDrawGizmos()
         {

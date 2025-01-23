@@ -19,7 +19,7 @@ public class PlayerModel : MonoBehaviour
             _movementController = transform.GetComponent<MovementController>();
     }
 
-    private void Start() => InitializeStats();
+    private void Awake() => InitializeStats();
 
     public int GetHealth() => _health.HealthValue;
 

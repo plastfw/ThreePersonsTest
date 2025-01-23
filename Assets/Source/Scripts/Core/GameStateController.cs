@@ -8,11 +8,7 @@ namespace Core
     {
         [Inject] private GameStateManager _gameStateManager;
 
-
         [Button]
-        private void Pause() => _gameStateManager.OnPause();
-
-        [Button]
-        private void Resume() => _gameStateManager.OnResume();
+        private void SwitchState() => _gameStateManager.SwitchState();
     }
 }

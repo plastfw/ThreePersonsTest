@@ -1,50 +1,35 @@
 using System;
 using System.Collections.Generic;
-using Reflex.Attributes;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour, IGameListener, IGamePauseListener
+public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListener
 {
     private const string HORIZONTAL = "Horizontal";
     private const string VERTICAL = "Vertical";
 
-    [SerializeField] private List<MovementController> _movementControllers;
-
+    private List<MovementController> _movementControllers;
     private GameStateManager _gameStateManager;
     private Vector3 _direction;
-    private bool _pause = false;
 
     public event Action SwitchButtonIsPressed;
-    public event Action SwitchGameStateButtonIsPressed;
 
-    [Inject]
-    private void Init(GameStateManager gameStateManager)
+    public PlayerInput(GameStateManager gameStateManager, List<MovementController> movementControllers)
     {
         _gameStateManager = gameStateManager;
+        _movementControllers = movementControllers;
         _gameStateManager.AddListener(this);
     }
 
-    public void Update() => ReadInput();
-
-
-    public void OnPause() => _pause = true;
-
-    public void OnResume() => _pause = false;
-
-    private void ReadInput()
+    public void OnPause()
     {
-        ReadPauseButton();
-
-        if (_pause) return;
-
-        ReadMoveInput();
-        ReadSwitchInput();
+        foreach (var controller in _movementControllers)
+            controller.StopMove();
     }
 
-    private void ReadPauseButton()
+    public void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SwitchGameStateButtonIsPressed?.Invoke();
+        ReadMoveInput();
+        ReadSwitchInput();
     }
 
     private void ReadMoveInput()
