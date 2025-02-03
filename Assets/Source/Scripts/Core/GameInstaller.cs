@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using Reflex.Core;
+using Source.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Core
+namespace Source.Scripts.Core
 {
     public class GameInstaller : MonoBehaviour, IInstaller
     {

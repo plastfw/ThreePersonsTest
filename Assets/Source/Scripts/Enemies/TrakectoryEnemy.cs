@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Reflex.Attributes;
+using Source.Scripts.Core;
+using Source.Scripts.Player;
 using UnityEngine;
-using VInspector;
 
-namespace Enemies
+namespace Source.Scripts.Enemies
 {
     public class TrakectoryEnemy : MonoBehaviour,IGameListener, IGamePauseListener, IGameResumeListener
     {

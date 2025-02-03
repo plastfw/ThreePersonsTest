@@ -1,12 +1,16 @@
+using Source.Scripts.Player;
 using UnityEngine;
 
-public class ExitZone : MonoBehaviour
+namespace Source.Scripts
 {
-    private void OnTriggerEnter(Collider collider)
+    public class ExitZone : MonoBehaviour
     {
-        if (collider.TryGetComponent(out PlayerModel playerModel))
+        private void OnTriggerEnter(Collider collider)
         {
-            playerModel.StayInSafe();
+            if (collider.TryGetComponent(out PlayerModel playerModel))
+            {
+                playerModel.StayInSafe();
+            }
         }
     }
 }

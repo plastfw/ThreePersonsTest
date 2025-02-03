@@ -1,8 +1,9 @@
-using Core;
 using Reflex.Attributes;
+using Source.Scripts.Core;
+using Source.Scripts.Player;
 using UnityEngine;
 
-namespace Enemies
+namespace Source.Scripts.Enemies
 {
     public class ShootEnemy : MonoBehaviour, IGameListener, IGameUpdateListener
     {

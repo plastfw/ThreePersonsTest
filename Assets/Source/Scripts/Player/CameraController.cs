@@ -1,9 +1,12 @@
 using Cinemachine;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace Source.Scripts.Player
 {
-    [SerializeField] private CinemachineVirtualCamera _cineMachineVirtual;
+    public class CameraController : MonoBehaviour
+    {
+        [SerializeField] private CinemachineVirtualCamera _cineMachineVirtual;
 
-    public void SwitchFollowTarget(Transform model) => _cineMachineVirtual.m_Follow = model;
+        public void SwitchFollowTarget(Transform model) => _cineMachineVirtual.m_Follow = model;
+    }
 }

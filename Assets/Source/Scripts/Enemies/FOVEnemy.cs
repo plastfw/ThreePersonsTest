@@ -1,7 +1,9 @@
 using Reflex.Attributes;
+using Source.Scripts.Core;
+using Source.Scripts.Player;
 using UnityEngine;
 
-namespace Enemies
+namespace Source.Scripts.Enemies
 {
     public class FOVEnemy : MonoBehaviour,IGameListener, IGameUpdateListener, IGamePauseListener
     {

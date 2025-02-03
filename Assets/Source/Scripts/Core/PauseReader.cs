@@ -1,15 +1,18 @@
 using System;
 using UnityEngine;
 
-public class PauseReader : MonoBehaviour
+namespace Source.Scripts.Core
 {
-    public event Action SwitchGameStateButtonIsPressed;
-
-    private void Update() => ReadPauseButton();
-
-    private void ReadPauseButton()
+    public class PauseReader : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SwitchGameStateButtonIsPressed?.Invoke();
+        public event Action SwitchGameStateButtonIsPressed;
+
+        private void Update() => ReadPauseButton();
+
+        private void ReadPauseButton()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                SwitchGameStateButtonIsPressed?.Invoke();
+        }
     }
 }

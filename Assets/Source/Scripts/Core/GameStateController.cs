@@ -2,7 +2,7 @@
 using UnityEngine;
 using VInspector;
 
-namespace Core
+namespace Source.Scripts.Core
 {
     public class GameStateEditor : MonoBehaviour
     {

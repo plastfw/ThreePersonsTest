@@ -1,13 +1,17 @@
 using System;
+using Source.Scripts.Player;
 using UnityEngine;
 
-public class ViewArea : MonoBehaviour
+namespace Source.Scripts.Enemies
 {
-    public event Action<Transform> SeePlayer;
-
-    private void OnTriggerEnter(Collider collider)
+    public class ViewArea : MonoBehaviour
     {
-        if (collider.TryGetComponent(out PlayerModel playerModel))
-            SeePlayer?.Invoke(playerModel.transform);
+        public event Action<Transform> SeePlayer;
+
+        private void OnTriggerEnter(Collider collider)
+        {
+            if (collider.TryGetComponent(out PlayerModel playerModel))
+                SeePlayer?.Invoke(playerModel.transform);
+        }
     }
 }

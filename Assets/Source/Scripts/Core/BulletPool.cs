@@ -1,6 +1,7 @@
+using Source.Scripts.Enemies;
 using UnityEngine;
 
-namespace Core
+namespace Source.Scripts.Core
 {
     public class BulletPool : MonoBehaviour
     {

@@ -1,12 +1,15 @@
 using TMPro;
 using UnityEngine;
 
-public class HealthView : MonoBehaviour
+namespace Source.Scripts.Player
 {
-    [SerializeField] private TMP_Text _healthField;
-
-    public void SetTextField(int value)
+    public class HealthView : MonoBehaviour
     {
-        _healthField.text = $"{value} healths";
+        [SerializeField] private TMP_Text _healthField;
+
+        public void SetTextField(int value)
+        {
+            _healthField.text = $"{value} healths";
+        }
     }
 }

@@ -1,52 +1,55 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(MovementController))]
-public class PlayerModel : MonoBehaviour
+namespace Source.Scripts.Player
 {
-    [SerializeField] private PlayerData _playerData;
-
-    private MovementController _movementController;
-    private Health _health;
-
-    public event Action<PlayerModel> ImInSafeZone;
-    public event Action<int> DamageIsTake;
-    public event Action DeadEvent;
-
-    private void OnValidate()
+    [RequireComponent(typeof(MovementController))]
+    public class PlayerModel : MonoBehaviour
     {
-        if (_movementController == null)
-            _movementController = transform.GetComponent<MovementController>();
-    }
+        [SerializeField] private PlayerData _playerData;
 
-    private void Awake() => InitializeStats();
+        private MovementController _movementController;
+        private Health _health;
 
-    public int GetHealth() => _health.HealthValue;
+        public event Action<PlayerModel> ImInSafeZone;
+        public event Action<int> DamageIsTake;
+        public event Action DeadEvent;
 
-    public void ChangeMoveState(bool state)
-    {
-        _movementController.ChangeActiveState(state);
-    }
+        private void OnValidate()
+        {
+            if (_movementController == null)
+                _movementController = transform.GetComponent<MovementController>();
+        }
 
-    public void StayInSafe()
-    {
-        ImInSafeZone?.Invoke(this);
-    }
+        private void Awake() => InitializeStats();
 
-    public void TakeDamage(int damage)
-    {
-        _health.TakeDamage(damage);
-        DamageIsTake?.Invoke(_health.HealthValue);
+        public int GetHealth() => _health.HealthValue;
 
-        if (_health.HealthValue <= 0)
-            DeadEvent?.Invoke();
-    }
+        public void ChangeMoveState(bool state)
+        {
+            _movementController.ChangeActiveState(state);
+        }
+
+        public void StayInSafe()
+        {
+            ImInSafeZone?.Invoke(this);
+        }
+
+        public void TakeDamage(int damage)
+        {
+            _health.TakeDamage(damage);
+            DamageIsTake?.Invoke(_health.HealthValue);
+
+            if (_health.HealthValue <= 0)
+                DeadEvent?.Invoke();
+        }
     
-    private void InitializeStats()
-    {
-        _movementController.SetSpeed(_playerData.Speed);
-        _health = new Health(_playerData.Health);
+        private void InitializeStats()
+        {
+            _movementController.SetSpeed(_playerData.Speed);
+            _health = new Health(_playerData.Health);
 
-        _health.SetHealth(_playerData.Health);
+            _health.SetHealth(_playerData.Health);
+        }
     }
 }
