@@ -1,4 +1,6 @@
 using System;
+using R3;
+using Reflex.Attributes;
 using UnityEngine;
 
 namespace Source.Scripts.Player
@@ -10,10 +12,20 @@ namespace Source.Scripts.Player
 
         private MovementController _movementController;
         private Health _health;
+        private ExitZone _exit;
 
         public event Action<PlayerModel> ImInSafeZone;
-        public event Action<int> DamageIsTake;
         public event Action DeadEvent;
+
+        public ReactiveProperty<float> DistanceToExit { get; private set; } = new();
+
+        public ReactiveProperty<int> Health { get; private set; } = new();
+
+        [Inject]
+        private void Init(ExitZone exitZone)
+        {
+            _exit = exitZone;
+        }
 
         private void OnValidate()
         {
@@ -23,7 +35,11 @@ namespace Source.Scripts.Player
 
         private void Awake() => InitializeStats();
 
-        public int GetHealth() => _health.HealthValue;
+        private void Update()
+        {
+            if (_exit == null) return;
+            DistanceToExit.Value = Vector3.Distance(transform.position, _exit.transform.position);
+        }
 
         public void ChangeMoveState(bool state)
         {
@@ -38,18 +54,20 @@ namespace Source.Scripts.Player
         public void TakeDamage(int damage)
         {
             _health.TakeDamage(damage);
-            DamageIsTake?.Invoke(_health.HealthValue);
 
-            if (_health.HealthValue <= 0)
+            Health.Value = _health.value;
+
+            if (_health.value <= 0)
                 DeadEvent?.Invoke();
         }
-    
+
         private void InitializeStats()
         {
             _movementController.SetSpeed(_playerData.Speed);
             _health = new Health(_playerData.Health);
 
             _health.SetHealth(_playerData.Health);
+            Health.Value = _health.value;
         }
     }
 }

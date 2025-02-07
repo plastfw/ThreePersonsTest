@@ -1,59 +1,51 @@
 using System;
 using System.Collections.Generic;
 using Source.Scripts.Core;
+using Source.Scripts.Player;
 using UnityEngine;
 
-namespace Source.Scripts.Player
+public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListener
 {
-    public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListener
+    private readonly IInputService _inputService;
+    private readonly List<MovementController> _movementControllers;
+    private readonly GameStateManager _gameStateManager;
+    private Vector3 _direction;
+    public event Action SwitchButtonIsPressed;
+
+    public PlayerInput(GameStateManager gameStateManager, List<MovementController> movementControllers,
+        IInputService inputService)
     {
-        private const string HORIZONTAL = "Horizontal";
-        private const string VERTICAL = "Vertical";
+        _gameStateManager = gameStateManager;
+        _movementControllers = movementControllers;
+        _inputService = inputService;
+        _gameStateManager.AddListener(this);
+    }
 
-        private List<MovementController> _movementControllers;
-        private GameStateManager _gameStateManager;
-        private Vector3 _direction;
+    public void OnPause()
+    {
+        foreach (var controller in _movementControllers)
+            controller.StopMove();
+    }
 
-        public event Action SwitchButtonIsPressed;
+    public void OnUpdate()
+    {
+        if (_inputService.IsSwitchButtonPressed())
+            SwitchButtonIsPressed?.Invoke();
 
-        public PlayerInput(GameStateManager gameStateManager, List<MovementController> movementControllers)
-        {
-            _gameStateManager = gameStateManager;
-            _movementControllers = movementControllers;
-            _gameStateManager.AddListener(this);
-        }
+        ReadMoveInput();
+    }
 
-        public void OnPause()
-        {
-            foreach (var controller in _movementControllers)
-                controller.StopMove();
-        }
+    private void ReadMoveInput()
+    {
+        _direction = new Vector3(
+            _inputService.GetHorizontalAxis(),
+            0,
+            _inputService.GetVerticalAxis()
+        );
 
-        public void OnUpdate()
-        {
-            ReadMoveInput();
-            ReadSwitchInput();
-        }
+        if (_direction == Vector3.zero) return;
 
-        private void ReadMoveInput()
-        {
-            _direction = new Vector3(
-                Input.GetAxisRaw(HORIZONTAL),
-                0,
-                Input.GetAxisRaw(VERTICAL)
-            );
-
-            if (_direction == Vector3.zero) return;
-
-
-            foreach (var controller in _movementControllers)
-                controller.Move(_direction);
-        }
-
-        private void ReadSwitchInput()
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-                SwitchButtonIsPressed?.Invoke();
-        }
+        foreach (var controller in _movementControllers)
+            controller.Move(_direction);
     }
 }

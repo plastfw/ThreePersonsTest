@@ -1,15 +1,14 @@
-using TMPro;
-using UnityEngine;
+using R3;
 
 namespace Source.Scripts.Player
 {
-    public class HealthView : MonoBehaviour
+    public class HealthView : ViewBase<int>
     {
-        [SerializeField] private TMP_Text _healthField;
-
-        public void SetTextField(int value)
+        protected override void SubscribeToModel(PlayerModel model)
         {
-            _healthField.text = $"{value} healths";
+            model.Health
+                .Subscribe(value => SetField($"{value} healths"))
+                .AddTo(ModelsDisposable);
         }
     }
 }

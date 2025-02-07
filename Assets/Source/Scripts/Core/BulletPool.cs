@@ -1,3 +1,4 @@
+using Reflex.Attributes;
 using Source.Scripts.Enemies;
 using UnityEngine;
 
@@ -5,21 +6,25 @@ namespace Source.Scripts.Core
 {
     public class BulletPool : MonoBehaviour
     {
-        [SerializeField] private Bullet _bulletPrefab;
+        [SerializeField] private Bullet _bullet;
         [SerializeField] private int _initialPoolSize = 5;
 
         private ObjectPool<Bullet> _bulletPool;
 
-        private void Start()
+        public void Start()
         {
             _bulletPool = new ObjectPool<Bullet>(
                 () =>
                 {
-                    var bullet = Instantiate(_bulletPrefab);
+                    var bullet = Instantiate(_bullet);
                     return bullet;
                 },
                 bullet => { bullet.ReturnMe += ReturnBullet; },
-                bullet => { bullet.Reset(); },
+                bullet =>
+                {
+                    bullet.ReturnMe -= ReturnBullet;
+                    bullet.Reset();
+                },
                 _initialPoolSize);
         }
 

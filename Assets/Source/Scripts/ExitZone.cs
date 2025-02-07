@@ -8,9 +8,7 @@ namespace Source.Scripts
         private void OnTriggerEnter(Collider collider)
         {
             if (collider.TryGetComponent(out PlayerModel playerModel))
-            {
                 playerModel.StayInSafe();
-            }
         }
     }
 }

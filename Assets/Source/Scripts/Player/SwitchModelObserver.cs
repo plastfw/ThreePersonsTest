@@ -1,29 +1,35 @@
 using System;
+using R3;
 using System.Collections.Generic;
+using ObservableCollections;
 using Source.Scripts.Core;
 
 namespace Source.Scripts.Player
 {
     public class SwitchModelObserver : IGameListener, IGameStartListener, IGameDisposeListener
     {
-        private int _currentControllerIndex = 0;
-        private List<PlayerModel> _playerModels;
-        private PlayerInput _playerInput;
-        private CameraController _cameraController;
-        private HealthView _healthView;
-        private GameStateManager _gameStateManager;
+        private int _currentControllerIndex;
+        private readonly PlayerInput _playerInput;
+        private readonly CameraController _cameraController;
+        private readonly GameStateManager _gameStateManager;
 
+        public IObservableCollection<PlayerModel> ObservablePlayerModels => _playerModels;
+
+        private readonly ObservableList<PlayerModel> _playerModels = new();
+
+        public ReactiveProperty<PlayerModel> CurrentModel { get; } = new();
         public event Action AllModelsInSafe;
 
         public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController,
-            List<PlayerModel> playerModels, HealthView healthView, GameStateManager gameStateManager)
+            List<PlayerModel> playerModels, GameStateManager gameStateManager)
         {
             _playerInput = playerInput;
             _cameraController = cameraController;
-            _playerModels = playerModels;
-            _healthView = healthView;
             _gameStateManager = gameStateManager;
             _gameStateManager.AddListener(this);
+
+            foreach (var model in playerModels)
+                _playerModels.Add(model);
         }
 
         public void OnStart()
@@ -46,8 +52,7 @@ namespace Source.Scripts.Player
 
         private void RemoveModel(PlayerModel model)
         {
-            _playerModels[_currentControllerIndex].ChangeMoveState(false);
-            _playerModels[_currentControllerIndex].DamageIsTake -= _healthView.SetTextField;
+            CurrentModel.Value.ChangeMoveState(false);
             _playerModels.Remove(model);
             _currentControllerIndex = 0;
             SwitchController();
@@ -63,16 +68,12 @@ namespace Source.Scripts.Player
 
             _playerModels[_currentControllerIndex].ChangeMoveState(false);
 
-            if (_currentControllerIndex == _playerModels.Count - 1)
-                _currentControllerIndex = 0;
-            else
-                _currentControllerIndex++;
+            _currentControllerIndex = (_currentControllerIndex + 1) % _playerModels.Count;
 
-            _playerModels[_currentControllerIndex].ChangeMoveState(true);
-            _cameraController.SwitchFollowTarget(_playerModels[_currentControllerIndex].transform);
-            _healthView.SetTextField(_playerModels[_currentControllerIndex].GetHealth());
+            CurrentModel.Value = _playerModels[_currentControllerIndex];
 
-            _playerModels[_currentControllerIndex].DamageIsTake += _healthView.SetTextField;
+            CurrentModel.Value.ChangeMoveState(true);
+            _cameraController.SwitchFollowTarget(CurrentModel.Value.transform);
         }
     }
 }

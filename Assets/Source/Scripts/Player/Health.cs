@@ -2,23 +2,21 @@ namespace Source.Scripts.Player
 {
     public class Health
     {
-        private int _healthValue;
+        public int value { get; private set; }
 
-        public int HealthValue => _healthValue;
-
-        public Health(int healthValue)
+        public Health(int newValue)
         {
-            _healthValue = healthValue;
+            value = newValue;
         }
 
-        public void SetHealth(int health) => _healthValue = health;
+        public void SetHealth(int health) => value = health;
 
         public void TakeDamage(int damage)
         {
-            if (damage >= _healthValue)
-                _healthValue = 0;
+            if (damage >= value)
+                value = 0;
             else
-                _healthValue -= damage;
+                value -= damage;
         }
     }
 }

@@ -1,33 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using R3;
 using Reflex.Attributes;
 using UnityEngine;
 
 namespace Source.Scripts.Core
 {
-    public class GameStateManager : MonoBehaviour
+    public class GameStateManager : MonoBehaviour, IDisposable
     {
-        private PauseReader _reader;
         private List<IGameListener> _listeners = new();
+        private CompositeDisposable _disposable = new();
+        private PauseService _pauseService;
+        private TickableService _tickableService;
         private bool _isPause;
 
         [Inject]
-        private void Init(PauseReader pauseReader)
+        private void Init(PauseService pauseService, TickableService tickableService)
         {
-            _reader = pauseReader;
+            _pauseService = pauseService;
+            _tickableService = tickableService;
         }
 
         private void Start()
         {
-            _reader.SwitchGameStateButtonIsPressed += SwitchState;
-
             foreach (var listener in _listeners)
                 if (listener is IGameStartListener startListener)
                     startListener.OnStart();
+
+            _pauseService.Pause
+                .Subscribe(_ => SwitchState()).AddTo(_disposable);
+
+            _tickableService.Update
+                .Subscribe(_ => OnUpdate()).AddTo(_disposable);
         }
 
         public void Dispose()
         {
-            _reader.SwitchGameStateButtonIsPressed -= SwitchState;
+            _disposable.Dispose();
 
             foreach (var listener in _listeners)
                 if (listener is IGameDisposeListener disposeListener)
@@ -36,7 +45,7 @@ namespace Source.Scripts.Core
 
         public void AddListener(IGameListener listener) => _listeners.Add(listener);
 
-        public void SwitchState()
+        private void SwitchState()
         {
             _isPause = !_isPause;
 
@@ -55,7 +64,7 @@ namespace Source.Scripts.Core
             }
         }
 
-        private void Update()
+        private void OnUpdate()
         {
             if (_isPause || _listeners.Count == 0) return;
 

@@ -7,7 +7,7 @@ namespace Source.Scripts.Enemies
     {
         [SerializeField] private List<FOVEnemy> _fovEnemies;
         [SerializeField] private List<ShootEnemy> _shootEnemies;
-        [SerializeField] private List<TrakectoryEnemy> _trakectoryEnemies;
+        [SerializeField] private List<TrajectoryEnemy> _trakectoryEnemies;
         [SerializeField] private FOVData _FOVData;
         [SerializeField] private TrajectoryData _trajectoryData;
         [SerializeField] private ShootData _shootData;

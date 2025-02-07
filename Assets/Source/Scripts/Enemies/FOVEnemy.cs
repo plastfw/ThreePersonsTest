@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class FOVEnemy : MonoBehaviour,IGameListener, IGameUpdateListener, IGamePauseListener
+    public class FOVEnemy : MonoBehaviour, IGameListener, IGameUpdateListener, IGamePauseListener
     {
         [SerializeField] private ViewArea _viewArea;
         [SerializeField] private Rigidbody _rigidbody;
@@ -29,9 +29,12 @@ namespace Source.Scripts.Enemies
             _speed = speed;
         }
 
-        private void OnEnable() => _viewArea.SeePlayer += MoveToPlayer;
+        private void Start()
+        {
+            _viewArea.SeePlayer += MoveToPlayer;
+        }
 
-        private void OnDisable() => _viewArea.SeePlayer -= MoveToPlayer;
+        private void OnDestroy() => _viewArea.SeePlayer -= MoveToPlayer;
 
         private void OnCollisionEnter(Collision collision)
         {
