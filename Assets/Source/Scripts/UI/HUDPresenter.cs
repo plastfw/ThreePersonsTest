@@ -2,7 +2,6 @@ using ObservableCollections;
 using R3;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
-using UnityEngine;
 
 public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListener
 {
@@ -11,7 +10,6 @@ public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListe
     private HUDModel _model;
 
     private CompositeDisposable _statsDisposables = new();
-    private CompositeDisposable _modelsCountDisposable = new();
     private CompositeDisposable _currentModel = new();
 
 
@@ -32,21 +30,19 @@ public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListe
         _switchModelObserver.ObservablePlayerModels
             .ObserveCountChanged()
             .Subscribe(OnCountChange)
-            .AddTo(_modelsCountDisposable);
+            .AddTo(_currentModel);
 
         OnCountChange(_switchModelObserver.ObservablePlayerModels.Count);
     }
 
     public void OnDispose()
     {
-        _modelsCountDisposable.Dispose();
         _statsDisposables.Dispose();
         _currentModel.Dispose();
     }
 
     private void OnModelChanged(PlayerModel model)
     {
-        _statsDisposables.Dispose();
         _statsDisposables.Dispose();
         _statsDisposables = new CompositeDisposable();
 
