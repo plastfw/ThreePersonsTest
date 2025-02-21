@@ -1,5 +1,3 @@
-using System;
-using System.Runtime.CompilerServices;
 using DG.Tweening;
 using R3;
 using Reflex.Attributes;
@@ -7,54 +5,57 @@ using Source.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameMenu : MonoBehaviour
+namespace Source.Scripts.UI
 {
-    [SerializeField] private CanvasGroup _canvas;
-    [SerializeField] private Button _next;
-    [SerializeField] private Button _menu;
-
-    private LevelManager _levelManager;
-
-    private ReactiveCommand Menu;
-    private ReactiveCommand Next;
-
-    [Inject]
-    private void Init(LevelManager levelManager)
+    public class GameMenu : MonoBehaviour
     {
-        _levelManager = levelManager;
+        [SerializeField] private CanvasGroup _canvas;
+        [SerializeField] private Button _next;
+        [SerializeField] private Button _menu;
 
-        Menu = new ReactiveCommand();
-        Next = new ReactiveCommand();
+        private LevelManager _levelManager;
 
-        _levelManager.SubscribeToPlayCommand(Menu, true);
-        _levelManager.SubscribeToPlayCommand(Next);
-    }
+        private ReactiveCommand Menu;
+        private ReactiveCommand Next;
 
-    public void Show()
-    {
-        _canvas.DOFade(1, .5f).Play();
-        _canvas.interactable = true;
-    }
+        [Inject]
+        private void Init(LevelManager levelManager)
+        {
+            _levelManager = levelManager;
 
-    private void Start()
-    {
-        _next.onClick.AddListener(NextClick);
-        _menu.onClick.AddListener(MenuClick);
-    }
+            Menu = new ReactiveCommand();
+            Next = new ReactiveCommand();
 
-    private void OnDestroy()
-    {
-        _next.onClick.RemoveListener(NextClick);
-        _menu.onClick.RemoveListener(MenuClick);
-    }
+            _levelManager.SubscribeToPlayCommand(Menu, true);
+            _levelManager.SubscribeToPlayCommand(Next);
+        }
 
-    private void MenuClick()
-    {
-        Menu.Execute(Unit.Default);
-    }
+        public void Show()
+        {
+            _canvas.DOFade(1, .5f).Play();
+            _canvas.interactable = true;
+        }
 
-    private void NextClick()
-    {
-        Next.Execute(Unit.Default);
+        private void Start()
+        {
+            _next.onClick.AddListener(NextClick);
+            _menu.onClick.AddListener(MenuClick);
+        }
+
+        private void OnDestroy()
+        {
+            _next.onClick.RemoveListener(NextClick);
+            _menu.onClick.RemoveListener(MenuClick);
+        }
+
+        private void MenuClick()
+        {
+            Menu.Execute(Unit.Default);
+        }
+
+        private void NextClick()
+        {
+            Next.Execute(Unit.Default);
+        }
     }
 }

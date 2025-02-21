@@ -1,4 +1,3 @@
-using Reflex.Attributes;
 using Source.Scripts.Enemies;
 using UnityEngine;
 
@@ -19,10 +18,10 @@ namespace Source.Scripts.Core
                     var bullet = Instantiate(_bullet);
                     return bullet;
                 },
-                bullet => { bullet.ReturnMe += ReturnBullet; },
+                bullet => { bullet.IsCollision += ReturnBullet; },
                 bullet =>
                 {
-                    bullet.ReturnMe -= ReturnBullet;
+                    bullet.IsCollision -= ReturnBullet;
                     bullet.Reset();
                 },
                 _initialPoolSize);

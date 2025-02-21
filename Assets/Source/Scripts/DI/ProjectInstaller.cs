@@ -2,11 +2,14 @@ using Reflex.Core;
 using Source.Scripts.Core;
 using UnityEngine;
 
-public class ProjectInstaller : MonoBehaviour, IInstaller
+namespace Source.Scripts.DI
 {
-    public void InstallBindings(ContainerBuilder builder)
+    public class ProjectInstaller : MonoBehaviour, IInstaller
     {
-        builder.AddSingleton(typeof(SceneManagerService));
-        builder.AddSingleton(typeof(LevelManager));
+        public void InstallBindings(ContainerBuilder builder)
+        {
+            builder.AddSingleton(typeof(SceneService));
+            builder.AddSingleton(typeof(LevelManager));
+        }
     }
 }

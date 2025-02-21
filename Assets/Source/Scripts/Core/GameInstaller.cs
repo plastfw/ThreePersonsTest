@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Reflex.Core;
 using Source.Scripts.Player;
+using Source.Scripts.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Source.Scripts.Core
@@ -12,13 +12,12 @@ namespace Source.Scripts.Core
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private List<PlayerModel> _playerModels;
         [SerializeField] private List<MovementController> _movementControllers;
-        [FormerlySerializedAs("_playerHealthView")] [SerializeField] private HealthView _healthView;
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private GameStateManager _gameStateManager;
         [SerializeField] private ExitZone _exit;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private GameMenu _gameMenu;
-
+        [SerializeField] private HUDView _hudView;
 
         public void InstallBindings(ContainerBuilder builder)
         {
@@ -29,8 +28,13 @@ namespace Source.Scripts.Core
             builder.AddSingleton(_movementControllers);
             builder.AddSingleton(_cameraController);
             builder.AddSingleton(_bulletPool);
+            builder.AddSingleton(_hudView);
+
+            builder.AddSingleton(typeof(HUDModel));
+            builder.AddSingleton(typeof(HUDPresenter));
 
             builder.AddSingleton(new StandardInputService());
+
             builder.AddSingleton(new TickableService());
             builder.AddSingleton(new PauseService(_pauseButton));
 
@@ -57,19 +61,13 @@ namespace Source.Scripts.Core
 
             var container = builder.Build();
 
+            container.Resolve<PauseService>();
             container.Resolve<PlayerInput>();
             container.Resolve<CompleteLevelObserver>();
             container.Resolve<SwitchModelObserver>();
             container.Resolve<TickableService>();
-            container.Resolve<PauseService>();
-
-            // builder.OnContainerBuilt += container =>
-            // {
-            //     container.Resolve<GameStateManager>().Initialize();
-            //     container.Resolve<PlayerInput>();
-            //     container.Resolve<LevelObserver>();
-            //     container.Resolve<SwitchModelObserver>();
-            // };
+            container.Resolve<HUDPresenter>();
+            container.Resolve<HUDModel>();
         }
     }
 }
