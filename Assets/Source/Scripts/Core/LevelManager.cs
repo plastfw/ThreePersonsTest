@@ -14,6 +14,7 @@ namespace Source.Scripts.Core
         public LevelManager(SceneService sceneService)
         {
             _sceneService = sceneService;
+            // _saves = savesManager;
             _levels.Add(0, "MainMenu");
             _levels.Add(1, "Level1");
         }
