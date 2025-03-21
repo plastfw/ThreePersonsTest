@@ -2,7 +2,6 @@ using ObservableCollections;
 using R3;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
-using UnityEngine;
 
 public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListener
 {
@@ -24,8 +23,6 @@ public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListe
 
     public void OnStart()
     {
-        Debug.LogWarning("start");
-
         _switchModelObserver.CurrentModel
             .Subscribe(OnModelChanged)
             .AddTo(_currentModel);

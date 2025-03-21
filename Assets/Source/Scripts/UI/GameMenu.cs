@@ -1,7 +1,6 @@
 using DG.Tweening;
 using R3;
 using Reflex.Attributes;
-using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +13,7 @@ namespace Source.Scripts.UI
         [SerializeField] private Button _next;
         [SerializeField] private Button _menu;
 
+        private CompositeDisposable _disposable = new();
         private LevelManager _levelManager;
 
         private ReactiveCommand Menu;
@@ -33,9 +33,11 @@ namespace Source.Scripts.UI
 
         private void Start()
         {
-            _next.OnClickAsObservable().Subscribe(_ => NextClick());
-            _menu.OnClickAsObservable().Subscribe(_ => MenuClick());
+            _next.OnClickAsObservable().Subscribe(_ => NextClick()).AddTo(_disposable);
+            _menu.OnClickAsObservable().Subscribe(_ => MenuClick()).AddTo(_disposable);
         }
+
+        private void OnDisable() => _disposable.Dispose();
 
         public void Show()
         {

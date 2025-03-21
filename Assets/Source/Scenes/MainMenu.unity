@@ -336,7 +336,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 346248143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ad586a0b033f447b4bc4c4f54c00fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e11a25f35ee48e29867ceaf5e70e0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _playButton: {fileID: 655976968}
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3820755, g: 1, b: 0.47755542, a: 1}
+  m_Color: {r: 0.7754896, g: 1, b: 0.3803922, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.14257741, g: 0.2896261, b: 0.33962262, a: 1}
+  m_Color: {r: 0, g: 0.509434, b: 0.3121575, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -751,6 +751,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1912244060}
   - component: {fileID: 1912244059}
+  - component: {fileID: 1912244061}
   m_Layer: 0
   m_Name: SceneScope
   m_TagString: Untagged
@@ -785,6 +786,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1912244061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912244058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e039eaed5a942dea52b3d5d094da7bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainMenuView: {fileID: 346248145}
 --- !u!1 &2086296908
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using R3;
 using Reflex.Attributes;
+using Source.Scripts.SaveTypes;
 using UnityEngine;
 
 namespace Source.Scripts.Player

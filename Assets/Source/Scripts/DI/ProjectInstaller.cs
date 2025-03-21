@@ -9,10 +9,11 @@ namespace Source.Scripts.DI
     {
         public void InstallBindings(ContainerBuilder builder)
         {
-            builder.AddSingleton(typeof(SavesManager));
-            builder.AddSingleton(typeof(SceneService));
-            builder.AddSingleton(typeof(LevelManager));
-            builder.AddSingleton(typeof(CustomAnalytics), typeof(IAnalytic));
+            builder
+                .AddSingleton(typeof(SavesManager))
+                .AddSingleton(typeof(SceneService))
+                .AddSingleton(typeof(LevelManager))
+                .AddSingleton(typeof(CustomAnalytics), typeof(IAnalytic));
         }
     }
 }

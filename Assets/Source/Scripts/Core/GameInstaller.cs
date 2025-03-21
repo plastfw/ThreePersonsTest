@@ -3,6 +3,7 @@ using Reflex.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Source.Scripts.Core
@@ -15,7 +16,7 @@ namespace Source.Scripts.Core
         [SerializeField] private GameStateManager _gameStateManager;
         [SerializeField] private ExitZone _exit;
         [SerializeField] private Button _pauseButton;
-        [SerializeField] private GameMenu _gameMenu;
+        [FormerlySerializedAs("_gameMenuView")] [SerializeField] private GameMenu _gameMenu;
         [SerializeField] private HUDView _hudView;
 
         public void InstallBindings(ContainerBuilder builder)
