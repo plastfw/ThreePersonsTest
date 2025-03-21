@@ -7,24 +7,28 @@ using UnityEngine;
 public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListener
 {
     private readonly IInputService _inputService;
-    private readonly List<MovementController> _movementControllers;
+
+    private readonly List<PlayerModel> _playerModels;
+
+    // private readonly List<MovementController> _movementControllers;
     private readonly GameStateManager _gameStateManager;
     private Vector3 _direction;
+
     public event Action SwitchButtonIsPressed;
 
-    public PlayerInput(GameStateManager gameStateManager, List<MovementController> movementControllers,
+    public PlayerInput(GameStateManager gameStateManager, List<PlayerModel> playerModels,
         IInputService inputService)
     {
         _gameStateManager = gameStateManager;
-        _movementControllers = movementControllers;
+        _playerModels = playerModels;
         _inputService = inputService;
         _gameStateManager.AddListener(this);
     }
 
     public void OnPause()
     {
-        foreach (var controller in _movementControllers)
-            controller.StopMove();
+        foreach (var model in _playerModels)
+            model.StopMove();
     }
 
     public void OnUpdate()
@@ -45,7 +49,7 @@ public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListene
 
         if (_direction == Vector3.zero) return;
 
-        foreach (var controller in _movementControllers)
-            controller.Move(_direction);
+        foreach (var model in _playerModels)
+            model.Move(_direction);
     }
 }

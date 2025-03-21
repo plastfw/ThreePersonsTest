@@ -1,24 +1,24 @@
 using System;
-using DG.Tweening;
 using R3;
 using Reflex.Attributes;
 using UnityEngine;
 
 namespace Source.Scripts.Player
 {
-    [RequireComponent(typeof(MovementController))]
     public class PlayerModel : MonoBehaviour
     {
         [SerializeField] private PlayerData _playerData;
+        [SerializeField] private Rigidbody _rigidbody;
+        [SerializeField] private float _speed;
 
-        private MovementController _movementController;
+        private bool _currentActive;
         private Health _health;
         private ExitZone _exit;
         private SavesManager _saves;
         private string _key;
 
-        public event Action<PlayerModel> ImInSafeZone;
-        public event Action DeadEvent;
+        public event Action<PlayerModel> InSafeZone;
+        public event Action Death;
 
         public ReactiveProperty<float> DistanceToExit { get; private set; } = new();
 
@@ -33,10 +33,7 @@ namespace Source.Scripts.Player
 
         private void OnValidate()
         {
-            if (_movementController == null)
-                _movementController = transform.GetComponent<MovementController>();
-
-            _key = Convert.ToString(transform.GetSiblingIndex());
+            _key = $"model_{Convert.ToString(transform.GetSiblingIndex())}";
         }
 
         private void Awake() => InitializeStats();
@@ -44,23 +41,21 @@ namespace Source.Scripts.Player
         private void Update()
         {
             if (_exit == null) return;
+
             DistanceToExit.Value = Vector3.Distance(transform.position, _exit.transform.position);
         }
 
         private void OnDisable()
         {
-            _saves.SaveVector3(_key, transform.position);
+            _saves.Save(_key, new Vector3Data(transform.position));
         }
 
         public void ChangeMoveState(bool state)
         {
-            _movementController.ChangeActiveState(state);
+            _currentActive = state;
         }
 
-        public void StayInSafe()
-        {
-            ImInSafeZone?.Invoke(this);
-        }
+        public void StayInSafe() => InSafeZone?.Invoke(this);
 
         public void TakeDamage(int damage)
         {
@@ -69,13 +64,27 @@ namespace Source.Scripts.Player
             Health.Value = _health.value;
 
             if (_health.value <= 0)
-                DeadEvent?.Invoke();
+                Death?.Invoke();
+        }
+
+        public void StopMove() => _rigidbody.linearVelocity = Vector3.zero;
+
+        public void Move(Vector3 direction)
+        {
+            if (_currentActive == false) return;
+
+            var cameraRotation = Quaternion.Euler(0, 45, 0);
+            var adjustedDirection = cameraRotation * direction.normalized;
+            _rigidbody.linearVelocity = adjustedDirection * _speed;
         }
 
         private void InitializeStats()
         {
-            transform.position = _saves.LoadVector3(_key, transform.position);
-            _movementController.SetSpeed(_playerData.Speed);
+            Vector3Data loadedPositionData = _saves.Load(_key, new Vector3Data(transform.position));
+            Vector3 loadedPosition = loadedPositionData.ToVector3();
+
+            transform.position = loadedPosition;
+            _speed = _playerData.Speed;
             _health = new Health(_playerData.Health);
 
             _health.SetHealth(_playerData.Health);

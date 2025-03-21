@@ -17,7 +17,7 @@ namespace Source.Scripts.Core
         public PauseService(Button pauseButton)
         {
             _pauseButtonClick = new ReactiveCommand();
-            pauseButton.onClick.AddListener(OnButtonClicked);
+            pauseButton.OnClickAsObservable().Subscribe(_ => OnButtonClicked());
         }
 
         private Observable<Unit> CreatePauseObservable()

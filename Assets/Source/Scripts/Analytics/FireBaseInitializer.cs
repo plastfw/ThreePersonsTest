@@ -6,21 +6,21 @@ namespace Source.Scripts.Analytics
 {
     public class FireBaseInitializer : MonoBehaviour
     {
-        public void Start()
-        {
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-            {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus == DependencyStatus.Available)
-                {
-                    FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                    Debug.Log("Firebase Analytics initialized.");
+        public static bool IsInitialized { get; private set; } = false;
 
-                    FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
-                }
-                else
-                    Debug.LogError("Could not resolve Firebase dependencies: " + dependencyStatus);
-            });
+        private async void Start()
+        {
+            var task = FirebaseApp.CheckAndFixDependenciesAsync();
+            await task;
+
+            if (task.Result == DependencyStatus.Available)
+            {
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                Debug.Log("Firebase Analytics initialized.");
+                IsInitialized = true;
+            }
+            else
+                Debug.LogError("Could not resolve Firebase dependencies: " + task.Result);
         }
     }
 }

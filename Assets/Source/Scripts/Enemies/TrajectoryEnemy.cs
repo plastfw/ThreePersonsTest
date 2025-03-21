@@ -25,21 +25,6 @@ namespace Source.Scripts.Enemies
             _gameStateManager.AddListener(this);
         }
 
-        public void Initialize(int damage)
-        {
-            _damage = damage;
-            _tween.Play();
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
-            {
-                playerModel.TakeDamage(_damage);
-                gameObject.SetActive(false);
-            }
-        }
-
         private void Awake()
         {
             Vector3[] path = new Vector3[_movePoints.Count];
@@ -51,6 +36,21 @@ namespace Source.Scripts.Enemies
                 .SetLoops(-1, LoopType.Restart)
                 .SetOptions(true)
                 .SetLink(gameObject);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
+            {
+                playerModel.TakeDamage(_damage);
+                gameObject.SetActive(false);
+            }
+        }
+
+        public void Initialize(int damage)
+        {
+            _damage = damage;
+            _tween.Play();
         }
 
         public void OnPause() => _tween.Pause();
@@ -70,7 +70,7 @@ namespace Source.Scripts.Enemies
                 if (i < _movePoints.Count - 1)
                     Gizmos.DrawLine(_movePoints[i].position, _movePoints[i + 1].position);
                 else
-                    Gizmos.DrawLine(_movePoints[i].position, _movePoints[0].position); // Замыкаем путь
+                    Gizmos.DrawLine(_movePoints[i].position, _movePoints[0].position);
             }
         }
     }

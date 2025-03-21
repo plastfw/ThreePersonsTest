@@ -23,15 +23,15 @@ namespace Source.Scripts.Enemies
             _gameStateManager.AddListener(this);
         }
 
+        private void Start()
+        {
+            _viewArea.SeePlayer += MoveToPlayer;
+        }
+
         public void Initialize(int damage, float speed)
         {
             _damage = damage;
             _speed = speed;
-        }
-
-        private void Start()
-        {
-            _viewArea.SeePlayer += MoveToPlayer;
         }
 
         private void OnDestroy() => _viewArea.SeePlayer -= MoveToPlayer;

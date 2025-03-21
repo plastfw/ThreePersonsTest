@@ -11,7 +11,6 @@ namespace Source.Scripts.Core
     {
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private List<PlayerModel> _playerModels;
-        [SerializeField] private List<MovementController> _movementControllers;
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private GameStateManager _gameStateManager;
         [SerializeField] private ExitZone _exit;
@@ -21,53 +20,45 @@ namespace Source.Scripts.Core
 
         public void InstallBindings(ContainerBuilder builder)
         {
-            builder.AddSingleton(_gameStateManager);
-            builder.AddSingleton(_gameMenu);
-            builder.AddSingleton(_exit);
-            builder.AddSingleton(_playerModels);
-            builder.AddSingleton(_movementControllers);
-            builder.AddSingleton(_cameraController);
-            builder.AddSingleton(_bulletPool);
-            builder.AddSingleton(_hudView);
+            builder
+                .AddSingleton(_gameStateManager)
+                .AddSingleton(_gameMenu)
+                .AddSingleton(_exit)
+                .AddSingleton(_playerModels)
+                .AddSingleton(_cameraController)
+                .AddSingleton(_bulletPool)
+                .AddSingleton(_hudView)
+                .AddSingleton(typeof(HUDModel))
+                .AddSingleton(new TickableService())
+                .AddSingleton(new PauseService(_pauseButton))
+                .AddSingleton(typeof(HUDPresenter), typeof(HUDPresenter), typeof(IGameListener),
+                    typeof(IGameStartListener), typeof(IGameDisposeListener))
+                .AddSingleton(new StandardInputService(), typeof(StandardInputService),
+                    typeof(IInputService))
+                .AddSingleton(typeof(PlayerInput), typeof(PlayerInput),
+                    typeof(IGameListener),
+                    typeof(IGameUpdateListener),
+                    typeof(IGamePauseListener))
+                .AddSingleton(typeof(SwitchModelObserver), typeof(SwitchModelObserver),
+                    typeof(IGameListener),
+                    typeof(IGameStartListener),
+                    typeof(IGameDisposeListener))
+                .AddSingleton(typeof(CompleteLevelObserver), typeof(CompleteLevelObserver),
+                    typeof(IGameListener),
+                    typeof(IGameStartListener),
+                    typeof(IGameDisposeListener))
+                .OnContainerBuilt += DoNonLazy;
+        }
 
-            builder.AddSingleton(typeof(HUDModel));
-            builder.AddSingleton(typeof(HUDPresenter));
-
-            builder.AddSingleton(new StandardInputService());
-
-            builder.AddSingleton(new TickableService());
-            builder.AddSingleton(new PauseService(_pauseButton));
-
-            builder.AddSingleton(container =>
-                new PlayerInput(
-                    container.Resolve<GameStateManager>(),
-                    container.Resolve<List<MovementController>>(),
-                    container.Resolve<StandardInputService>()));
-
-            builder.AddSingleton(container =>
-                new SwitchModelObserver(
-                    container.Resolve<PlayerInput>(),
-                    container.Resolve<CameraController>(),
-                    container.Resolve<List<PlayerModel>>(),
-                    container.Resolve<GameStateManager>()));
-
-            builder.AddSingleton(container =>
-                new CompleteLevelObserver(
-                    container.Resolve<SwitchModelObserver>(),
-                    container.Resolve<List<PlayerModel>>(),
-                    container.Resolve<GameStateManager>(),
-                    container.Resolve<GameMenu>()));
-
-
-            var container = builder.Build();
-
-            container.Resolve<PauseService>();
+        // Я почитал в дискорде у создателя рефлекса, он типо такого способоа советуюет. Аналог зенжектовского не ленивого биндинга.
+        // До этого я резолвил тоже все это именно для этого. Но я по каличному делал.
+        private void DoNonLazy(Container container)
+        {
+            container.Resolve<HUDPresenter>();
             container.Resolve<PlayerInput>();
             container.Resolve<CompleteLevelObserver>();
             container.Resolve<SwitchModelObserver>();
-            container.Resolve<TickableService>();
-            container.Resolve<HUDPresenter>();
-            container.Resolve<HUDModel>();
+            container.Resolve<StandardInputService>();
         }
     }
 }

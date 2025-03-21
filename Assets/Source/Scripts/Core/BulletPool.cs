@@ -18,10 +18,10 @@ namespace Source.Scripts.Core
                     var bullet = Instantiate(_bullet);
                     return bullet;
                 },
-                bullet => { bullet.IsCollision += ReturnBullet; },
+                bullet => { bullet.OnHit += ReturnBullet; },
                 bullet =>
                 {
-                    bullet.IsCollision -= ReturnBullet;
+                    bullet.OnHit -= ReturnBullet;
                     bullet.Reset();
                 },
                 _initialPoolSize);

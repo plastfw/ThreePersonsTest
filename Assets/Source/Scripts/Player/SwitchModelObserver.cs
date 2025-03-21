@@ -2,6 +2,7 @@ using System;
 using R3;
 using System.Collections.Generic;
 using ObservableCollections;
+using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 
 namespace Source.Scripts.Player
@@ -21,7 +22,7 @@ namespace Source.Scripts.Player
         public event Action AllModelsInSafe;
 
         public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController,
-            List<PlayerModel> playerModels, GameStateManager gameStateManager)
+            List<PlayerModel> playerModels, GameStateManager gameStateManager, IAnalytic analytic)
         {
             _playerInput = playerInput;
             _cameraController = cameraController;
@@ -37,7 +38,7 @@ namespace Source.Scripts.Player
             _playerInput.SwitchButtonIsPressed += SwitchController;
 
             foreach (var model in _playerModels)
-                model.ImInSafeZone += RemoveModel;
+                model.InSafeZone += RemoveModel;
 
             SwitchController();
         }
@@ -47,7 +48,7 @@ namespace Source.Scripts.Player
             _playerInput.SwitchButtonIsPressed -= SwitchController;
 
             foreach (var model in _playerModels)
-                model.ImInSafeZone -= RemoveModel;
+                model.InSafeZone -= RemoveModel;
         }
 
         private void RemoveModel(PlayerModel model)

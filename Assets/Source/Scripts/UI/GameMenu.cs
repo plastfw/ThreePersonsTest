@@ -31,22 +31,16 @@ namespace Source.Scripts.UI
             _levelManager.SubscribeToPlayCommand(Next);
         }
 
+        private void Start()
+        {
+            _next.OnClickAsObservable().Subscribe(_ => NextClick());
+            _menu.OnClickAsObservable().Subscribe(_ => MenuClick());
+        }
+
         public void Show()
         {
             _canvas.DOFade(1, .5f).Play();
             _canvas.interactable = true;
-        }
-
-        private void Start()
-        {
-            _next.onClick.AddListener(NextClick);
-            _menu.onClick.AddListener(MenuClick);
-        }
-
-        private void OnDestroy()
-        {
-            _next.onClick.RemoveListener(NextClick);
-            _menu.onClick.RemoveListener(MenuClick);
         }
 
         private void MenuClick()

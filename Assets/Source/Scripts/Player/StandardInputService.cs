@@ -1,16 +1,18 @@
 using UnityEngine;
-using Action = System.Action;
 
-public class StandardInputService : IInputService
+namespace Source.Scripts.Player
 {
-    private const string HORIZONTAL = "Horizontal";
-    private const string VERTICAL = "Vertical";
-    
-    public float GetHorizontalAxis() => Input.GetAxisRaw(HORIZONTAL);
-    public float GetVerticalAxis() => Input.GetAxisRaw(VERTICAL);
-
-    public bool IsSwitchButtonPressed()
+    public class StandardInputService : IInputService
     {
-        return Input.GetKeyDown(KeyCode.Tab);
+        private const string HORIZONTAL = "Horizontal";
+        private const string VERTICAL = "Vertical";
+    
+        public float GetHorizontalAxis() => Input.GetAxisRaw(HORIZONTAL);
+        public float GetVerticalAxis() => Input.GetAxisRaw(VERTICAL);
+
+        public bool IsSwitchButtonPressed()
+        {
+            return Input.GetKeyDown(KeyCode.Tab);
+        }
     }
 }

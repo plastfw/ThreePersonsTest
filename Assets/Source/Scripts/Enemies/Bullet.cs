@@ -14,7 +14,16 @@ namespace Source.Scripts.Enemies
         private float _speed = 10f;
         private float _lifeTime = 3f;
 
-        public event Action<Bullet> IsCollision;
+        public event Action<Bullet> OnHit;
+
+        public void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
+            {
+                playerModel.TakeDamage(_damage);
+                Deactivate();
+            }
+        }
 
         public void Shoot(Vector3 targetPosition)
         {
@@ -27,15 +36,6 @@ namespace Source.Scripts.Enemies
 
         public void SetDamage(int damage) => _damage = damage;
 
-        public void OnCollisionEnter(Collision collision)
-        {
-            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
-            {
-                playerModel.TakeDamage(_damage);
-                Deactivate();
-            }
-        }
-
         private IEnumerator ReturnToPoolAfterDelay()
         {
             yield return new WaitForSeconds(_lifeTime);
@@ -45,7 +45,7 @@ namespace Source.Scripts.Enemies
         private void Deactivate()
         {
             gameObject.SetActive(false);
-            IsCollision?.Invoke(this);
+            OnHit?.Invoke(this);
         }
     }
 }

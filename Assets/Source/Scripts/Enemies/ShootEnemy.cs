@@ -24,12 +24,6 @@ namespace Source.Scripts.Enemies
             _gameStateManager.AddListener(this);
         }
 
-        public void Initialize(int damage, float radius)
-        {
-            _damage = damage;
-            _sphereCollider.radius = radius;
-        }
-
         private void OnTriggerEnter(Collider collider)
         {
             if (collider.TryGetComponent(out PlayerModel playerModel))
@@ -40,6 +34,12 @@ namespace Source.Scripts.Enemies
         {
             if (collider.TryGetComponent(out PlayerModel playerModel))
                 _currentTarget = null;
+        }
+
+        public void Initialize(int damage, float radius)
+        {
+            _damage = damage;
+            _sphereCollider.radius = radius;
         }
 
         public void OnUpdate()

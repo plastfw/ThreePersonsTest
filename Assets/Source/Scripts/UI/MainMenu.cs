@@ -1,8 +1,10 @@
+using R3;
 using Reflex.Attributes;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 namespace Source.Scripts.UI
 {
@@ -10,27 +12,37 @@ namespace Source.Scripts.UI
     {
         [SerializeField] private Button _playButton;
 
-        private LevelManager _levelManager;
+        private SceneService _sceneService;
         private IAnalytic _analytic;
         private SavesManager _saves;
 
         [Inject]
-        public void Init(LevelManager levelManager, IAnalytic analytic, SavesManager savesManager)
+        public void Init(SceneService sceneService, IAnalytic analytic, SavesManager savesManager)
         {
-            _levelManager = levelManager;
+            _sceneService = sceneService;
             _analytic = analytic;
             _saves = savesManager;
         }
 
-        private void OnEnable() => _playButton.onClick.AddListener(PlayButtonEvent);
+        private void OnEnable() => _playButton.OnClickAsObservable().Subscribe(_ => OnPlayButtonClick());
 
-        private void OnDisable() => _playButton.onClick.RemoveListener(PlayButtonEvent);
-
-        private void PlayButtonEvent()
+        private async void OnPlayButtonClick()
         {
-            _saves.DeleteAll();
-            _levelManager.GoToNextLevel();
+            if (!FireBaseInitializer.IsInitialized)
+            {
+                Debug.Log("Waiting for Firebase initialization...");
+                await WaitForFirebaseInitialization();
+            }
+
+            _sceneService.LoadScene(1);
+            // _saves.DeleteAll();
             _analytic.Login();
+        }
+
+        private async Task WaitForFirebaseInitialization()
+        {
+            while (!FireBaseInitializer.IsInitialized)
+                await Task.Yield();
         }
     }
 }
