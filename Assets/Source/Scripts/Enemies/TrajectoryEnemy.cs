@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using Reflex.Attributes;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using UnityEngine;
+using Zenject;
 
 namespace Source.Scripts.Enemies
 {

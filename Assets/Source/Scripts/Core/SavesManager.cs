@@ -8,8 +8,6 @@ public class SavesManager
 
         PlayerPrefs.SetString(key, json);
         PlayerPrefs.Save();
-
-        Debug.Log($"Saved {typeof(T)}");
     }
 
     public T Load<T>(string key, T defaultValue = default) where T : new()
@@ -23,7 +21,6 @@ public class SavesManager
             return data;
         }
 
-        Debug.LogWarning($"Key {key} not found. Returning default value.");
         return defaultValue;
     }
 

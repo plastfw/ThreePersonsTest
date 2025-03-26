@@ -1,9 +1,9 @@
 using DG.Tweening;
 using R3;
-using Reflex.Attributes;
 using Source.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Source.Scripts.UI
 {
@@ -13,7 +13,6 @@ namespace Source.Scripts.UI
         [SerializeField] private Button _next;
         [SerializeField] private Button _menu;
 
-        private CompositeDisposable _disposable = new();
         private LevelManager _levelManager;
 
         private ReactiveCommand Menu;
@@ -33,11 +32,10 @@ namespace Source.Scripts.UI
 
         private void Start()
         {
-            _next.OnClickAsObservable().Subscribe(_ => NextClick()).AddTo(_disposable);
-            _menu.OnClickAsObservable().Subscribe(_ => MenuClick()).AddTo(_disposable);
+            _next.OnClickAsObservable().Subscribe(_ => NextClick()).AddTo(this);
+            _menu.OnClickAsObservable().Subscribe(_ => MenuClick()).AddTo(this);
         }
 
-        private void OnDisable() => _disposable.Dispose();
 
         public void Show()
         {
@@ -45,14 +43,8 @@ namespace Source.Scripts.UI
             _canvas.interactable = true;
         }
 
-        private void MenuClick()
-        {
-            Menu.Execute(Unit.Default);
-        }
+        private void MenuClick() => Menu.Execute(Unit.Default);
 
-        private void NextClick()
-        {
-            Next.Execute(Unit.Default);
-        }
+        private void NextClick() => Next.Execute(Unit.Default);
     }
 }

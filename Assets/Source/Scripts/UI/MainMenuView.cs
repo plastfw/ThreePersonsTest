@@ -1,7 +1,7 @@
 ﻿using R3;
-using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Source.Scripts.UI
 {
@@ -9,14 +9,10 @@ namespace Source.Scripts.UI
     {
         [SerializeField] private Button _playButton;
 
-        private CompositeDisposable _disposable = new();
-
         [Inject]
         private void Init(MainMenuPresenter presenter)
         {
-            _playButton.OnClickAsObservable().Subscribe(_ => presenter.OnButtonClicked()).AddTo(_disposable);
+            _playButton.OnClickAsObservable().Subscribe(_ => presenter.OnButtonClicked()).AddTo(this);
         }
-
-        private void OnDestroy() => _disposable.Dispose();
     }
 }

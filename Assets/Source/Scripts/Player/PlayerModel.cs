@@ -1,8 +1,8 @@
 using System;
 using R3;
-using Reflex.Attributes;
 using Source.Scripts.SaveTypes;
 using UnityEngine;
+using Zenject;
 
 namespace Source.Scripts.Player
 {

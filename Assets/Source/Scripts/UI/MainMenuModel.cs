@@ -1,8 +1,8 @@
-using Reflex.Attributes;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using UnityEngine;
-using Cysharp.Threading.Tasks; // Для UniTask
+using Cysharp.Threading.Tasks;
+using Zenject;
 
 namespace Source.Scripts.UI
 {
