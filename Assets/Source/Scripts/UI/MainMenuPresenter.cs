@@ -1,4 +1,6 @@
-﻿namespace Source.Scripts.UI
+﻿using Cysharp.Threading.Tasks;
+
+namespace Source.Scripts.UI
 {
     public class MainMenuPresenter
     {
@@ -9,6 +11,9 @@
             _model = model;
         }
 
-        public void OnButtonClicked() => _model.StartLoadGame();
+        public void OnButtonClicked()
+        {
+            _model.StartLoadGame().Forget();
+        }
     }
 }
