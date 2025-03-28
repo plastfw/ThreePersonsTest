@@ -14,5 +14,10 @@ namespace Source.Scripts.UI
         {
             _playButton.OnClickAsObservable().Subscribe(_ => presenter.OnButtonClicked()).AddTo(this);
         }
+
+        public void ChangeButtonState(bool state)
+        {
+            _playButton.interactable = state;
+        }
     }
 }

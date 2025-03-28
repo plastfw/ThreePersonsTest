@@ -1,28 +1,31 @@
 using UnityEngine;
 
-public class SavesManager
+namespace Source.Scripts.Core
 {
-    public void Save<T>(string key, T data)
+    public class SavesManager
     {
-        string json = JsonUtility.ToJson(data);
-
-        PlayerPrefs.SetString(key, json);
-        PlayerPrefs.Save();
-    }
-
-    public T Load<T>(string key, T defaultValue = default) where T : new()
-    {
-        if (PlayerPrefs.HasKey(key))
+        public void Save<T>(string key, T data)
         {
-            string json = PlayerPrefs.GetString(key);
+            string json = JsonUtility.ToJson(data);
 
-            T data = JsonUtility.FromJson<T>(json);
-
-            return data;
+            PlayerPrefs.SetString(key, json);
+            PlayerPrefs.Save();
         }
 
-        return defaultValue;
-    }
+        public T Load<T>(string key, T defaultValue = default) where T : new()
+        {
+            if (PlayerPrefs.HasKey(key))
+            {
+                string json = PlayerPrefs.GetString(key);
 
-    public void DeleteAll() => PlayerPrefs.DeleteAll();
+                T data = JsonUtility.FromJson<T>(json);
+
+                return data;
+            }
+
+            return defaultValue;
+        }
+
+        public void DeleteAll() => PlayerPrefs.DeleteAll();
+    }
 }

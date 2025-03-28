@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using R3;
-
-namespace Source.Scripts.Core
+﻿namespace Source.Scripts.Core
 {
-    public class LevelManager : IDisposable
+    public class LevelManager
     {
         private readonly SceneService _sceneService;
-        private CompositeDisposable _disposable = new();
 
-        public LevelManager(SceneService sceneService)
-        {
-            _sceneService = sceneService;
-        }
+        public LevelManager(SceneService sceneService) => _sceneService = sceneService;
 
-        public void SubscribeToPlayCommand(ReactiveCommand playCommand, bool exit = false)
-        {
-            if (exit)
-                playCommand.Subscribe(_ => _sceneService.LoadScene(0)).AddTo(_disposable);
-            else
-                playCommand.Subscribe(_ => _sceneService.LoadScene(1)).AddTo(_disposable);
-        }
+        public void LoadMenuScene() => _sceneService.LoadScene(0);
 
-        public void Dispose() => _disposable?.Dispose();
+        public void LoadGameScene() => _sceneService.LoadScene(1);
     }
 }

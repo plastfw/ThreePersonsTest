@@ -2,36 +2,51 @@
 using System.Collections.Generic;
 using R3;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Source.Scripts.Core
 {
-    public class GameStateManager : MonoBehaviour, IDisposable
+    public class GameStateManager : ITickable, IInitializable, IDisposable
     {
         private List<IGameListener> _listeners = new();
         private CompositeDisposable _disposable = new();
-        private PauseService _pauseService;
-        private TickableService _tickableService;
         private bool _isPause;
 
         [Inject]
-        private void Init(PauseService pauseService, TickableService tickableService)
+        private void Init(Button pauseButton)
         {
-            _pauseService = pauseService;
-            _tickableService = tickableService;
+            pauseButton.OnClickAsObservable().Subscribe(_ => SwitchState()).AddTo(_disposable);
         }
 
-        private void Start()
+        public void Initialize()
         {
             foreach (var listener in _listeners)
                 if (listener is IGameStartListener startListener)
                     startListener.OnStart();
+        }
 
-            _pauseService.Pause
-                .Subscribe(_ => SwitchState()).AddTo(_disposable);
+        public void Tick()
+        {
+            CheckPauseClick();
+            UpdateInListeners();
+        }
 
-            _tickableService.Update
-                .Subscribe(_ => OnUpdate()).AddTo(_disposable);
+        private void CheckPauseClick()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                SwitchState();
+        }
+
+        private void UpdateInListeners()
+        {
+            if (_isPause || _listeners.Count == 0) return;
+
+            foreach (var listener in _listeners)
+            {
+                if (listener is IGameUpdateListener updateListener)
+                    updateListener.OnUpdate();
+            }
         }
 
         public void Dispose()
@@ -61,17 +76,6 @@ namespace Source.Scripts.Core
                     if (listener is IGameResumeListener pauseListener)
                         pauseListener.OnResume();
                 }
-            }
-        }
-
-        private void OnUpdate()
-        {
-            if (_isPause || _listeners.Count == 0) return;
-
-            foreach (var listener in _listeners)
-            {
-                if (listener is IGameUpdateListener updateListener)
-                    updateListener.OnUpdate();
             }
         }
     }

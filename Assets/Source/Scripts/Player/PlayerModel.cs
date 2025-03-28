@@ -1,5 +1,6 @@
 using System;
 using R3;
+using Source.Scripts.Core;
 using Source.Scripts.SaveTypes;
 using UnityEngine;
 using Zenject;
@@ -22,7 +23,6 @@ namespace Source.Scripts.Player
         public event Action Death;
 
         public ReactiveProperty<float> DistanceToExit { get; private set; } = new();
-
         public ReactiveProperty<int> Health { get; private set; } = new();
 
         [Inject]
@@ -42,28 +42,23 @@ namespace Source.Scripts.Player
         private void Update()
         {
             if (_exit == null) return;
-
             DistanceToExit.Value = Vector3.Distance(transform.position, _exit.transform.position);
         }
 
         private void OnDisable()
         {
-            _saves.Save(_key, new Vector3Data(transform.position));
+            var saveData = new PlayerSaveData(transform.position);
+            _saves.Save(_key, saveData);
         }
 
-        public void ChangeMoveState(bool state)
-        {
-            _currentActive = state;
-        }
+        public void ChangeMoveState(bool state) => _currentActive = state;
 
         public void StayInSafe() => InSafeZone?.Invoke(this);
 
         public void TakeDamage(int damage)
         {
             _health.TakeDamage(damage);
-
             Health.Value = _health.value;
-
             if (_health.value <= 0)
                 Death?.Invoke();
         }
@@ -72,8 +67,7 @@ namespace Source.Scripts.Player
 
         public void Move(Vector3 direction)
         {
-            if (_currentActive == false) return;
-
+            if (!_currentActive) return;
             var cameraRotation = Quaternion.Euler(0, 45, 0);
             var adjustedDirection = cameraRotation * direction.normalized;
             _rigidbody.linearVelocity = adjustedDirection * _speed;
@@ -81,13 +75,11 @@ namespace Source.Scripts.Player
 
         private void InitializeStats()
         {
-            Vector3Data loadedPositionData = _saves.Load(_key, new Vector3Data(transform.position));
-            Vector3 loadedPosition = loadedPositionData.ToVector3();
+            var loadedData = _saves.Load(_key, new PlayerSaveData(transform.position));
+            transform.position = loadedData.Position;
 
-            transform.position = loadedPosition;
             _speed = _playerData.Speed;
             _health = new Health(_playerData.Health);
-
             _health.SetHealth(_playerData.Health);
             Health.Value = _health.value;
         }

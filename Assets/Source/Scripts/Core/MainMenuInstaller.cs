@@ -11,7 +11,7 @@ namespace Source.Scripts.Core
         public override void InstallBindings()
         {
             Container.Bind<MainMenuView>().FromInstance(_mainMenuView).AsSingle().NonLazy();
-            Container.Bind<MainMenuModel>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<MainMenuModel>().AsSingle().NonLazy();
             Container.Bind<MainMenuPresenter>().AsSingle().NonLazy();
         }
     }
