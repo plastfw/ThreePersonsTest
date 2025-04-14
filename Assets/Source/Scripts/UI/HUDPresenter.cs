@@ -5,7 +5,7 @@ using Source.Scripts.Player;
 
 namespace Source.Scripts.UI
 {
-    public class HUDPresenter : IGameListener, IGameStartListener, IGameDisposeListener
+    public class HUDPresenter : IGameListener, IGameDisposeListener
     {
         private GameStateManager _gameStateManager;
         private SwitchModelObserver _switchModelObserver;
@@ -13,7 +13,6 @@ namespace Source.Scripts.UI
 
         private CompositeDisposable _statsDisposables = new();
         private CompositeDisposable _currentModel = new();
-
 
         public HUDPresenter(HUDModel model, SwitchModelObserver switchModelObserver, GameStateManager gameStateManager)
         {
@@ -23,7 +22,7 @@ namespace Source.Scripts.UI
             _gameStateManager.AddListener(this);
         }
 
-        public void OnStart()
+        public void StartInit()
         {
             _switchModelObserver.CurrentModel
                 .Subscribe(OnModelChanged)

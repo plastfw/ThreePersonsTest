@@ -6,14 +6,8 @@ namespace Source.Scripts.UI
     {
         private MainMenuModel _model;
 
-        public MainMenuPresenter(MainMenuModel model)
-        {
-            _model = model;
-        }
+        public void Init(MainMenuModel model) => _model = model;
 
-        public void OnButtonClicked()
-        {
-            _model.StartLoadGame().Forget();
-        }
+        public void OnButtonClicked() => _model.StartGameAsync().Forget();
     }
 }

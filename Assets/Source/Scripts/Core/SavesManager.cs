@@ -26,6 +26,10 @@ namespace Source.Scripts.Core
             return defaultValue;
         }
 
-        public void DeleteAll() => PlayerPrefs.DeleteAll();
+        public void DeleteAll()
+        {
+            Debug.LogWarning("DeleteAll");
+            PlayerPrefs.DeleteAll();
+        }
     }
 }

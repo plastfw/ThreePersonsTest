@@ -14,21 +14,22 @@ namespace Source.Scripts.Core
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private ExitZone _exit;
         [SerializeField] private Button _pauseButton;
-        [SerializeField] private GameMenuView _gameMenuView;
-        [SerializeField] private HUDView _hudView;
+        [SerializeField] private Canvas _sceneCanvas;
 
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
-            Container.Bind<Button>().FromInstance(_pauseButton).AsSingle().NonLazy();
-
-            Container.Bind<GameMenuView>().FromInstance(_gameMenuView).AsSingle().NonLazy();
-            Container.Bind<GameMenuModel>().AsSingle().NonLazy();
-            Container.Bind<GameMenuPresenter>().AsSingle().NonLazy();
-
-            Container.Bind<HUDView>().FromInstance(_hudView).AsSingle().NonLazy();
+            Container.Bind<Canvas>().FromInstance(_sceneCanvas).AsSingle().NonLazy();
             Container.Bind<HUDModel>().AsSingle().NonLazy();
             Container.Bind<HUDPresenter>().AsSingle().NonLazy();
+            Container.Bind<HUDFactory>().AsSingle().NonLazy();
+
+            Container.Bind<GameMenuPresenter>().AsSingle().NonLazy();
+            Container.Bind<GameMenuModel>().AsSingle().NonLazy();
+            Container.Bind<GameMenuFactory>().AsSingle().NonLazy();
+
+            Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<GameplayEntryPoint>().AsSingle().NonLazy();
+            Container.Bind<Button>().FromInstance(_pauseButton).AsSingle().NonLazy();
 
             Container.Bind<ExitZone>().FromInstance(_exit).AsSingle().NonLazy();
             Container.Bind<List<PlayerModel>>().FromInstance(_playerModels).AsSingle().NonLazy();

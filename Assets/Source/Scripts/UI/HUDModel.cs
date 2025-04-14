@@ -8,10 +8,15 @@ namespace Source.Scripts.UI
         private float _distance;
         private int _count;
 
-        public HUDModel(HUDView view)
+        public void Construct(HUDView view)
         {
             _view = view;
         }
+
+        // public HUDModel(HUDView view)
+        // {
+        //     _view = view;
+        // }
 
         public void SetHealth(int value)
         {

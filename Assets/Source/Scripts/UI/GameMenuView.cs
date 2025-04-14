@@ -2,7 +2,6 @@
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace Source.Scripts.UI
 {
@@ -14,8 +13,7 @@ namespace Source.Scripts.UI
 
         private GameMenuPresenter _presenter;
 
-        [Inject]
-        public void Init(GameMenuPresenter gameMenuPresenter)
+        public void Construct(GameMenuPresenter gameMenuPresenter)
         {
             _presenter = gameMenuPresenter;
         }
