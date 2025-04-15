@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+using Source.Scripts.Enemies;
 using Source.Scripts.Factories;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -16,6 +17,7 @@ namespace Source.Scripts.Core
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Canvas _sceneCanvas;
         [SerializeField] private Transform _startPlayerPosition;
+        [SerializeField] private EnemiesStatsInitializer _enemiesStatsInitializer;
 
         public override void InstallBindings()
         {
@@ -32,8 +34,11 @@ namespace Source.Scripts.Core
             Container.BindInterfacesAndSelfTo<GameplayEntryPoint>().AsSingle().NonLazy();
             Container.Bind<Button>().FromInstance(_pauseButton).AsSingle().NonLazy();
 
+            Container.Bind<EnemiesStatsInitializer>().FromInstance(_enemiesStatsInitializer).AsSingle().NonLazy();
             Container.Bind<PlayerModelsFactory>().AsSingle().NonLazy();
             Container.Bind<Transform>().FromInstance(_startPlayerPosition).AsSingle().NonLazy();
+            Container.Bind<EnemiesFactory>().AsSingle().NonLazy();
+
 
             Container.Bind<ExitZone>().FromInstance(_exit).AsSingle().NonLazy();
             Container.Bind<CameraController>().FromInstance(_cameraController).AsSingle().NonLazy();

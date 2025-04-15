@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Source.Scripts.Enemies
 {
-    public class FOVEnemy : MonoBehaviour, IGameListener, IGameUpdateListener, IGamePauseListener
+    public class FOVEnemy : MonoBehaviour, IGameListener, IGameUpdateListener, IGamePauseListener, IEnemy
     {
         [SerializeField] private ViewArea _viewArea;
         [SerializeField] private Rigidbody _rigidbody;
@@ -16,10 +16,9 @@ namespace Source.Scripts.Enemies
         private float _speed = 5f;
         private int _damage;
 
-        [Inject]
-        private void Init(GameStateManager gameStateManager)
+        public void Construct(GameStateManager manager, BulletPool pool = null)
         {
-            _gameStateManager = gameStateManager;
+            _gameStateManager = manager;
             _gameStateManager.AddListener(this);
         }
 

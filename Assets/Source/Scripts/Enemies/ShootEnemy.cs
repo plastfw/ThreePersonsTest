@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Source.Scripts.Enemies
 {
-    public class ShootEnemy : MonoBehaviour, IGameListener, IGameUpdateListener
+    public class ShootEnemy : MonoBehaviour, IGameListener, IGameUpdateListener, IEnemy
     {
         [SerializeField] private SphereCollider _sphereCollider;
 
@@ -14,13 +14,13 @@ namespace Source.Scripts.Enemies
         private int _damage;
         private Transform _currentTarget;
         private float _coolDown = 2f;
+
         private float _lastShootTime;
 
-        [Inject]
-        private void Init(BulletPool bulletPool, GameStateManager gameStateManager)
+        public void Construct(GameStateManager manager, BulletPool pool = null)
         {
-            _bulletPool = bulletPool;
-            _gameStateManager = gameStateManager;
+            _bulletPool = pool;
+            _gameStateManager = manager;
             _gameStateManager.AddListener(this);
         }
 

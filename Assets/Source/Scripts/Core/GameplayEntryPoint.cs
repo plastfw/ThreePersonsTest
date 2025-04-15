@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Source.Scripts.Enemies;
 using Source.Scripts.Factories;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
@@ -16,12 +17,16 @@ namespace Source.Scripts.Core
         private readonly ExitZone _exit;
         private readonly SavesManager _saves;
         private readonly PlayerInput _playerInput;
+        private EnemiesFactory _enemiesFactory;
+        private GameStateManager _gameStateManager;
+        private EnemiesStatsInitializer _enemiesStatsInitializer;
 
         private List<PlayerModel> _playerModels;
 
         public GameplayEntryPoint(HUDFactory factory, GameMenuFactory menuFactory,
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
-            SavesManager saves, PlayerInput playerInput)
+            SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
+            EnemiesStatsInitializer enemiesStatsInitializer)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;
@@ -30,6 +35,8 @@ namespace Source.Scripts.Core
             _exit = exitZone;
             _saves = saves;
             _playerInput = playerInput;
+            _enemiesFactory = enemiesFactory;
+            _enemiesStatsInitializer = enemiesStatsInitializer;
         }
 
         public void Initialize() => Init().Forget();
@@ -38,6 +45,7 @@ namespace Source.Scripts.Core
         {
             await _hudFactory.Create();
             await _menuFactory.Create();
+
             _playerModels = await _playerModelsFactory.Create();
 
             foreach (var model in _playerModels)
@@ -48,6 +56,8 @@ namespace Source.Scripts.Core
 
             _observer.Construct(_playerModels);
             _playerInput.Construct(_playerModels);
+            await _enemiesFactory.Create();
+            _enemiesStatsInitializer.InitializeEnemies();
         }
     }
 }

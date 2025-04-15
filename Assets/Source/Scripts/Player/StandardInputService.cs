@@ -6,7 +6,7 @@ namespace Source.Scripts.Player
     {
         private const string HORIZONTAL = "Horizontal";
         private const string VERTICAL = "Vertical";
-    
+
         public float GetHorizontalAxis() => Input.GetAxisRaw(HORIZONTAL);
         public float GetVerticalAxis() => Input.GetAxisRaw(VERTICAL);
 

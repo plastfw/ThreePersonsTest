@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47d7fcd45c6a3e944ad4a62df48e0111
+    m_Address: FOVEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 638ee3214199eac4aa6c249ad40fd67a
     m_Address: GameplayHUD
     m_ReadOnly: 0
@@ -32,6 +37,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 74d7bd9b724348b4c814a167167a67d6
     m_Address: PlayerCube
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 907adc432db5da44787c412f08ee7306
+    m_Address: TrakectoryEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4b59b6cbcedfc4438488d50d112e995
+    m_Address: ShootEnemy
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

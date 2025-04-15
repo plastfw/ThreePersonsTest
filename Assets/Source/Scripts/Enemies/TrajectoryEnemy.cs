@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Source.Scripts.Enemies
 {
-    public class TrajectoryEnemy : MonoBehaviour,IGameListener, IGamePauseListener, IGameResumeListener
+    public class TrajectoryEnemy : MonoBehaviour, IGameListener, IGamePauseListener, IGameResumeListener, IEnemy
     {
         [SerializeField] private List<Transform> _movePoints;
         [SerializeField] private Transform _model;
@@ -16,12 +16,12 @@ namespace Source.Scripts.Enemies
 
         private GameStateManager _gameStateManager;
         private Tween _tween;
+
         private int _damage;
 
-        [Inject]
-        private void Init(GameStateManager gameStateManager)
+        public void Construct(GameStateManager manager, BulletPool pool = null)
         {
-            _gameStateManager = gameStateManager;
+            _gameStateManager = manager;
             _gameStateManager.AddListener(this);
         }
 
