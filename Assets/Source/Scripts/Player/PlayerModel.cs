@@ -3,7 +3,6 @@ using R3;
 using Source.Scripts.Core;
 using Source.Scripts.SaveTypes;
 using UnityEngine;
-using Zenject;
 
 namespace Source.Scripts.Player
 {
@@ -25,19 +24,12 @@ namespace Source.Scripts.Player
         public ReactiveProperty<float> DistanceToExit { get; private set; } = new();
         public ReactiveProperty<int> Health { get; private set; } = new();
 
-        [Inject]
-        private void Init(ExitZone exitZone, SavesManager savesManager)
+        public void Construct(ExitZone exitZone, SavesManager savesManager)
         {
             _saves = savesManager;
             _exit = exitZone;
-        }
-
-        private void OnValidate()
-        {
             _key = $"model_{Convert.ToString(transform.GetSiblingIndex())}";
         }
-
-        private void Awake() => InitializeStats();
 
         private void Update()
         {
@@ -73,10 +65,10 @@ namespace Source.Scripts.Player
             _rigidbody.linearVelocity = adjustedDirection * _speed;
         }
 
-        private void InitializeStats()
+        public void InitializeStats()
         {
             var loadedData = _saves.Load(_key, new PlayerSaveData(transform.position));
-            transform.position = loadedData.Position;
+            // transform.position = loadedData.Position;
 
             _speed = _playerData.Speed;
             _health = new Health(_playerData.Health);

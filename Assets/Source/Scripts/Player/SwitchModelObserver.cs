@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ObservableCollections;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
+using UnityEngine;
 
 namespace Source.Scripts.Player
 {
@@ -22,26 +23,26 @@ namespace Source.Scripts.Player
         public event Action AllModelsInSafe;
 
         public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController,
-            List<PlayerModel> playerModels, GameStateManager gameStateManager, IAnalytic analytic)
+            GameStateManager gameStateManager, IAnalytic analytic)
         {
             _playerInput = playerInput;
             _cameraController = cameraController;
             _gameStateManager = gameStateManager;
             _gameStateManager.AddListener(this);
-
-            foreach (var model in playerModels)
-                _playerModels.Add(model);
         }
 
-        public void OnStart()
+        public void Construct(List<PlayerModel> playerModels)
         {
-            _playerInput.SwitchButtonIsPressed += SwitchController;
+            foreach (var model in playerModels)
+                _playerModels.Add(model);
 
             foreach (var model in _playerModels)
                 model.InSafeZone += RemoveModel;
 
             SwitchController();
         }
+
+        public void OnStart() => _playerInput.SwitchButtonIsPressed += SwitchController;
 
         public void OnDispose()
         {

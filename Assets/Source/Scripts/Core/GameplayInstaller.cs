@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Source.Scripts.Factories;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
 using UnityEngine;
@@ -10,11 +11,11 @@ namespace Source.Scripts.Core
     public class GameplayInstaller : MonoInstaller
     {
         [SerializeField] private CameraController _cameraController;
-        [SerializeField] private List<PlayerModel> _playerModels;
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private ExitZone _exit;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Canvas _sceneCanvas;
+        [SerializeField] private Transform _startPlayerPosition;
 
         public override void InstallBindings()
         {
@@ -31,8 +32,10 @@ namespace Source.Scripts.Core
             Container.BindInterfacesAndSelfTo<GameplayEntryPoint>().AsSingle().NonLazy();
             Container.Bind<Button>().FromInstance(_pauseButton).AsSingle().NonLazy();
 
+            Container.Bind<PlayerModelsFactory>().AsSingle().NonLazy();
+            Container.Bind<Transform>().FromInstance(_startPlayerPosition).AsSingle().NonLazy();
+
             Container.Bind<ExitZone>().FromInstance(_exit).AsSingle().NonLazy();
-            Container.Bind<List<PlayerModel>>().FromInstance(_playerModels).AsSingle().NonLazy();
             Container.Bind<CameraController>().FromInstance(_cameraController).AsSingle().NonLazy();
             Container.Bind<BulletPool>().FromInstance(_bulletPool).AsSingle().NonLazy();
             Container.Bind<IInputService>().To<StandardInputService>().AsSingle().NonLazy();

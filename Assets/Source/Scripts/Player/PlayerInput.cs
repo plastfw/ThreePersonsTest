@@ -8,21 +8,25 @@ public class PlayerInput : IGameListener, IGameUpdateListener, IGamePauseListene
 {
     private readonly IInputService _inputService;
 
-    private readonly List<PlayerModel> _playerModels;
+    private readonly List<PlayerModel> _playerModels = new();
 
-    // private readonly List<MovementController> _movementControllers;
     private readonly GameStateManager _gameStateManager;
     private Vector3 _direction;
 
     public event Action SwitchButtonIsPressed;
 
-    public PlayerInput(GameStateManager gameStateManager, List<PlayerModel> playerModels,
+    public PlayerInput(GameStateManager gameStateManager,
         IInputService inputService)
     {
         _gameStateManager = gameStateManager;
-        _playerModels = playerModels;
         _inputService = inputService;
         _gameStateManager.AddListener(this);
+    }
+
+    public void Construct(List<PlayerModel> models)
+    {
+        foreach (var model in models)
+            _playerModels.Add(model);
     }
 
     public void OnPause()

@@ -9,7 +9,6 @@ namespace Source.Scripts.UI
     {
         private const string GameMenuKey = "InGameScreenMenu";
 
-
         private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
         private readonly Canvas _canvas;
