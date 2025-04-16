@@ -19,30 +19,14 @@ namespace Source.Scripts.Factories
             _loader = loader;
         }
 
-        public async UniTask<MenuSystem> Create()
+        public async UniTask Create()
         {
             var presenter = _container.Resolve<MainMenuPresenter>();
             var model = _container.Resolve<MainMenuModel>();
             var view = await _loader.LoadAssetAsync<MainMenuView>(MenuAddressableKey);
 
             view.Construct(presenter);
-            presenter.Init(model);
-
-            return new MenuSystem(model, presenter, view);
-        }
-    }
-
-    public class MenuSystem
-    {
-        public MainMenuModel Model { get; }
-        public MainMenuPresenter Presenter { get; }
-        public MainMenuView View { get; }
-
-        public MenuSystem(MainMenuModel model, MainMenuPresenter presenter, MainMenuView view)
-        {
-            Model = model;
-            Presenter = presenter;
-            View = view;
+            presenter.Init(model, view);
         }
     }
 }

@@ -6,8 +6,8 @@
 
         public LevelManager(SceneService sceneService) => _sceneService = sceneService;
 
-        public void LoadMenuScene() => _sceneService.LoadScene(0);
+        public void LoadMenuScene() => _sceneService.LoadMenuScene();
 
-        public void LoadGameScene() => _sceneService.LoadScene(1);
+        public void LoadGameScene() => _sceneService.LoadGameScene();
     }
 }

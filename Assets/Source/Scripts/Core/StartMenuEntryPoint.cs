@@ -1,40 +1,34 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Source.Scripts.Analytics;
 using Source.Scripts.Factories;
 using Source.Scripts.UI;
-using UnityEngine;
 using Zenject;
 
 namespace Source.Scripts.Core
 {
     public class StartMenuEntryPoint : IInitializable
     {
-        private MenuSystemFactory _menuFactory;
+        private readonly MenuSystemFactory _menuFactory;
+        private readonly FireBaseInitializer _firebaseInitializer;
+        private MainMenuModel _model;
 
-        public StartMenuEntryPoint(MenuSystemFactory menuFactory)
+        public StartMenuEntryPoint(MenuSystemFactory menuFactory, FireBaseInitializer firebaseInitializer,
+            MainMenuModel model)
         {
             _menuFactory = menuFactory;
+            _firebaseInitializer = firebaseInitializer;
+            _model = model;
         }
 
-        public void Initialize() => Init().Forget();
-
-        private async UniTaskVoid Init()
+        public async void Initialize()
         {
-            var menuSystem = await _menuFactory.Create();
+            await _menuFactory.Create();
+            _model.UpdateFirebaseStatus(_firebaseInitializer.IsInitialized);
 
-            try
+            if (!_firebaseInitializer.IsInitialized)
             {
-                if (!FireBaseInitializer.IsInitialized)
-                {
-                    menuSystem.View.ChangeButtonState(false);
-                    await UniTask.WaitUntil(() => FireBaseInitializer.IsInitialized);
-                    menuSystem.View.ChangeButtonState(true);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Initialization failed: {e}");
+                await UniTask.WaitUntil(() => _firebaseInitializer.IsInitialized);
+                _model.UpdateFirebaseStatus(true);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Source.Scripts.Analytics
 {
     public class FireBaseInitializer : MonoBehaviour
     {
-        public static bool IsInitialized { get; private set; } = false;
+        public bool IsInitialized { get; private set; } = false;
 
         private async void Start()
         {
@@ -16,8 +16,8 @@ namespace Source.Scripts.Analytics
             if (task.Result == DependencyStatus.Available)
             {
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                Debug.Log("Firebase Analytics initialized.");
                 IsInitialized = true;
+                Debug.Log("Firebase Analytics initialized.");
             }
             else
                 Debug.LogError("Could not resolve Firebase dependencies: " + task.Result);

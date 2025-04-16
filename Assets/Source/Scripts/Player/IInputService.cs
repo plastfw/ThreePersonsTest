@@ -1,6 +1,9 @@
-public interface IInputService
+namespace Source.Scripts.Player
 {
-    float GetHorizontalAxis();
-    float GetVerticalAxis();
-    bool IsSwitchButtonPressed();
+    public interface IInputService
+    {
+        float GetHorizontalAxis();
+        float GetVerticalAxis();
+        bool IsSwitchButtonPressed();
+    }
 }

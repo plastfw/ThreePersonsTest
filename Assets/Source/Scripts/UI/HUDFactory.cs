@@ -20,7 +20,7 @@ namespace Source.Scripts.UI
             _loader = loader;
         }
 
-        public async UniTask<HUDSystem> Create()
+        public async UniTask Create()
         {
             var presenter = _container.Resolve<HUDPresenter>();
             var model = _container.Resolve<HUDModel>();
@@ -29,22 +29,6 @@ namespace Source.Scripts.UI
 
             model.Construct(view);
             presenter.StartInit();
-
-            return new HUDSystem(model, presenter, view);
-        }
-    }
-
-    public class HUDSystem
-    {
-        public HUDModel Model { get; }
-        public HUDPresenter Presenter { get; }
-        public HUDView View { get; }
-
-        public HUDSystem(HUDModel model, HUDPresenter presenter, HUDView view)
-        {
-            Model = model;
-            Presenter = presenter;
-            View = view;
         }
     }
 }

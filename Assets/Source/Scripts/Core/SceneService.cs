@@ -5,11 +5,13 @@ namespace Source.Scripts.Core
 {
     public class SceneService
     {
-        public void LoadScene(int index) => SceneManager.LoadScene(index);
+        public void LoadMenuScene() => SceneManager.LoadScene(0);
 
-        public async UniTask LoadSceneAsync(int index, bool allowSceneActivation = true)
+        public void LoadGameScene() => SceneManager.LoadScene(1);
+
+        public async UniTask LoadGameSceneAsync(bool allowSceneActivation = true)
         {
-            var asyncOperation = SceneManager.LoadSceneAsync(index);
+            var asyncOperation = SceneManager.LoadSceneAsync(1);
             asyncOperation.allowSceneActivation = allowSceneActivation;
 
             await asyncOperation.ToUniTask();
