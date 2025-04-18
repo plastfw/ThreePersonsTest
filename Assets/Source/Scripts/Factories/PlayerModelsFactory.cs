@@ -8,13 +8,10 @@ namespace Source.Scripts.Factories
 {
     public class PlayerModelsFactory
     {
-        private const string SHEREKEY = "PlayerSphere";
-        private const string CUBEKEY = "PlayerCube";
-
         private readonly IAddressableLoader _loader;
         private readonly Transform _startPosition;
-        
-        private List<PlayerModel> _models = new();
+
+        private readonly List<PlayerModel> _models = new();
 
         public PlayerModelsFactory(IAddressableLoader loader, Transform startPosition)
         {
@@ -24,12 +21,7 @@ namespace Source.Scripts.Factories
 
         public async UniTask<List<PlayerModel>> Create()
         {
-            var sphereModel = await _loader.LoadAssetAsync<PlayerModel>(SHEREKEY, _startPosition);
-            var cubeModel = await _loader.LoadAssetAsync<PlayerModel>(CUBEKEY, _startPosition);
-
-            _models.Add(sphereModel);
-            _models.Add(cubeModel);
-            
+            _models.AddRange(await _loader.LoadPlayerModels(_startPosition));
             return _models;
         }
     }

@@ -7,8 +7,6 @@ namespace Source.Scripts.UI
 {
     public class HUDFactory
     {
-        private const string HUDAddressableKey = "GameplayHUD";
-
         private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
         private readonly Canvas _canvas;
@@ -24,8 +22,7 @@ namespace Source.Scripts.UI
         {
             var presenter = _container.Resolve<HUDPresenter>();
             var model = _container.Resolve<HUDModel>();
-
-            var view = await _loader.LoadAssetAsync<HUDView>(HUDAddressableKey, _canvas.transform);
+            var view = await _loader.LoadHudMenu(_canvas.transform);
 
             model.Construct(view);
             presenter.StartInit();

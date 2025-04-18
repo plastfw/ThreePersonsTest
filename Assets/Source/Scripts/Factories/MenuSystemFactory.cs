@@ -8,8 +8,6 @@ namespace Source.Scripts.Factories
 {
     public class MenuSystemFactory
     {
-        private const string MenuAddressableKey = "MainMenuScreen";
-
         private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
 
@@ -23,7 +21,7 @@ namespace Source.Scripts.Factories
         {
             var presenter = _container.Resolve<MainMenuPresenter>();
             var model = _container.Resolve<MainMenuModel>();
-            var view = await _loader.LoadAssetAsync<MainMenuView>(MenuAddressableKey);
+            var view = await _loader.LoadMainMenu();
 
             view.Construct(presenter);
             presenter.Init(model, view);

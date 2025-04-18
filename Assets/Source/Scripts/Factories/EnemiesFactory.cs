@@ -6,10 +6,6 @@ namespace Source.Scripts.Factories
 {
     public class EnemiesFactory
     {
-        private const string FOVENEMYKEY = "FOVEnemy";
-        private const string SHOOTENEMY = "ShootEnemy";
-        private const string TRAJECTORYENEMY = "TrakectoryEnemy";
-
         private readonly IAddressableLoader _loader;
         private readonly EnemiesStatsInitializer _enemiesStatsInitializer;
         private readonly GameStateManager _gameStateManager;
@@ -26,10 +22,10 @@ namespace Source.Scripts.Factories
 
         public async UniTask Create()
         {
-            var fovEnemy = await _loader.LoadAssetAsync<FOVEnemy>(FOVENEMYKEY, _enemiesStatsInitializer.transform);
+            var fovEnemy = await _loader.LoadFovEnemy(_enemiesStatsInitializer.transform);
             var trajectoryEnemy =
-                await _loader.LoadAssetAsync<TrajectoryEnemy>(TRAJECTORYENEMY, _enemiesStatsInitializer.transform);
-            var shootEnemy = await _loader.LoadAssetAsync<ShootEnemy>(SHOOTENEMY, _enemiesStatsInitializer.transform);
+                await _loader.LoadTrajectoryEnemy(_enemiesStatsInitializer.transform);
+            var shootEnemy = await _loader.LoadShootEnemy(_enemiesStatsInitializer.transform);
 
             fovEnemy.Construct(_gameStateManager);
             trajectoryEnemy.Construct(_gameStateManager);

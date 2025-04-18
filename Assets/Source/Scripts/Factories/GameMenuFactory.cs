@@ -1,14 +1,13 @@
 ﻿using Cysharp.Threading.Tasks;
 using Source.Scripts.Core;
+using Source.Scripts.UI;
 using UnityEngine;
 using Zenject;
 
-namespace Source.Scripts.UI
+namespace Source.Scripts.Factories
 {
     public class GameMenuFactory
     {
-        private const string GameMenuKey = "InGameScreenMenu";
-
         private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
         private readonly Canvas _canvas;
@@ -24,8 +23,7 @@ namespace Source.Scripts.UI
         {
             var presenter = _container.Resolve<GameMenuPresenter>();
             var model = _container.Resolve<GameMenuModel>();
-
-            var view = await _loader.LoadAssetAsync<GameMenuView>(GameMenuKey, _canvas.transform);
+            var view = await _loader.LoadInGameMenu(_canvas.transform);
 
             model.Construct(view);
             view.Construct(presenter);

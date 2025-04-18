@@ -4,6 +4,7 @@ using Source.Scripts.Enemies;
 using Source.Scripts.Factories;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
+using UnityEngine;
 using Zenject;
 
 namespace Source.Scripts.Core
@@ -20,13 +21,15 @@ namespace Source.Scripts.Core
         private EnemiesFactory _enemiesFactory;
         private GameStateManager _gameStateManager;
         private EnemiesStatsInitializer _enemiesStatsInitializer;
+        private Transform _startPosition;
+        private SavesManager _saveManager;
 
         private List<PlayerModel> _playerModels;
 
         public GameplayEntryPoint(HUDFactory factory, GameMenuFactory menuFactory,
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
-            EnemiesStatsInitializer enemiesStatsInitializer)
+            EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;
@@ -36,6 +39,8 @@ namespace Source.Scripts.Core
             _saves = saves;
             _playerInput = playerInput;
             _enemiesFactory = enemiesFactory;
+            _startPosition = startPosition;
+            _saveManager = saveManager;
             _enemiesStatsInitializer = enemiesStatsInitializer;
         }
 
@@ -51,7 +56,7 @@ namespace Source.Scripts.Core
             foreach (var model in _playerModels)
             {
                 model.Construct(_exit, _saves);
-                model.InitializeStats();
+                model.InitializeStats(_startPosition);
             }
 
             _observer.Construct(_playerModels);

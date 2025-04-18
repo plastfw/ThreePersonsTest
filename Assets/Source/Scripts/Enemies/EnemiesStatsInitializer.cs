@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Source.Scripts.Enemies.Data;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies

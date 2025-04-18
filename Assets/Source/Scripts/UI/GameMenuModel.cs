@@ -23,7 +23,6 @@ namespace Source.Scripts.UI
 
         public void Show()
         {
-            
             _view.Show();
         }
     }

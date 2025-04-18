@@ -37,8 +37,10 @@ namespace Source.Scripts.Player
             DistanceToExit.Value = Vector3.Distance(transform.position, _exit.transform.position);
         }
 
-        private void OnDisable()
+        public void SaveDate()
         {
+            Debug.LogWarning("SAVE");
+
             var saveData = new PlayerSaveData(transform.position);
             _saves.Save(_key, saveData);
         }
@@ -65,10 +67,10 @@ namespace Source.Scripts.Player
             _rigidbody.linearVelocity = adjustedDirection * _speed;
         }
 
-        public void InitializeStats()
+        public void InitializeStats(Transform parent)
         {
-            var loadedData = _saves.Load(_key, new PlayerSaveData(transform.position));
-            // transform.position = loadedData.Position;
+            var loadedData = _saves.Load(_key, new PlayerSaveData(parent.position));
+            transform.position = loadedData.Position;
 
             _speed = _playerData.Speed;
             _health = new Health(_playerData.Health);

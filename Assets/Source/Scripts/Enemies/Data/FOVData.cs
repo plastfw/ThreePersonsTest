@@ -1,8 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "FOVData", menuName = "ScriptableObjects/FOVData", order = 1)]
-public class FOVData : ScriptableObject
+namespace Source.Scripts.Enemies.Data
 {
-  public int Damage;
-  public float Speed;
+  [CreateAssetMenu(fileName = "FOVData", menuName = "ScriptableObjects/FOVData", order = 1)]
+  public class FOVData : ScriptableObject
+  {
+    public int Damage;
+    public float Speed;
+  }
 }
