@@ -30,5 +30,7 @@ namespace Source.Scripts.Core
         public Bullet GetBullet() => _bulletPool.Get();
 
         public void ReturnBullet(Bullet bullet) => _bulletPool.Return(bullet);
+        
+        
     }
 }
