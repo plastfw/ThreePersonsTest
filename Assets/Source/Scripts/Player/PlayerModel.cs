@@ -39,8 +39,6 @@ namespace Source.Scripts.Player
 
         public void SaveDate()
         {
-            Debug.LogWarning("SAVE");
-
             var saveData = new PlayerSaveData(transform.position);
             _saves.Save(_key, saveData);
         }
@@ -53,8 +51,13 @@ namespace Source.Scripts.Player
         {
             _health.TakeDamage(damage);
             Health.Value = _health.value;
-            if (_health.value <= 0)
+            Debug.LogWarning(Health.Value);
+
+            if (Health.Value <= 0)
+            {
+                Debug.LogWarning("Invoke");
                 Death?.Invoke();
+            }
         }
 
         public void StopMove() => _rigidbody.linearVelocity = Vector3.zero;

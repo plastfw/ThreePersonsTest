@@ -18,6 +18,7 @@ namespace Source.Scripts.Core
         UniTask<TrajectoryEnemy> LoadTrajectoryEnemy(Transform parent);
         UniTask<ShootEnemy> LoadShootEnemy(Transform parent);
         UniTask<MainMenuView> LoadMainMenu();
+        UniTask<AdsView> LoadAdsMenu(Transform parent);
 
         void ReleaseAsset();
     }

@@ -49,10 +49,13 @@ namespace Source.Scripts.Player
             _playerInput.SwitchButtonIsPressed -= SwitchController;
 
             foreach (var model in _playerModels)
-            {
                 model.InSafeZone -= RemoveModel;
+        }
+
+        public void SaveData()
+        {
+            foreach (var model in _playerModels)
                 model.SaveDate();
-            }
         }
 
         private void RemoveModel(PlayerModel model)

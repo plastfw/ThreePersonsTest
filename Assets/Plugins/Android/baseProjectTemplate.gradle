@@ -1,0 +1,21 @@
+plugins {
+    id 'com.android.application' version '8.3.0' apply false
+    id 'com.android.library' version '8.3.0' apply false
+    **BUILD_SCRIPT_DEPS**
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}
+
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.plugins.hasPlugin('com.android.library') || subproject.plugins.hasPlugin('com.android.application')) {
+            if (subproject.name == "IronSource.androidlib") {
+                subproject.android.namespace = "com.ironsource.unity"
+            } else {
+                subproject.android.namespace = "com.def.persons"
+            }
+        }
+    }
+}

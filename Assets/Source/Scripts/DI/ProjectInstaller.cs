@@ -1,6 +1,6 @@
+using Source.Scripts.Ads;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
-using Source.Scripts.UI;
 using Zenject;
 
 namespace Source.Scripts.DI
@@ -9,6 +9,11 @@ namespace Source.Scripts.DI
     {
         public override void InstallBindings()
         {
+            Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
+            Container.BindInterfacesAndSelfTo<AdsInitializer>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<InterstitialAds>().AsSingle().NonLazy();
+            Container.Bind<RewardedAds>().AsSingle().NonLazy();
+
             Container.Bind<IAddressableLoader>().To<AddressableLoader>().AsSingle().NonLazy();
 
             Container.Bind<SavesManager>().FromNew().AsSingle().NonLazy();

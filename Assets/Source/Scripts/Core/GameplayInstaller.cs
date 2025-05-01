@@ -3,7 +3,6 @@ using Source.Scripts.Factories;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -30,6 +29,10 @@ namespace Source.Scripts.Core
             Container.Bind<GameMenuModel>().AsSingle().NonLazy();
             Container.Bind<GameMenuFactory>().AsSingle().NonLazy();
 
+            Container.Bind<AdsPresenter>().AsSingle().NonLazy();
+            Container.Bind<AdsModel>().AsSingle().NonLazy();
+            Container.Bind<AdsFactory>().AsSingle().NonLazy();
+
             Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<GameplayEntryPoint>().AsSingle().NonLazy();
             Container.Bind<Button>().FromInstance(_pauseButton).AsSingle().NonLazy();
@@ -38,8 +41,7 @@ namespace Source.Scripts.Core
             Container.Bind<PlayerModelsFactory>().AsSingle().NonLazy();
             Container.Bind<Transform>().FromInstance(_startPlayerPosition).AsSingle().NonLazy();
             Container.Bind<EnemiesFactory>().AsSingle().NonLazy();
-
-
+            
             Container.Bind<ExitZone>().FromInstance(_exit).AsSingle().NonLazy();
             Container.Bind<CameraController>().FromInstance(_cameraController).AsSingle().NonLazy();
             Container.Bind<BulletPool>().FromInstance(_bulletPool).AsSingle().NonLazy();

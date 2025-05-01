@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Source.Scripts.Core;
 using Source.Scripts.UI;
-using UnityEngine;
 using Zenject;
 
 namespace Source.Scripts.Factories

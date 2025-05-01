@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88401bca34e535843bfa3b24949172df
+    m_Address: AdsScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 907adc432db5da44787c412f08ee7306
     m_Address: TrakectoryEnemy
     m_ReadOnly: 0

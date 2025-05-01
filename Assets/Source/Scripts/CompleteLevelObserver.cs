@@ -3,47 +3,55 @@ using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
+using UnityEngine;
 
 namespace Source.Scripts
 {
-    public class CompleteLevelObserver : IGameListener, IGameStartListener, IGameDisposeListener
+    public class CompleteLevelObserver : IGameListener, IGameDisposeListener
     {
         private IAnalytic _analytic;
         private SwitchModelObserver _switchModelObserver;
         private List<PlayerModel> _playerModels;
-        private GameStateManager _gameStateManager;
         private GameMenuModel _menuModel;
+        private AdsModel _adsModel;
         private SavesManager _saves;
 
-        public CompleteLevelObserver(SwitchModelObserver switchModelObserver, List<PlayerModel> playerModels,
-            GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves)
+        public CompleteLevelObserver(SwitchModelObserver switchModelObserver,
+            GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves,
+            AdsModel adsModel)
         {
             _switchModelObserver = switchModelObserver;
-            _playerModels = playerModels;
-            _gameStateManager = gameStateManager;
             _menuModel = gameMenuModel;
             _analytic = analytic;
             _saves = saves;
-            _gameStateManager.AddListener(this);
+            _adsModel = adsModel;
+            gameStateManager.AddListener(this);
         }
 
-        public void OnStart()
+        public void Init(List<PlayerModel> models)
         {
-            foreach (var model in _playerModels)
-                model.Death += ShowMenu;
+            _playerModels = models;
 
-            _switchModelObserver.AllModelsInSafe += ShowMenu;
+            foreach (var model in _playerModels)
+                model.Death += ShowAdsMenu;
+
+            _switchModelObserver.AllModelsInSafe += ShowCompleteMenu;
+        }
+
+        private void ShowAdsMenu()
+        {
+            _adsModel.Show();
         }
 
         public void OnDispose()
         {
             foreach (var model in _playerModels)
-                model.Death -= ShowMenu;
+                model.Death -= ShowCompleteMenu;
 
-            _switchModelObserver.AllModelsInSafe -= ShowMenu;
+            _switchModelObserver.AllModelsInSafe -= ShowCompleteMenu;
         }
 
-        private void ShowMenu()
+        private void ShowCompleteMenu()
         {
             _analytic.CompleteLevel();
             _menuModel.Show();
