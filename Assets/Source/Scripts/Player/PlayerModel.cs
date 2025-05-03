@@ -40,7 +40,7 @@ namespace Source.Scripts.Player
         public void SaveDate()
         {
             var saveData = new PlayerSaveData(transform.position);
-            _saves.Save(_key, saveData);
+            _saves.Save(saveData);
         }
 
         public void ChangeMoveState(bool state) => _currentActive = state;
@@ -72,7 +72,7 @@ namespace Source.Scripts.Player
 
         public void InitializeStats(Transform parent)
         {
-            var loadedData = _saves.Load(_key, new PlayerSaveData(parent.position));
+            var loadedData = _saves.Load(new PlayerSaveData(parent.position));
             transform.position = loadedData.Position;
 
             _speed = _playerData.Speed;

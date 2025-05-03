@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Ads
 {
-    public class InterstitialAds : IDisposable
+    public class InterstitialAds : IDisposable , IInterstitialAds
     {
         private LevelPlayInterstitialAd interstitialAd;
         private Action onAdCompleteCallback;

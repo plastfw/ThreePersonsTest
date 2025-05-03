@@ -26,11 +26,5 @@ namespace Source.Scripts.UI
             _canvas.blocksRaycasts = true;
             _canvas.interactable = true;
         }
-
-        public void Hide()
-        {
-            // _canvas.DOFade(0, .5f).Play();
-            // _canvas.interactable = false;
-        }
     }
 }

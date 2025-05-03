@@ -12,19 +12,19 @@ namespace Source.Scripts.Core
 {
     public class AddressableLoader : IAddressableLoader
     {
-        private const string Hudkey = "GameplayHUD";
-        private const string Spherekey = "PlayerSphere";
-        private const string Cubekey = "PlayerCube";
+        private const string HudKey = "GameplayHUD";
+        private const string SphereKey = "PlayerSphere";
+        private const string CubeKey = "PlayerCube";
         private const string GameMenuKey = "InGameScreenMenu";
-        private const string Fovenemykey = "FOVEnemy";
-        private const string Shootenemy = "ShootEnemy";
-        private const string Trajectoryenemy = "TrakectoryEnemy";
+        private const string FovEnemyKey = "FOVEnemy";
+        private const string ShootEnemyKey = "ShootEnemy";
+        private const string TrajectoryEnemyKey = "TrakectoryEnemy";
         private const string MainMenuKey = "MainMenuScreen";
         private const string AdsKey = "AdsScreen";
 
         private AsyncOperationHandle<GameObject> _handle;
 
-        public async UniTask<T> LoadAssetAsync<T>(string key, Transform parent = null) where T : Component
+        public async UniTask<T> InstantiateAssetAsync<T>(string key, Transform parent = null) where T : Component
         {
             _handle = Addressables.LoadAssetAsync<GameObject>(key);
             await _handle.ToUniTask();
@@ -45,49 +45,49 @@ namespace Source.Scripts.Core
             return null;
         }
 
-        public async UniTask<HUDView> LoadHudMenu(Transform parent) => await LoadAssetAsync<HUDView>(Hudkey, parent);
+        public async UniTask<HUDView> LoadHudMenu(Transform parent) => await InstantiateAssetAsync<HUDView>(HudKey, parent);
 
         public async UniTask<List<PlayerModel>> LoadPlayerModels(Transform parent)
         {
-            var cubeTask = await LoadAssetAsync<PlayerModel>(Cubekey, parent);
-            var sphereTask = await LoadAssetAsync<PlayerModel>(Spherekey, parent);
+            var cubeTask = await InstantiateAssetAsync<PlayerModel>(CubeKey, parent);
+            var sphereTask = await InstantiateAssetAsync<PlayerModel>(SphereKey, parent);
 
             return new List<PlayerModel> { cubeTask, sphereTask };
         }
 
         public async UniTask<GameMenuView> LoadInGameMenu(Transform parent)
         {
-            var menuView = await LoadAssetAsync<GameMenuView>(GameMenuKey, parent);
+            var menuView = await InstantiateAssetAsync<GameMenuView>(GameMenuKey, parent);
             return menuView;
         }
 
         public async UniTask<FOVEnemy> LoadFovEnemy(Transform parent)
         {
-            var enemy = await LoadAssetAsync<FOVEnemy>(Fovenemykey, parent);
+            var enemy = await InstantiateAssetAsync<FOVEnemy>(FovEnemyKey, parent);
             return enemy;
         }
 
         public async UniTask<TrajectoryEnemy> LoadTrajectoryEnemy(Transform parent)
         {
-            var enemy = await LoadAssetAsync<TrajectoryEnemy>(Trajectoryenemy, parent);
+            var enemy = await InstantiateAssetAsync<TrajectoryEnemy>(TrajectoryEnemyKey, parent);
             return enemy;
         }
 
         public async UniTask<ShootEnemy> LoadShootEnemy(Transform parent)
         {
-            var enemy = await LoadAssetAsync<ShootEnemy>(Shootenemy, parent);
+            var enemy = await InstantiateAssetAsync<ShootEnemy>(ShootEnemyKey, parent);
             return enemy;
         }
 
         public async UniTask<MainMenuView> LoadMainMenu()
         {
-            var menuView = await LoadAssetAsync<MainMenuView>(MainMenuKey);
+            var menuView = await InstantiateAssetAsync<MainMenuView>(MainMenuKey);
             return menuView;
         }
 
         public async UniTask<AdsView> LoadAdsMenu(Transform parent)
         {
-            var menuView = await LoadAssetAsync<AdsView>(AdsKey, parent);
+            var menuView = await InstantiateAssetAsync<AdsView>(AdsKey, parent);
             return menuView;
         }
 

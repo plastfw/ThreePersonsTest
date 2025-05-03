@@ -9,7 +9,7 @@ namespace Source.Scripts.Core
 {
     public interface IAddressableLoader
     {
-        UniTask<T> LoadAssetAsync<T>(string key, Transform parent = null) where T : UnityEngine.Component;
+        UniTask<T> InstantiateAssetAsync<T>(string key, Transform parent = null) where T : UnityEngine.Component;
 
         UniTask<HUDView> LoadHudMenu(Transform parent);
         UniTask<List<PlayerModel>> LoadPlayerModels(Transform parent);

@@ -1,6 +1,7 @@
 ﻿using System;
 using R3;
 using Source.Scripts.Ads;
+using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using UnityEngine;
@@ -16,11 +17,12 @@ namespace Source.Scripts.UI
         private LevelManager _levelManager;
         private SwitchModelObserver _switchModelObserver;
         private SavesManager _savesManager;
+        private IAnalytic _analytic;
 
         private readonly CompositeDisposable _disposable = new();
 
         public void Init(AdsModel model, AdsView view, InterstitialAds interstitialAds, RewardedAds rewardedAds,
-            LevelManager levelManager, SwitchModelObserver observer, SavesManager savesManager)
+            LevelManager levelManager, SwitchModelObserver observer, SavesManager savesManager, IAnalytic analytic)
         {
             _rewardedAds = rewardedAds;
             _interstitialAds = interstitialAds;
@@ -29,6 +31,7 @@ namespace Source.Scripts.UI
             _levelManager = levelManager;
             _switchModelObserver = observer;
             _savesManager = savesManager;
+            _analytic = analytic;
         }
 
         public async void OnConfirmClicked()
@@ -37,10 +40,7 @@ namespace Source.Scripts.UI
             try
             {
                 bool adCompleted = await _rewardedAds.ShowRewardedAdAsync();
-                //Здесь логика после просмотра рекламы
-                _view.Hide();
-                _switchModelObserver.SaveData();
-                _levelManager.LoadGameScene();
+                ConfirmEvent();
                 Debug.Log($"Rewarded ad completed: {adCompleted}");
             }
             catch (Exception e)
@@ -48,10 +48,7 @@ namespace Source.Scripts.UI
                 Debug.LogError($"Error showing rewarded ad: {e}");
             }
 #else
-            _view.Hide();
-            _switchModelObserver.SaveData();
-            _levelManager.LoadGameScene();
-            Debug.LogWarning("Продолжить игру с того же места");
+            ConfirmEvent();
 #endif
         }
 
@@ -61,10 +58,7 @@ namespace Source.Scripts.UI
             try
             {
                 bool adShown = await _interstitialAds.ShowInterstitialAsync();
-                // Общая логика после показа
-                _view.Hide();
-                _levelManager.LoadMenuScene();
-                _savesManager.DeleteAll();
+                RejectEvent();
                 Debug.Log($"Interstitial ad shown: {adShown}");
             }
             catch (Exception e)
@@ -72,11 +66,21 @@ namespace Source.Scripts.UI
                 Debug.LogError($"Error showing interstitial ad: {e}");
             }
 #else
-            _view.Hide();
+            RejectEvent();
+#endif
+        }
+
+        private void RejectEvent()
+        {
+            _analytic.LoseLevel();
             _levelManager.LoadMenuScene();
             _savesManager.DeleteAll();
-            Debug.LogWarning("Выйти в меню");
-#endif
+        }
+
+        private void ConfirmEvent()
+        {
+            _switchModelObserver.SaveData();
+            _levelManager.LoadGameScene();
         }
 
         public void Dispose() => _disposable.Dispose();

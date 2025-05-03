@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Source.Scripts.Ads;
+using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
@@ -18,10 +19,11 @@ namespace Source.Scripts.Factories
         private LevelManager _levelManager;
         private SwitchModelObserver _switchModelObserver;
         private SavesManager _savesManager;
+        private IAnalytic _analytic;
 
         public AdsFactory(DiContainer container, IAddressableLoader loader, Canvas canvas,
             InterstitialAds interstitialAds, RewardedAds rewardedAds, LevelManager levelManager,
-            SwitchModelObserver switchModelObserver, SavesManager savesManager)
+            SwitchModelObserver switchModelObserver, SavesManager savesManager, IAnalytic analytic)
         {
             _container = container;
             _loader = loader;
@@ -31,6 +33,7 @@ namespace Source.Scripts.Factories
             _levelManager = levelManager;
             _switchModelObserver = switchModelObserver;
             _savesManager = savesManager;
+            _analytic = analytic;
         }
 
         public async UniTask Create()
@@ -42,7 +45,7 @@ namespace Source.Scripts.Factories
             model.Construct(view);
             view.Construct(presenter);
             presenter.Init(model, view, _interstitialAds, _rewardedAds, _levelManager, _switchModelObserver,
-                _savesManager);
+                _savesManager, _analytic);
         }
     }
 }

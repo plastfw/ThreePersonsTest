@@ -6,7 +6,7 @@ using SystemInfo = UnityEngine.Device.SystemInfo;
 
 namespace Source.Scripts.Ads
 {
-    public class AdsInitializer : IDisposable
+    public class AdsInitializer : IDisposable, IAdsInitializer
     {
         private readonly AdsConfig _config;
         private readonly InterstitialAds _interstitialAds;
@@ -20,7 +20,7 @@ namespace Source.Scripts.Ads
             _config = config;
         }
 
-        public void InitLevelPlay()
+        public void Init()
         {
             LevelPlay.Init(_config.GetAppKey(), GatUserId(), adFormats: new[] { LevelPlayAdFormat.REWARDED });
             LevelPlay.OnInitSuccess += OnInitializationComplete;

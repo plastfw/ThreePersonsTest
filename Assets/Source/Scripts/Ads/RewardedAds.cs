@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Ads
 {
-    public class RewardedAds : IDisposable
+    public class RewardedAds : IDisposable, IRewardedAds
     {
         public void EnableAds()
         {

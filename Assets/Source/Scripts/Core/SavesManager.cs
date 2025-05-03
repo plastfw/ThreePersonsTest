@@ -1,26 +1,25 @@
+using Source.Scripts.SaveTypes;
 using UnityEngine;
 
 namespace Source.Scripts.Core
 {
     public class SavesManager
     {
-        public void Save<T>(string key, T data)
+        private const string PlayerSaveKey = "PlayerSaveData"; // Фиксированный ключ
+
+        public void Save(PlayerSaveData data)
         {
             string json = JsonUtility.ToJson(data);
-
-            PlayerPrefs.SetString(key, json);
+            PlayerPrefs.SetString(PlayerSaveKey, json);
             PlayerPrefs.Save();
         }
 
-        public T Load<T>(string key, T defaultValue = default) where T : new()
+        public PlayerSaveData Load(PlayerSaveData defaultValue = default)
         {
-            if (PlayerPrefs.HasKey(key))
+            if (PlayerPrefs.HasKey(PlayerSaveKey))
             {
-                string json = PlayerPrefs.GetString(key);
-
-                T data = JsonUtility.FromJson<T>(json);
-
-                return data;
+                string json = PlayerPrefs.GetString(PlayerSaveKey);
+                return JsonUtility.FromJson<PlayerSaveData>(json);
             }
 
             return defaultValue;

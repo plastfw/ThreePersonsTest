@@ -73,7 +73,7 @@ namespace Source.Scripts.Core
             await _enemiesFactory.Create();
             _enemiesStatsInitializer.InitializeEnemies();
             _completeLevelObserver.Init(_playerModels);
-            _adsInitializer.InitLevelPlay();
+            _adsInitializer.Init();
         }
     }
 }
