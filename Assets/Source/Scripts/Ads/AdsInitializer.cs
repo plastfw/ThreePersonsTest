@@ -1,6 +1,5 @@
 ﻿using System;
 using com.unity3d.mediation;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using SystemInfo = UnityEngine.Device.SystemInfo;
 
@@ -9,11 +8,11 @@ namespace Source.Scripts.Ads
     public class AdsInitializer : IDisposable, IAdsInitializer
     {
         private readonly AdsConfig _config;
-        private readonly InterstitialAds _interstitialAds;
-        private readonly RewardedAds _rewardedAds;
-        public bool isInitialized = false;
+        private readonly IInterstitialAds _interstitialAds;
+        private readonly IRewardedAds _rewardedAds;
+        public bool IsInitialized { get; private set; } = false;
 
-        public AdsInitializer(InterstitialAds interstitialAds, RewardedAds rewardedAds, AdsConfig config)
+        public AdsInitializer(IInterstitialAds interstitialAds, IRewardedAds rewardedAds, AdsConfig config)
         {
             _interstitialAds = interstitialAds;
             _rewardedAds = rewardedAds;
@@ -29,10 +28,11 @@ namespace Source.Scripts.Ads
             // IronSource.Agent.setMetaData("is_test_suite", "enable");
         }
 
+
         private void OnInitializationComplete(LevelPlayConfiguration config)
         {
             Debug.Log("Initialization completed successfully with config: " + config);
-            isInitialized = true;
+            IsInitialized = true;
 
             //delete
             // IronSource.Agent.launchTestSuite();
@@ -47,7 +47,7 @@ namespace Source.Scripts.Ads
         private void OnInitializationFailed(LevelPlayInitError error)
         {
             Debug.Log("Initialization failed with error: " + error);
-            isInitialized = false;
+            IsInitialized = false;
         }
 
         private void OnApplicationPause(bool isPaused) => IronSource.Agent.onApplicationPause(isPaused);
@@ -60,6 +60,10 @@ namespace Source.Scripts.Ads
 
         private string GatUserId() => SystemInfo.deviceUniqueIdentifier;
 
-        public void Dispose() => _interstitialAds?.Dispose();
+        public void Dispose()
+        {
+            _rewardedAds?.Dispose();
+            _interstitialAds?.Dispose();
+        }
     }
 }

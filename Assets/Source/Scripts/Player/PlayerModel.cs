@@ -51,7 +51,6 @@ namespace Source.Scripts.Player
         {
             _health.TakeDamage(damage);
             Health.Value = _health.value;
-            Debug.LogWarning(Health.Value);
 
             if (Health.Value <= 0)
             {

@@ -12,8 +12,8 @@ namespace Source.Scripts.UI
     {
         private AdsModel _model;
         private AdsView _view;
-        private InterstitialAds _interstitialAds;
-        private RewardedAds _rewardedAds;
+        private IInterstitialAds _interstitialAds;
+        private IRewardedAds _rewardedAds;
         private LevelManager _levelManager;
         private SwitchModelObserver _switchModelObserver;
         private SavesManager _savesManager;
@@ -21,7 +21,7 @@ namespace Source.Scripts.UI
 
         private readonly CompositeDisposable _disposable = new();
 
-        public void Init(AdsModel model, AdsView view, InterstitialAds interstitialAds, RewardedAds rewardedAds,
+        public void Init(AdsModel model, AdsView view, IInterstitialAds interstitialAds, IRewardedAds rewardedAds,
             LevelManager levelManager, SwitchModelObserver observer, SavesManager savesManager, IAnalytic analytic)
         {
             _rewardedAds = rewardedAds;

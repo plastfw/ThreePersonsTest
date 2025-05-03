@@ -14,15 +14,15 @@ namespace Source.Scripts.Factories
         private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
         private readonly Canvas _canvas;
-        private InterstitialAds _interstitialAds;
-        private RewardedAds _rewardedAds;
+        private IInterstitialAds _interstitialAds;
+        private IRewardedAds _rewardedAds;
         private LevelManager _levelManager;
         private SwitchModelObserver _switchModelObserver;
         private SavesManager _savesManager;
         private IAnalytic _analytic;
 
         public AdsFactory(DiContainer container, IAddressableLoader loader, Canvas canvas,
-            InterstitialAds interstitialAds, RewardedAds rewardedAds, LevelManager levelManager,
+            IInterstitialAds interstitialAds, IRewardedAds rewardedAds, LevelManager levelManager,
             SwitchModelObserver switchModelObserver, SavesManager savesManager, IAnalytic analytic)
         {
             _container = container;

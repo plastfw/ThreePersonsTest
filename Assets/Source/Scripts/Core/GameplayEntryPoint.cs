@@ -26,7 +26,7 @@ namespace Source.Scripts.Core
         private Transform _startPosition;
         private SavesManager _saveManager;
         private CompleteLevelObserver _completeLevelObserver;
-        private AdsInitializer _adsInitializer;
+        private IAdsInitializer _adsInitializer;
 
         private List<PlayerModel> _playerModels;
 
@@ -34,7 +34,7 @@ namespace Source.Scripts.Core
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
             EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager,
-            AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, AdsInitializer adsInitializer)
+            AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, IAdsInitializer adsInitializer)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;

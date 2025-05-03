@@ -6,5 +6,6 @@ namespace Source.Scripts.Ads
     {
         void EnableAds();
         UniTask<bool> ShowRewardedAdAsync();
+        void Dispose();
     }
 }

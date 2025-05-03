@@ -3,5 +3,6 @@
     public interface IAdsInitializer
     {
         void Init();
+        bool IsInitialized { get; }
     }
 }

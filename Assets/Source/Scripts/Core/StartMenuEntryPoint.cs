@@ -12,10 +12,10 @@ namespace Source.Scripts.Core
         private readonly MenuSystemFactory _menuFactory;
         private readonly FireBaseInitializer _firebaseInitializer;
         private MainMenuModel _model;
-        private AdsInitializer _adsInitializer;
+        private IAdsInitializer _adsInitializer;
 
         public StartMenuEntryPoint(MenuSystemFactory menuFactory, FireBaseInitializer firebaseInitializer,
-            MainMenuModel model, AdsInitializer adsInitializer)
+            MainMenuModel model, IAdsInitializer adsInitializer)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
@@ -28,10 +28,10 @@ namespace Source.Scripts.Core
             await _menuFactory.Create();
 
 #if !UNITY_EDITOR
-            _adsInitializer.InitLevelPlay();
+            _adsInitializer.Init();
 
-            if (!_adsInitializer.isInitialized)
-                await UniTask.WaitUntil(() => _adsInitializer.isInitialized);
+            if (!_adsInitializer.IsInitialized)
+                await UniTask.WaitUntil(() => _adsInitializer.IsInitialized);
 #endif
 
             _model.UpdateFirebaseStatus(_firebaseInitializer.IsInitialized);

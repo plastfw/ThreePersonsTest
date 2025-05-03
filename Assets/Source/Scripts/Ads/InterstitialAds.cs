@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Ads
 {
-    public class InterstitialAds : IDisposable , IInterstitialAds
+    public class InterstitialAds : IInterstitialAds
     {
         private LevelPlayInterstitialAd interstitialAd;
         private Action onAdCompleteCallback;
@@ -26,7 +26,7 @@ namespace Source.Scripts.Ads
         }
 
         private void LoadInterstitial() => interstitialAd.LoadAd();
-        
+
         public async UniTask<bool> ShowInterstitialAsync()
         {
             if (!interstitialAd.IsAdReady())
@@ -36,7 +36,7 @@ namespace Source.Scripts.Ads
             }
 
             var completionSource = new UniTaskCompletionSource<bool>();
-            
+
             void OnAdCompleted(bool success)
             {
                 completionSource.TrySetResult(success);

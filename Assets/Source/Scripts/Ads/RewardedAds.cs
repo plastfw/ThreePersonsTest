@@ -1,10 +1,9 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Source.Scripts.Ads
 {
-    public class RewardedAds : IDisposable, IRewardedAds
+    public class RewardedAds : IRewardedAds
     {
         public void EnableAds()
         {
