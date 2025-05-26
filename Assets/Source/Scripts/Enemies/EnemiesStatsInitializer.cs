@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Source.Scripts.Enemies.Data;
+using Source.Scripts.Remote;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies
@@ -10,23 +10,20 @@ namespace Source.Scripts.Enemies
         private readonly List<ShootEnemy> _shootEnemies = new();
         private readonly List<TrajectoryEnemy> _trajectoryEnemies = new();
 
-        [SerializeField] private FOVData _FOVData;
-        [SerializeField] private TrajectoryData _trajectoryData;
-        [SerializeField] private ShootData _shootData;
         [SerializeField] private Transform _shootPosition;
         [SerializeField] private Transform _fovPosition;
         [SerializeField] private Transform _trajectoryPosition;
 
-        public void InitializeEnemies()
+        public void InitializeEnemies(RemoteGameConfig config)
         {
             foreach (var enemy in _shootEnemies)
-                enemy.Initialize(_shootData.Damage, _shootData.Radius);
+                enemy.Initialize(config.shoot_data.damage, config.shoot_data.radius);
 
             foreach (var enemy in _trajectoryEnemies)
-                enemy.Initialize(_trajectoryData.Damage);
+                enemy.Initialize(config.trajectory_data.damage);
 
             foreach (var enemy in _fovEnemies)
-                enemy.Initialize(_FOVData.Damage, _FOVData.Speed);
+                enemy.Initialize(config.fov_data.damage, config.fov_data.speed);
         }
 
         public void AddEnemies(FOVEnemy fovEnemy, TrajectoryEnemy trajectoryEnemy, ShootEnemy shootEnemy)

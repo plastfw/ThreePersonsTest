@@ -3,7 +3,6 @@ using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
-using UnityEngine;
 
 namespace Source.Scripts
 {

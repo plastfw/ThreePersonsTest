@@ -1,78 +1,105 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Firebase;
-using Firebase.Analytics;
-using Firebase.Extensions;
 using Firebase.RemoteConfig;
+using Source.Scripts.Remote;
 using UnityEngine;
 
 namespace Source.Scripts.Analytics
 {
     public class FireBaseInitializer : MonoBehaviour
     {
-        private int _test = 0;
-        public bool IsInitialized { get; private set; } = false;
+        private const string ConfigKey = "game_config_json";
+        private bool _firebaseInitialized = false;
+        private RemoteGameConfig _config;
 
-        private async void Start()
+        public bool IsInitialized { get; private set; }
+
+        private async UniTaskVoid Start()
         {
-            var task = FirebaseApp.CheckAndFixDependenciesAsync();
-            await task;
-
-            if (task.Result == DependencyStatus.Available)
-            {
-                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                IsInitialized = true;
-                FetchDataAsync();
-                Debug.Log("Firebase initialized.");
-            }
+            await InitializeFirebase();
+            if (_firebaseInitialized)
+                await InitializeRemoteConfig();
             else
-                Debug.LogError("Could not resolve Firebase dependencies: " + task.Result);
-
-            // await FetchDataAsync().ContinueWith(FetchComplete);
-            // FetchComplete();
+                NotifyDefaultConfig();
         }
 
-        // private UniTask FetchDataAsync()
-        // {
-        //     return FirebaseRemoteConfig.DefaultInstance
-        //         .FetchAsync(TimeSpan.Zero)
-        //         .AsUniTask();
-        // }
-
-        public Task FetchDataAsync()
+        private async UniTask InitializeFirebase()
         {
-            Task fetchTask = FirebaseRemoteConfig.DefaultInstance
-                .FetchAsync(TimeSpan.Zero);
-
-            return fetchTask.ContinueWithOnMainThread(FetchComplete);
-        }
-
-        private void FetchComplete(Task task)
-        {
-            if (!task.IsCompleted)
+            try
             {
-                Debug.LogError("Retrieval hasn't finished");
-                return;
-            }
-
-            var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
-            var info = remoteConfig.Info;
-
-            if (info.LastFetchStatus != LastFetchStatus.Success)
-            {
-                Debug.LogError(
-                    $"{nameof(FetchComplete)} was unsuccessful \n {nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
-                return;
-            }
-
-            remoteConfig.ActivateAsync()
-                .ContinueWithOnMainThread(task =>
+                var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
+                if (dependencyStatus == DependencyStatus.Available)
                 {
-                    Debug.Log("Remote data load and ready to use");
-                    var value = (int)FirebaseRemoteConfig.DefaultInstance.GetValue("testValue").LongValue;
-                    _test = value;
-                    Debug.LogWarning(_test);
-                });
+                    _firebaseInitialized = true;
+                    IsInitialized = true;
+                    Debug.Log("Firebase initialized successfully");
+                }
+                else
+                {
+                    _firebaseInitialized = false;
+                    Debug.LogError($"Could not resolve Firebase dependencies: {dependencyStatus}");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Firebase initialization failed: {e}");
+                _firebaseInitialized = false;
+            }
         }
+
+        private async UniTask InitializeRemoteConfig()
+        {
+            try
+            {
+                var defaults = new Dictionary<string, object> { [ConfigKey] = GetDefaultConfigJson() };
+                await FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults).AsUniTask();
+
+                await FirebaseRemoteConfig.DefaultInstance.FetchAsync(TimeSpan.Zero).AsUniTask();
+                await FirebaseRemoteConfig.DefaultInstance.ActivateAsync().AsUniTask();
+
+                await ProcessRemoteConfig();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Remote config error: {e}");
+                NotifyDefaultConfig();
+            }
+        }
+
+        private async UniTask ProcessRemoteConfig()
+        {
+            try
+            {
+                string json = FirebaseRemoteConfig.DefaultInstance.GetValue(ConfigKey).StringValue;
+                _config = JsonUtility.FromJson<RemoteGameConfig>(json);
+                Debug.Log("Remote config loaded successfully");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Config parsing error: {e}");
+                NotifyDefaultConfig();
+            }
+        }
+
+        private void NotifyDefaultConfig()
+        {
+            _config = JsonUtility.FromJson<RemoteGameConfig>(GetDefaultConfigJson());
+            Debug.LogWarning("Using default config");
+        }
+
+        private string GetDefaultConfigJson()
+        {
+            return JsonUtility.ToJson(new RemoteGameConfig
+            {
+                shoot_data = new RemoteGameConfig.ShootData { damage = 10, radius = 1.5f },
+                trajectory_data = new RemoteGameConfig.TrajectoryData { damage = 5 },
+                fov_data = new RemoteGameConfig.FOVData { damage = 8, speed = 3.2f },
+                additional_data = new RemoteGameConfig.AdditionalData { cube_speed = 3.0f, sphere_speed = 1.8f }
+            });
+        }
+
+        public RemoteGameConfig GetConfig() => _config;
     }
 }

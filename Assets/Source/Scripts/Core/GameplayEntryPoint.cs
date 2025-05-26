@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Source.Scripts.Ads;
+using Source.Scripts.Analytics;
 using Source.Scripts.Enemies;
 using Source.Scripts.Factories;
 using Source.Scripts.Player;
@@ -27,14 +28,15 @@ namespace Source.Scripts.Core
         private SavesManager _saveManager;
         private CompleteLevelObserver _completeLevelObserver;
         private IAdsInitializer _adsInitializer;
-
+        private FireBaseInitializer _fireBaseInitializer;
         private List<PlayerModel> _playerModels;
 
         public GameplayEntryPoint(HUDFactory factory, GameMenuFactory menuFactory,
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
             EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager,
-            AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, IAdsInitializer adsInitializer)
+            AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, IAdsInitializer adsInitializer,
+            FireBaseInitializer fireBaseInitializer)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;
@@ -49,6 +51,7 @@ namespace Source.Scripts.Core
             _adsFactory = adsFactory;
             _completeLevelObserver = completeLevelObserver;
             _adsInitializer = adsInitializer;
+            _fireBaseInitializer = fireBaseInitializer;
             _enemiesStatsInitializer = enemiesStatsInitializer;
         }
 
@@ -62,16 +65,18 @@ namespace Source.Scripts.Core
 
             _playerModels = await _playerModelsFactory.Create();
 
-            foreach (var model in _playerModels)
-            {
-                model.Construct(_exit, _saves);
-                model.InitializeStats(_startPosition);
-            }
+            _playerModels[0].Construct(_exit, _saves);
+            _playerModels[0]
+                .InitializeStats(_startPosition, _fireBaseInitializer.GetConfig().additional_data.cube_speed);
+
+            _playerModels[1].Construct(_exit, _saves);
+            _playerModels[1].InitializeStats(_startPosition,
+                _fireBaseInitializer.GetConfig().additional_data.sphere_speed);
 
             _observer.Construct(_playerModels);
             _playerInput.Construct(_playerModels);
             await _enemiesFactory.Create();
-            _enemiesStatsInitializer.InitializeEnemies();
+            _enemiesStatsInitializer.InitializeEnemies(_fireBaseInitializer.GetConfig());
             _completeLevelObserver.Init(_playerModels);
             _adsInitializer.Init();
         }

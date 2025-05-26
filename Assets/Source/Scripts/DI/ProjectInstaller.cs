@@ -10,6 +10,8 @@ namespace Source.Scripts.DI
         public override void InstallBindings()
         {
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
+            Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();
+
             Container.BindInterfacesTo<AdsInitializer>().AsSingle().NonLazy();
             Container.BindInterfacesTo<InterstitialAds>().AsSingle().NonLazy();
             Container.BindInterfacesTo<RewardedAds>().AsSingle().NonLazy();

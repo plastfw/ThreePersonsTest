@@ -69,12 +69,12 @@ namespace Source.Scripts.Player
             _rigidbody.linearVelocity = adjustedDirection * _speed;
         }
 
-        public void InitializeStats(Transform parent)
+        public void InitializeStats(Transform parent, float speed)
         {
             var loadedData = _saves.Load(new PlayerSaveData(parent.position));
             transform.position = loadedData.Position;
 
-            _speed = _playerData.Speed;
+            _speed = speed;
             _health = new Health(_playerData.Health);
             _health.SetHealth(_playerData.Health);
             Health.Value = _health.value;

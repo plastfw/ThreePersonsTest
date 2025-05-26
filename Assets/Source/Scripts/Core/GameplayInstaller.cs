@@ -41,7 +41,7 @@ namespace Source.Scripts.Core
             Container.Bind<PlayerModelsFactory>().AsSingle().NonLazy();
             Container.Bind<Transform>().FromInstance(_startPlayerPosition).AsSingle().NonLazy();
             Container.Bind<EnemiesFactory>().AsSingle().NonLazy();
-            
+
             Container.Bind<ExitZone>().FromInstance(_exit).AsSingle().NonLazy();
             Container.Bind<CameraController>().FromInstance(_cameraController).AsSingle().NonLazy();
             Container.Bind<BulletPool>().FromInstance(_bulletPool).AsSingle().NonLazy();

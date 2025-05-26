@@ -5,7 +5,7 @@ namespace Source.Scripts.Core
 {
     public class SavesManager
     {
-        private const string PlayerSaveKey = "PlayerSaveData"; // Фиксированный ключ
+        private const string PlayerSaveKey = "PlayerSaveData";
 
         public void Save(PlayerSaveData data)
         {
