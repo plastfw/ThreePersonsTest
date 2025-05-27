@@ -1,34 +1,42 @@
-using Source.Scripts.SaveTypes;
 using UnityEngine;
 
 namespace Source.Scripts.Core
 {
     public class SavesManager
     {
-        private const string PlayerSaveKey = "PlayerSaveData";
+        private const string SaveKey = "GameSaveData";
 
-        public void Save(PlayerSaveData data)
+        public GameSaveData CurrentSave { get; private set; }
+
+        public SavesManager()
         {
-            string json = JsonUtility.ToJson(data);
-            PlayerPrefs.SetString(PlayerSaveKey, json);
+            Load();
+        }
+
+        public void Save()
+        {
+            string json = JsonUtility.ToJson(CurrentSave);
+            PlayerPrefs.SetString(SaveKey, json);
             PlayerPrefs.Save();
         }
 
-        public PlayerSaveData Load(PlayerSaveData defaultValue = default)
+        public void Load(PlayerPositionData defaultPlayerData = null, SettingsData defaultSettings = null)
         {
-            if (PlayerPrefs.HasKey(PlayerSaveKey))
-            {
-                string json = PlayerPrefs.GetString(PlayerSaveKey);
-                return JsonUtility.FromJson<PlayerSaveData>(json);
-            }
+            CurrentSave = PlayerPrefs.HasKey(SaveKey)
+                ? JsonUtility.FromJson<GameSaveData>(PlayerPrefs.GetString(SaveKey))
+                : new GameSaveData();
 
-            return defaultValue;
+            if (defaultPlayerData != null)
+                CurrentSave.Player = defaultPlayerData;
+
+            if (defaultSettings != null)
+                CurrentSave.Settings = defaultSettings;
         }
 
         public void DeleteAll()
         {
-            Debug.LogWarning("DeleteAll");
             PlayerPrefs.DeleteAll();
+            CurrentSave = new GameSaveData();
         }
     }
 }

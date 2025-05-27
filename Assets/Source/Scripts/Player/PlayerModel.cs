@@ -1,7 +1,6 @@
 using System;
 using R3;
 using Source.Scripts.Core;
-using Source.Scripts.SaveTypes;
 using UnityEngine;
 
 namespace Source.Scripts.Player
@@ -39,8 +38,8 @@ namespace Source.Scripts.Player
 
         public void SaveDate()
         {
-            var saveData = new PlayerSaveData(transform.position);
-            _saves.Save(saveData);
+            _saves.CurrentSave.Player.Position = transform.position;
+            _saves.Save();
         }
 
         public void ChangeMoveState(bool state) => _currentActive = state;
@@ -71,8 +70,8 @@ namespace Source.Scripts.Player
 
         public void InitializeStats(Transform parent, float speed)
         {
-            var loadedData = _saves.Load(new PlayerSaveData(parent.position));
-            transform.position = loadedData.Position;
+            _saves.Load(new PlayerPositionData { Position = parent.position });
+            transform.position = _saves.CurrentSave.Player.Position;
 
             _speed = speed;
             _health = new Health(_playerData.Health);

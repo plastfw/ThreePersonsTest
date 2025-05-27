@@ -24,6 +24,7 @@ namespace Source.Scripts.Factories
 
             view.Construct(presenter);
             presenter.Init(model, view);
+            model.Init();
         }
     }
 }

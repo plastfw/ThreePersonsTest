@@ -39,6 +39,7 @@ namespace Source.Scripts
 
         private void ShowAdsMenu()
         {
+            if (_saves.CurrentSave.Settings.AdsDisabled) return;
             _adsModel.Show();
         }
 
@@ -54,7 +55,8 @@ namespace Source.Scripts
         {
             _analytic.CompleteLevel();
             _menuModel.Show();
-            _saves.DeleteAll();
+            _saves.CurrentSave.Player.Position = default;
+            _saves.Save();
         }
     }
 }

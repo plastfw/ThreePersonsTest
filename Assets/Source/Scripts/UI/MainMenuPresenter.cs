@@ -20,7 +20,13 @@ namespace Source.Scripts.UI
                 .AddTo(_disposables);
         }
 
-        public void OnButtonClicked() => _model.StartGameAsync().Forget();
+        public void OnStartButtonClicked() => _model.StartGameAsync().Forget();
+
+        public void OnAdsButtonClicked()
+        {
+            _view.HideAdsButton();
+            _model.DisableAds();
+        }
 
         public void Dispose() => _disposables.Dispose();
     }
