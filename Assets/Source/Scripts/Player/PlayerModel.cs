@@ -38,8 +38,8 @@ namespace Source.Scripts.Player
 
         public void SaveDate()
         {
-            _saves.CurrentSave.Player.Position = transform.position;
-            _saves.Save();
+            _saves.CurrentPlayerPosition.Position = transform.position;
+            _saves.SavePlayerPosition();
         }
 
         public void ChangeMoveState(bool state) => _currentActive = state;
@@ -70,8 +70,8 @@ namespace Source.Scripts.Player
 
         public void InitializeStats(Transform parent, float speed)
         {
-            _saves.Load(new PlayerPositionData { Position = parent.position });
-            transform.position = _saves.CurrentSave.Player.Position;
+            _saves.LoadPlayerPosition(new PlayerPositionData { Position = parent.position });
+            transform.position = _saves.CurrentPlayerPosition.Position;
 
             _speed = speed;
             _health = new Health(_playerData.Health);

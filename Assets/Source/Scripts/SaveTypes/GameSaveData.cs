@@ -1,19 +1,6 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class GameSaveData
-{
-    public PlayerPositionData Player;
-    public SettingsData Settings;
-
-    public GameSaveData()
-    {
-        Player = new PlayerPositionData();
-        Settings = new SettingsData();
-    }
-}
-
-[System.Serializable]
 public class PlayerPositionData
 {
     public Vector3 Position;

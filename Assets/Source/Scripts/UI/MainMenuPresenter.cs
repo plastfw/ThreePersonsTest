@@ -18,14 +18,18 @@ namespace Source.Scripts.UI
             _model.IsFirebaseReady.Subscribe(isReady =>
                     _view.ChangeButtonState(isReady))
                 .AddTo(_disposables);
+
+            _model.IsIAPReady.Subscribe(isInitialized =>
+                    _view.ChangeAdsButtonState(isInitialized))
+                .AddTo(_disposables);
         }
 
         public void OnStartButtonClicked() => _model.StartGameAsync().Forget();
 
-        public void OnAdsButtonClicked()
+        public async UniTask OnAdsButtonClicked()
         {
+            await _model.DisableAds();
             _view.HideAdsButton();
-            _model.DisableAds();
         }
 
         public void Dispose() => _disposables.Dispose();

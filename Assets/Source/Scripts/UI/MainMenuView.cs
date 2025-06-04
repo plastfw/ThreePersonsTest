@@ -21,5 +21,10 @@ namespace Source.Scripts.UI
         public void ChangeButtonState(bool state) => _playButton.interactable = state;
 
         public void HideAdsButton() => _buyAdsButton.gameObject.SetActive(false);
+
+        public void ChangeAdsButtonState(bool state)
+        {
+            _buyAdsButton.interactable = state;
+        }
     }
 }

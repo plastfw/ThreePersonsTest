@@ -5,6 +5,8 @@ namespace Source.Scripts.Ads
 {
     public class RewardedAds : IRewardedAds
     {
+        private UniTaskCompletionSource<bool> _completionSource;
+
         public void EnableAds()
         {
             IronSourceRewardedVideoEvents.onAdOpenedEvent += RewardedVideoOnAdOpenedEvent;
@@ -24,28 +26,11 @@ namespace Source.Scripts.Ads
                 return false;
             }
 
-            var completionSource = new UniTaskCompletionSource<bool>();
-
-            IronSourceRewardedVideoEvents.onAdClosedEvent += onAdClosed;
-            IronSourceRewardedVideoEvents.onAdRewardedEvent += onAdRewarded;
-            IronSourceRewardedVideoEvents.onAdShowFailedEvent += onAdFailed;
-
+            _completionSource = new UniTaskCompletionSource<bool>();
             IronSource.Agent.showRewardedVideo();
-
-            bool result = await completionSource.Task;
-
-            IronSourceRewardedVideoEvents.onAdClosedEvent -= onAdClosed;
-            IronSourceRewardedVideoEvents.onAdRewardedEvent -= onAdRewarded;
-            IronSourceRewardedVideoEvents.onAdShowFailedEvent -= onAdFailed;
-
+            bool result = await _completionSource.Task;
+            _completionSource = null;
             return result;
-
-            void onAdClosed(IronSourceAdInfo adInfo) => completionSource.TrySetResult(false);
-
-            void onAdRewarded(IronSourcePlacement placement, IronSourceAdInfo adInfo) =>
-                completionSource.TrySetResult(true);
-
-            void onAdFailed(IronSourceError error, IronSourceAdInfo adInfo) => completionSource.TrySetResult(false);
         }
 
         private void RewardedVideoOnAdOpenedEvent(IronSourceAdInfo adInfo)
@@ -56,6 +41,7 @@ namespace Source.Scripts.Ads
         private void RewardedVideoOnAdClosedEvent(IronSourceAdInfo adInfo)
         {
             Debug.Log("unity-script: I got RewardedVideoOnAdClosedEvent With AdInfo " + adInfo);
+            _completionSource?.TrySetResult(false);
         }
 
         private void RewardedVideoOnAdAvailable(IronSourceAdInfo adInfo)
@@ -72,12 +58,14 @@ namespace Source.Scripts.Ads
         {
             Debug.Log("unity-script: I got RewardedVideoOnAdShowFailedEvent With Error" + ironSourceError +
                       "And AdInfo " + adInfo);
+            _completionSource?.TrySetResult(false);
         }
 
         private void RewardedVideoOnAdRewardedEvent(IronSourcePlacement ironSourcePlacement, IronSourceAdInfo adInfo)
         {
             Debug.Log("unity-script: I got RewardedVideoOnAdRewardedEvent With Placement" + ironSourcePlacement +
                       "And AdInfo " + adInfo);
+            _completionSource?.TrySetResult(true);
         }
 
         private void RewardedVideoOnAdClickedEvent(IronSourcePlacement ironSourcePlacement, IronSourceAdInfo adInfo)
@@ -95,6 +83,9 @@ namespace Source.Scripts.Ads
             IronSourceRewardedVideoEvents.onAdShowFailedEvent -= RewardedVideoOnAdShowFailedEvent;
             IronSourceRewardedVideoEvents.onAdRewardedEvent -= RewardedVideoOnAdRewardedEvent;
             IronSourceRewardedVideoEvents.onAdClickedEvent -= RewardedVideoOnAdClickedEvent;
+            
+            _completionSource?.TrySetResult(false);
+            _completionSource = null;
         }
     }
 }

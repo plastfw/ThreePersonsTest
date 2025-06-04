@@ -3,24 +3,30 @@ using UnityEngine;
 
 namespace Source.Scripts.Analytics
 {
-    public class CustomAnalytics : IAnalytic
+    public class FirebaseCustomAnalytics : IAnalytic
     {
         public void Login()
         {
             FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
-            Debug.LogWarning("Login");
+            Debug.Log("Login");
         }
 
         public void CompleteLevel()
         {
             FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelEnd);
-            Debug.LogWarning("LevelEnd");
+            Debug.Log("LevelEnd");
         }
 
         public void LoseLevel()
         {
             FirebaseAnalytics.LogEvent("LoseLevel");
-            Debug.LogWarning("LoseLevel");
+            Debug.Log("LoseLevel");
+        }
+
+        public void LogEvent(string str)
+        {
+            FirebaseAnalytics.LogEvent(str);
+            Debug.Log(str);
         }
     }
 }

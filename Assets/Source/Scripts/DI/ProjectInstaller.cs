@@ -11,7 +11,7 @@ namespace Source.Scripts.DI
         {
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
             Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.Bind<IAPInitializer>().AsSingle().NonLazy();
+            Container.Bind<IIAPService>().To<IAPInitializer>().AsSingle().NonLazy();
 
             Container.BindInterfacesTo<AdsInitializer>().AsSingle().NonLazy();
             Container.BindInterfacesTo<InterstitialAds>().AsSingle().NonLazy();
@@ -22,7 +22,7 @@ namespace Source.Scripts.DI
             Container.Bind<SavesManager>().FromNew().AsSingle().NonLazy();
             Container.Bind<SceneService>().AsSingle().NonLazy();
             Container.Bind<LevelManager>().AsSingle().NonLazy();
-            Container.Bind<IAnalytic>().To<CustomAnalytics>().AsSingle().NonLazy();
+            Container.Bind<IAnalytic>().To<FirebaseCustomAnalytics>().AsSingle().NonLazy();
         }
     }
 }

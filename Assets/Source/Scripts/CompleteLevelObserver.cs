@@ -12,18 +12,18 @@ namespace Source.Scripts
         private SwitchModelObserver _switchModelObserver;
         private List<PlayerModel> _playerModels;
         private GameMenuModel _menuModel;
-        private AdsModel _adsModel;
+        private AdsPresenter _adsPresenter;
         private SavesManager _saves;
 
         public CompleteLevelObserver(SwitchModelObserver switchModelObserver,
             GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves,
-            AdsModel adsModel)
+            AdsPresenter adsPresenter)
         {
             _switchModelObserver = switchModelObserver;
             _menuModel = gameMenuModel;
             _analytic = analytic;
             _saves = saves;
-            _adsModel = adsModel;
+            _adsPresenter = adsPresenter;
             gameStateManager.AddListener(this);
         }
 
@@ -39,8 +39,8 @@ namespace Source.Scripts
 
         private void ShowAdsMenu()
         {
-            if (_saves.CurrentSave.Settings.AdsDisabled) return;
-            _adsModel.Show();
+            if (_saves.CurrentSettings.AdsDisabled) return;
+            _adsPresenter.Show();
         }
 
         public void OnDispose()
@@ -55,8 +55,9 @@ namespace Source.Scripts
         {
             _analytic.CompleteLevel();
             _menuModel.Show();
-            _saves.CurrentSave.Player.Position = default;
-            _saves.Save();
+
+            _saves.CurrentPlayerPosition.Position = default;
+            _saves.SavePlayerPosition();
         }
     }
 }

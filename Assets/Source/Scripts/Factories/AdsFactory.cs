@@ -42,10 +42,10 @@ namespace Source.Scripts.Factories
             var model = _container.Resolve<AdsModel>();
             var view = await _loader.LoadAdsMenu(_canvas.transform);
 
-            model.Construct(view);
+            model.Construct(view, _switchModelObserver, _levelManager, _rewardedAds, _savesManager, _analytic,
+                _interstitialAds);
             view.Construct(presenter);
-            presenter.Init(model, view, _interstitialAds, _rewardedAds, _levelManager, _switchModelObserver,
-                _savesManager, _analytic);
+            presenter.Init(model, view);
         }
     }
 }

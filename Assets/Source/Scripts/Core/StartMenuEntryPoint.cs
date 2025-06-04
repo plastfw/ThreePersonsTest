@@ -16,16 +16,16 @@ namespace Source.Scripts.Core
         private readonly FireBaseInitializer _firebaseInitializer;
         private MainMenuModel _model;
         private IAdsInitializer _adsInitializer;
-        private IAPInitializer _iapInitializer;
+        private IIAPService _iap;
 
         public StartMenuEntryPoint(MenuSystemFactory menuFactory, FireBaseInitializer firebaseInitializer,
-            MainMenuModel model, IAdsInitializer adsInitializer, IAPInitializer iapInitializer)
+            MainMenuModel model, IAdsInitializer adsInitializer, IIAPService iap)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
             _model = model;
             _adsInitializer = adsInitializer;
-            _iapInitializer = iapInitializer;
+            _iap = iap;
         }
 
         public void Initialize()
@@ -39,7 +39,11 @@ namespace Source.Scripts.Core
             {
                 await UnityServices.InitializeAsync().AsUniTask();
                 await UniTask.WaitUntil(() => UnityServices.State == ServicesInitializationState.Initialized);
-                _iapInitializer.InitializeIAP();
+
+                UniTask.Delay(5000);
+                Debug.Log(_iap.IsInitialized);
+                _iap.Initialize(_model);
+                Debug.Log(_iap.IsInitialized);
                 await _menuFactory.Create();
 
 #if !UNITY_EDITOR
@@ -50,9 +54,14 @@ namespace Source.Scripts.Core
 #endif
 
                 _model.UpdateFirebaseStatus(_firebaseInitializer.IsInitialized);
+                _model.UpdateIAPStatus(_iap.IsInitialized);
 
-                if (!_iapInitializer.IsInitialized)
-                    await UniTask.WaitUntil(() => _iapInitializer.IsInitialized);
+                if (!_iap.IsInitialized)
+                {
+                    await UniTask.WaitUntil(() => _iap.IsInitialized);
+                    UniTask.Delay(5000);
+                    _model.UpdateIAPStatus(true);
+                }
 
                 if (!_firebaseInitializer.IsInitialized)
                 {
