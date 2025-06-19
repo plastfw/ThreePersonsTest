@@ -17,15 +17,14 @@ namespace Source.Scripts.UI
             _model = model;
         }
 
+        public void ModeIsDeath() => _model.RejectClicked();
+
         public void OnConfirmClicked() => _model.ConfirmClickedEvent();
 
         public void OnRejectClicked() => _model.RejectClicked();
 
         public void Dispose() => _disposable.Dispose();
 
-        public void Show()
-        {
-            _view.Show();
-        }
+        public void Show() => _view.Show();
     }
 }

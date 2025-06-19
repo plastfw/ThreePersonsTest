@@ -52,10 +52,7 @@ namespace Source.Scripts.Player
             Health.Value = _health.value;
 
             if (Health.Value <= 0)
-            {
-                Debug.LogWarning("Invoke");
                 Death?.Invoke();
-            }
         }
 
         public void StopMove() => _rigidbody.linearVelocity = Vector3.zero;

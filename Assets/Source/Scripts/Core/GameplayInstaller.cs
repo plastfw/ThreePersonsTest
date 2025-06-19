@@ -29,8 +29,8 @@ namespace Source.Scripts.Core
             Container.Bind<GameMenuModel>().AsSingle().NonLazy();
             Container.Bind<GameMenuFactory>().AsSingle().NonLazy();
 
-            Container.Bind<AdsPresenter>().AsSingle().NonLazy();
-            Container.Bind<AdsModel>().AsSingle().NonLazy();
+            // Container.Bind<AdsPresenter>().AsSingle().NonLazy();
+            // Container.Bind<AdsModel>().AsSingle().NonLazy();
             Container.Bind<AdsFactory>().AsSingle().NonLazy();
 
             Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();

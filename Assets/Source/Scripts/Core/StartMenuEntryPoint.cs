@@ -18,12 +18,14 @@ namespace Source.Scripts.Core
         private IAdsInitializer _adsInitializer;
         private IIAPService _iap;
 
-        public StartMenuEntryPoint(MenuSystemFactory menuFactory, FireBaseInitializer firebaseInitializer,
-            MainMenuModel model, IAdsInitializer adsInitializer, IIAPService iap)
+        public StartMenuEntryPoint(
+            MenuSystemFactory menuFactory,
+            FireBaseInitializer firebaseInitializer,
+            IAdsInitializer adsInitializer,
+            IIAPService iap)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
-            _model = model;
             _adsInitializer = adsInitializer;
             _iap = iap;
         }
@@ -41,10 +43,9 @@ namespace Source.Scripts.Core
                 await UniTask.WaitUntil(() => UnityServices.State == ServicesInitializationState.Initialized);
 
                 UniTask.Delay(5000);
-                Debug.Log(_iap.IsInitialized);
-                _iap.Initialize(_model);
-                Debug.Log(_iap.IsInitialized);
-                await _menuFactory.Create();
+
+                _iap.Initialize();
+                _model = await _menuFactory.Create();
 
 #if !UNITY_EDITOR
             _adsInitializer.Init();

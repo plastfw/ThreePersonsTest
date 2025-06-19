@@ -11,7 +11,7 @@ namespace Source.Scripts.DI
         {
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
             Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.Bind<IIAPService>().To<IAPInitializer>().AsSingle().NonLazy();
+            Container.Bind<IIAPService>().To<IAPService>().AsSingle().NonLazy();
 
             Container.BindInterfacesTo<AdsInitializer>().AsSingle().NonLazy();
             Container.BindInterfacesTo<InterstitialAds>().AsSingle().NonLazy();

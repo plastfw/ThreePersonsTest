@@ -1,16 +1,12 @@
-﻿using System;
-using Source.Scripts.Ads;
+﻿using Source.Scripts.Ads;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
-using Source.Scripts.Core;
-using UnityEngine;
 
 namespace Source.Scripts.UI
 {
     public class AdsModel
     {
-        private AdsView _view;
         private SwitchModelObserver _switchModelObserver;
         private LevelManager _levelManager;
         private IRewardedAds _rewardedAds;
@@ -18,10 +14,9 @@ namespace Source.Scripts.UI
         private IAnalytic _analytic;
         private IInterstitialAds _interstitialAds;
 
-        public void Construct(AdsView view, SwitchModelObserver switchModel, LevelManager levelManager,
+        public AdsModel(SwitchModelObserver switchModel, LevelManager levelManager,
             IRewardedAds rewardedAds, SavesManager saves, IAnalytic analytic, IInterstitialAds interstitial)
         {
-            _view = view;
             _switchModelObserver = switchModel;
             _levelManager = levelManager;
             _rewardedAds = rewardedAds;

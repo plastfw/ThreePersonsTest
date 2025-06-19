@@ -61,7 +61,7 @@ namespace Source.Scripts.Core
         {
             await _hudFactory.Create();
             await _menuFactory.Create();
-            await _adsFactory.Create();
+            var adsPresenter = await _adsFactory.Create();
 
             _playerModels = await _playerModelsFactory.Create();
 
@@ -77,7 +77,7 @@ namespace Source.Scripts.Core
             _playerInput.Construct(_playerModels);
             await _enemiesFactory.Create();
             _enemiesStatsInitializer.InitializeEnemies(_fireBaseInitializer.GetConfig());
-            _completeLevelObserver.Init(_playerModels);
+            _completeLevelObserver.Init(_playerModels,adsPresenter);
             _adsInitializer.Init();
         }
     }

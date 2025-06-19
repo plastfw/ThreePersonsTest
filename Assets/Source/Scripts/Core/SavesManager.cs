@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
+using Zenject;
 
 namespace Source.Scripts.Core
 {
-    public class SavesManager
+    public class SavesManager : IInitializable, IDisposable
     {
         private const string PlayerPositionKey = "PlayerPositionData";
         private const string SettingsKey = "SettingsData";
@@ -10,9 +12,11 @@ namespace Source.Scripts.Core
         public PlayerPositionData CurrentPlayerPosition { get; private set; }
         public SettingsData CurrentSettings { get; private set; }
 
-        public SavesManager()
+        public void Initialize() => LoadAll();
+
+        public void Dispose()
         {
-            LoadAll();
+            SaveAll();
         }
 
         public void SaveAll()
@@ -63,4 +67,3 @@ namespace Source.Scripts.Core
         }
     }
 }
-

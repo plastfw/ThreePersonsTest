@@ -3,7 +3,6 @@ using R3;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 namespace Source.Scripts.UI
 {
@@ -18,25 +17,28 @@ namespace Source.Scripts.UI
         public readonly ReactiveProperty<bool> IsFirebaseReady = new();
         public readonly ReactiveProperty<bool> IsIAPReady = new();
         public readonly ReactiveProperty<bool> IsPurchasing = new(false);
+        public readonly ReactiveProperty<bool> AdsDisabled = new(false);
+
+        public SavesManager Saves => _saves;
 
         public MainMenuModel(
             SceneService sceneService,
             IAnalytic analytic,
             SavesManager saves,
-            IIAPService iapService,
-            MainMenuPresenter menuPresenter)
+            IIAPService iapService)
         {
             _sceneService = sceneService;
             _analytic = analytic;
             _saves = saves;
             _iapService = iapService;
-            _menuPresenter = menuPresenter;
         }
 
-        public void Init()
+        public async UniTask Init()
         {
-            if (_saves.CurrentSettings.AdsDisabled)
-                _menuPresenter.OnAdsButtonClicked();
+            if (_saves.CurrentSettings == null)
+                _saves.LoadSettings();
+
+            AdsDisabled.Value = _saves.CurrentSettings.AdsDisabled;
         }
 
         public async UniTask StartGameAsync()
@@ -56,31 +58,14 @@ namespace Source.Scripts.UI
                 return;
             }
 
-            IsPurchasing.Value = true;
-
-            try
-            {
-                var product = _iapService.GetController().products.WithID("test.noads");
-
-                if (product == null || !product.availableToPurchase)
-                {
-                    Debug.LogError("Product not available");
-                    return;
-                }
-
-                _iapService.GetController().InitiatePurchase(product);
-            }
-            finally
-            {
-                IsPurchasing.Value = false;
-            }
+            IsPurchasing.Value = _iapService.DisableAds();
         }
 
         public async UniTask OnAdsPurchaseCompleted()
         {
             _saves.CurrentSettings.AdsDisabled = true;
             _saves.SaveSettings();
-            await _menuPresenter.OnAdsButtonClicked();
+            AdsDisabled.OnNext(true);
             _analytic.LogEvent("ads_disabled_purchase");
         }
 

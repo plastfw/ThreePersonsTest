@@ -16,31 +16,32 @@ namespace Source.Scripts
         private SavesManager _saves;
 
         public CompleteLevelObserver(SwitchModelObserver switchModelObserver,
-            GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves,
-            AdsPresenter adsPresenter)
+            GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves)
         {
             _switchModelObserver = switchModelObserver;
             _menuModel = gameMenuModel;
             _analytic = analytic;
             _saves = saves;
-            _adsPresenter = adsPresenter;
             gameStateManager.AddListener(this);
         }
 
-        public void Init(List<PlayerModel> models)
+        public void Init(List<PlayerModel> models, AdsPresenter adsPresenter)
         {
             _playerModels = models;
+            _adsPresenter = adsPresenter;
 
             foreach (var model in _playerModels)
-                model.Death += ShowAdsMenu;
+                model.Death += TryShowLoseScreen;
 
             _switchModelObserver.AllModelsInSafe += ShowCompleteMenu;
         }
 
-        private void ShowAdsMenu()
+        private void TryShowLoseScreen()
         {
-            if (_saves.CurrentSettings.AdsDisabled) return;
-            _adsPresenter.Show();
+            if (_saves.CurrentSettings.AdsDisabled)
+                _adsPresenter.ModeIsDeath();
+            else
+                _adsPresenter.Show();
         }
 
         public void OnDispose()

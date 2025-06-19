@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using R3;
+using Source.Scripts.Core;
 
 namespace Source.Scripts.UI
 {
@@ -8,20 +9,38 @@ namespace Source.Scripts.UI
     {
         private MainMenuModel _model;
         private MainMenuView _view;
+        private IIAPService _iap;
         private readonly CompositeDisposable _disposables = new();
 
-        public void Init(MainMenuModel model, MainMenuView view)
+        public MainMenuPresenter(IIAPService service) => _iap = service;
+
+        public async UniTask Init(MainMenuView view, MainMenuModel model)
         {
             _model = model;
             _view = view;
 
-            _model.IsFirebaseReady.Subscribe(isReady =>
-                    _view.ChangeButtonState(isReady))
+            _model.AdsDisabled
+                .Where(isDisabled => isDisabled) // реагируем только на true
+                .Subscribe(_ => OnAdsButtonClicked().Forget())
                 .AddTo(_disposables);
 
-            _model.IsIAPReady.Subscribe(isInitialized =>
-                    _view.ChangeAdsButtonState(isInitialized))
+            _model.IsFirebaseReady
+                .Subscribe(isReady => _view.ChangeButtonState(isReady))
                 .AddTo(_disposables);
+
+            _model.IsIAPReady
+                .Subscribe(isReady => _view.ChangeAdsButtonState(isReady))
+                .AddTo(_disposables);
+
+            _iap.PurchaseCompleted
+                .Subscribe(_ => _model.OnAdsPurchaseCompleted().Forget())
+                .AddTo(_disposables);
+
+            if (_model.Saves.CurrentSettings.AdsDisabled)
+            {
+                _view.HideAdsButton();
+                _model.AdsDisabled.Value = true;
+            }
         }
 
         public void OnStartButtonClicked() => _model.StartGameAsync().Forget();

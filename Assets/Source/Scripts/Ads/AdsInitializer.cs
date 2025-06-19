@@ -1,5 +1,5 @@
 ﻿using System;
-using com.unity3d.mediation;
+using Unity.Services.LevelPlay;
 using UnityEngine;
 using SystemInfo = UnityEngine.Device.SystemInfo;
 
@@ -19,9 +19,16 @@ namespace Source.Scripts.Ads
             _config = config;
         }
 
+        //В доке и гпт говорит что ревады только в легаси пакете есть.
+        //Поэтому сделал так
         public void Init()
         {
-            LevelPlay.Init(_config.GetAppKey(), GatUserId(), adFormats: new[] { LevelPlayAdFormat.REWARDED });
+            LevelPlay.Init(
+                _config.GetAppKey(),
+                GatUserId(),
+                adFormats: new[] { com.unity3d.mediation.LevelPlayAdFormat.REWARDED }
+            );
+
             LevelPlay.OnInitSuccess += OnInitializationComplete;
             LevelPlay.OnInitFailed += OnInitializationFailed;
 

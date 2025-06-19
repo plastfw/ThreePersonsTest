@@ -7,24 +7,25 @@ namespace Source.Scripts.Factories
 {
     public class MenuSystemFactory
     {
-        private readonly DiContainer _container;
         private readonly IAddressableLoader _loader;
+        private readonly IInstantiator _instantiator;
 
-        public MenuSystemFactory(DiContainer container, IAddressableLoader loader)
+        public MenuSystemFactory(IAddressableLoader loader, IInstantiator instantiator)
         {
-            _container = container;
             _loader = loader;
+            _instantiator = instantiator;
         }
 
-        public async UniTask Create()
+        public async UniTask<MainMenuModel> Create()
         {
-            var presenter = _container.Resolve<MainMenuPresenter>();
-            var model = _container.Resolve<MainMenuModel>();
+            var model = _instantiator.Instantiate<MainMenuModel>();
+            var presenter = _instantiator.Instantiate<MainMenuPresenter>();
             var view = await _loader.LoadMainMenu();
 
-            view.Construct(presenter);
-            presenter.Init(model, view);
-            model.Init();
+            await model.Init();
+            await presenter.Init(view, model);
+            view.Init(presenter);
+            return model;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Source.Scripts.UI
 
         private AdsPresenter _presenter;
 
-        public void Construct(AdsPresenter presenter)
+        public void Init(AdsPresenter presenter)
         {
             _presenter = presenter;
             _confirmAds.OnClickAsObservable().Subscribe(_ => _presenter.OnConfirmClicked()).AddTo(this);

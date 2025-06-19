@@ -10,8 +10,8 @@ namespace Source.Scripts.Core
         {
             Container.BindInterfacesAndSelfTo<StartMenuEntryPoint>().AsSingle().NonLazy();
             Container.Bind<MenuSystemFactory>().AsSingle().NonLazy();
-            Container.Bind<MainMenuModel>().AsSingle().NonLazy();
-            Container.Bind<MainMenuPresenter>().AsSingle().NonLazy();
+            // Container.Bind<MainMenuModel>().AsSingle().NonLazy();
+            // Container.Bind<MainMenuPresenter>().AsSingle().NonLazy();
         }
     }
 }

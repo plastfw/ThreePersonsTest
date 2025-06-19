@@ -13,8 +13,6 @@ namespace Source.Scripts.Ads
         {
 #if UNITY_ANDROID
             return AndroidAppKey;
-#elif UNITY_IPHONE
-        return IOSAppKey;
 #else
         return "unexpected_platform";
 #endif

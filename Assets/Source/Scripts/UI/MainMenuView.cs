@@ -1,6 +1,7 @@
 ﻿using R3;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Source.Scripts.UI
 {
@@ -11,9 +12,10 @@ namespace Source.Scripts.UI
 
         private MainMenuPresenter _presenter;
 
-        public void Construct(MainMenuPresenter presenter)
+        public void Init(MainMenuPresenter presenter)
         {
             _presenter = presenter;
+
             _playButton.OnClickAsObservable().Subscribe(_ => _presenter.OnStartButtonClicked()).AddTo(this);
             _buyAdsButton.OnClickAsObservable().Subscribe(_ => _presenter.OnAdsButtonClicked()).AddTo(this);
         }
