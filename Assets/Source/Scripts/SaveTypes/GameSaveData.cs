@@ -1,23 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[System.Serializable]
-public class PlayerPositionData
+namespace Source.Scripts.SaveTypes
 {
-    public Vector3 Position;
-
-    public PlayerPositionData()
+    [Serializable]
+    public class SavesData
     {
-        Position = Vector3.zero;
+        public SavedVector3 Position;
+        public SavedVector3 TempPosition;
+        public bool AdsDisabled;
+
+        public void InitDefaults()
+        {
+            AdsDisabled = false;
+        }
     }
-}
 
-[System.Serializable]
-public class SettingsData
-{
-    public bool AdsDisabled;
-
-    public SettingsData()
+    [Serializable]
+    public struct SavedVector3
     {
-        AdsDisabled = false;
+        public Vector3 Value;
+        public bool HasValue;
     }
 }

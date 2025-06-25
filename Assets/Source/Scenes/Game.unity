@@ -678,28 +678,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 734926880}
-  - component: {fileID: 734926879}
+  - component: {fileID: 734926881}
   m_Layer: 0
-  m_Name: BulletPool
+  m_Name: BulletsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &734926879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 734926878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3e3f9716055cb44f89146c5e5485864, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bullet: {fileID: 8163901914818034309, guid: 94a523562b02e0940983e06c7eb432cb, type: 3}
-  _initialPoolSize: 5
 --- !u!4 &734926880
 Transform:
   m_ObjectHideFlags: 0
@@ -715,6 +701,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &734926881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734926878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a112b0d810814984aa9c16e6fbbe6a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,9 +912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33501652ec1ecda4da48b0234466c1a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _FOVData: {fileID: 11400000, guid: 37b92dc714fc3ed4ab19be608b167e82, type: 2}
-  _trajectoryData: {fileID: 11400000, guid: 70a9c6617e0e23145944b4398e56b0d2, type: 2}
-  _shootData: {fileID: 11400000, guid: f4f429a893790e74e8fa6bf6e0bb1514, type: 2}
   _shootPosition: {fileID: 353847873}
   _fovPosition: {fileID: 349618202}
   _trajectoryPosition: {fileID: 903018539}
@@ -1016,12 +1011,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraController: {fileID: 378123347}
-  _bulletPool: {fileID: 734926879}
+  _bulletsContainer: {fileID: 734926881}
   _exit: {fileID: 876786183}
-  _pauseButton: {fileID: 1667864680028166025}
   _sceneCanvas: {fileID: 5966766886462398576}
   _startPlayerPosition: {fileID: 1241819941}
   _enemiesStatsInitializer: {fileID: 884696659}
+  _bulletPrefab: {fileID: 8163901914818034309, guid: 94a523562b02e0940983e06c7eb432cb,
+    type: 3}
 --- !u!1 &903018538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,7 +1307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1667864680028166025
 MonoBehaviour:
   m_ObjectHideFlags: 0

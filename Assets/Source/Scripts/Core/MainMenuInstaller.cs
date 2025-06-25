@@ -8,10 +8,8 @@ namespace Source.Scripts.Core
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<StartMenuEntryPoint>().AsSingle().NonLazy();
-            Container.Bind<MenuSystemFactory>().AsSingle().NonLazy();
-            // Container.Bind<MainMenuModel>().AsSingle().NonLazy();
-            // Container.Bind<MainMenuPresenter>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<StartMenuEntryPoint>().AsSingle();
+            Container.Bind<MenuSystemFactory>().AsSingle();
         }
     }
 }

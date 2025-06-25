@@ -33,13 +33,7 @@ namespace Source.Scripts.UI
             _iapService = iapService;
         }
 
-        public async UniTask Init()
-        {
-            if (_saves.CurrentSettings == null)
-                _saves.LoadSettings();
-
-            AdsDisabled.Value = _saves.CurrentSettings.AdsDisabled;
-        }
+        public async UniTask Init() => AdsDisabled.Value = _saves.LoadSettings();
 
         public async UniTask StartGameAsync()
         {
@@ -49,7 +43,7 @@ namespace Source.Scripts.UI
 
         public async UniTask DisableAds()
         {
-            if (_saves.CurrentSettings.AdsDisabled)
+            if (_saves.LoadSettings())
                 return;
 
             if (!_iapService.IsInitialized)
@@ -63,8 +57,7 @@ namespace Source.Scripts.UI
 
         public async UniTask OnAdsPurchaseCompleted()
         {
-            _saves.CurrentSettings.AdsDisabled = true;
-            _saves.SaveSettings();
+            _saves.SaveAdsState(true);
             AdsDisabled.OnNext(true);
             _analytic.LogEvent("ads_disabled_purchase");
         }

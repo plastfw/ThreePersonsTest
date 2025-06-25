@@ -25,10 +25,6 @@ namespace Source.Scripts.UI
             _interstitialAds = interstitial;
         }
 
-        public void Show()
-        {
-        }
-
         public async void ConfirmClickedEvent()
         {
 #if !UNITY_EDITOR
@@ -67,7 +63,7 @@ namespace Source.Scripts.UI
 
         private void ConfirmEvent()
         {
-            _switchModelObserver.SaveData();
+            _switchModelObserver.SaveTempPositions();
             _levelManager.LoadGameScene();
         }
 

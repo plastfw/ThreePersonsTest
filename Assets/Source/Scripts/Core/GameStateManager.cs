@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using R3;
+using Source.Scripts.Ads;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace Source.Scripts.Core
@@ -10,14 +9,7 @@ namespace Source.Scripts.Core
     public class GameStateManager : ITickable, IInitializable, IDisposable
     {
         private List<IGameListener> _listeners = new();
-        private CompositeDisposable _disposable = new();
         private bool _isPause;
-
-        [Inject]
-        private void Init(Button pauseButton)
-        {
-            pauseButton.OnClickAsObservable().Subscribe(_ => SwitchState()).AddTo(_disposable);
-        }
 
         public void Initialize()
         {
@@ -51,8 +43,6 @@ namespace Source.Scripts.Core
 
         public void Dispose()
         {
-            _disposable.Dispose();
-
             foreach (var listener in _listeners)
                 if (listener is IGameDisposeListener disposeListener)
                     disposeListener.OnDispose();

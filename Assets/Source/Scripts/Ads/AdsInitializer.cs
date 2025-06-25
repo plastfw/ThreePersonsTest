@@ -1,11 +1,12 @@
 ﻿using System;
 using Unity.Services.LevelPlay;
 using UnityEngine;
+// using LevelPlayAdFormat = com.unity3d.mediation.LevelPlayAdFormat;
 using SystemInfo = UnityEngine.Device.SystemInfo;
 
 namespace Source.Scripts.Ads
 {
-    public class AdsInitializer : IDisposable, IAdsInitializer
+    public class AdsInitializer : IDisposable, IAdsInitializer, IGameListener, IGamePauseListener, IGameResumeListener
     {
         private readonly AdsConfig _config;
         private readonly IInterstitialAds _interstitialAds;
@@ -19,22 +20,14 @@ namespace Source.Scripts.Ads
             _config = config;
         }
 
-        //В доке и гпт говорит что ревады только в легаси пакете есть.
-        //Поэтому сделал так
         public void Init()
         {
-            LevelPlay.Init(
-                _config.GetAppKey(),
-                GatUserId(),
-                adFormats: new[] { com.unity3d.mediation.LevelPlayAdFormat.REWARDED }
-            );
-
+            LevelPlay.Init(_config.GetAppKey());
             LevelPlay.OnInitSuccess += OnInitializationComplete;
             LevelPlay.OnInitFailed += OnInitializationFailed;
 
             // IronSource.Agent.setMetaData("is_test_suite", "enable");
         }
-
 
         private void OnInitializationComplete(LevelPlayConfiguration config)
         {
@@ -72,5 +65,9 @@ namespace Source.Scripts.Ads
             _rewardedAds?.Dispose();
             _interstitialAds?.Dispose();
         }
+
+        public void OnPause() => OnApplicationPause(true);
+
+        public void OnResume() => OnApplicationPause(false);
     }
 }

@@ -1,15 +1,10 @@
-﻿using System;
-using R3;
-
-namespace Source.Scripts.UI
+﻿namespace Source.Scripts.UI
 {
-    public class AdsPresenter : IDisposable
+    public class AdsPresenter
     {
         private AdsModel _model;
         private AdsView _view;
 
-
-        private readonly CompositeDisposable _disposable = new();
 
         public void Init(AdsModel model, AdsView adsView)
         {
@@ -22,8 +17,6 @@ namespace Source.Scripts.UI
         public void OnConfirmClicked() => _model.ConfirmClickedEvent();
 
         public void OnRejectClicked() => _model.RejectClicked();
-
-        public void Dispose() => _disposable.Dispose();
 
         public void Show() => _view.Show();
     }

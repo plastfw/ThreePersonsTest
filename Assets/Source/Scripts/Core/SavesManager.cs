@@ -1,4 +1,5 @@
 using System;
+using Source.Scripts.SaveTypes;
 using UnityEngine;
 using Zenject;
 
@@ -6,64 +7,68 @@ namespace Source.Scripts.Core
 {
     public class SavesManager : IInitializable, IDisposable
     {
-        private const string PlayerPositionKey = "PlayerPositionData";
-        private const string SettingsKey = "SettingsData";
-
-        public PlayerPositionData CurrentPlayerPosition { get; private set; }
-        public SettingsData CurrentSettings { get; private set; }
+        private const string SavesKey = "SettingsData";
+        private SavesData _currentSaves;
 
         public void Initialize() => LoadAll();
-
-        public void Dispose()
-        {
-            SaveAll();
-        }
+        public void Dispose() => SaveAll();
 
         public void SaveAll()
         {
-            SavePlayerPosition();
-            SaveSettings();
-        }
-
-        public void SavePlayerPosition()
-        {
-            string json = JsonUtility.ToJson(CurrentPlayerPosition);
-            PlayerPrefs.SetString(PlayerPositionKey, json);
+            var json = JsonUtility.ToJson(_currentSaves);
+            PlayerPrefs.SetString(SavesKey, json);
             PlayerPrefs.Save();
         }
 
-        public void SaveSettings()
+        private void LoadAll()
         {
-            string json = JsonUtility.ToJson(CurrentSettings);
-            PlayerPrefs.SetString(SettingsKey, json);
-            PlayerPrefs.Save();
+            if (PlayerPrefs.HasKey(SavesKey))
+                _currentSaves = JsonUtility.FromJson<SavesData>(PlayerPrefs.GetString(SavesKey));
+            else
+            {
+                _currentSaves = new SavesData();
+                _currentSaves.InitDefaults();
+            }
         }
 
-        public void LoadAll(PlayerPositionData defaultPlayerData = null, SettingsData defaultSettings = null)
+        public bool LoadSettings()
         {
-            LoadPlayerPosition(defaultPlayerData);
-            LoadSettings(defaultSettings);
+            return _currentSaves.AdsDisabled;
         }
 
-        public void LoadPlayerPosition(PlayerPositionData defaultPlayerData = null)
+        public void SavePlayerPosition(Vector3 position)
         {
-            CurrentPlayerPosition = PlayerPrefs.HasKey(PlayerPositionKey)
-                ? JsonUtility.FromJson<PlayerPositionData>(PlayerPrefs.GetString(PlayerPositionKey))
-                : defaultPlayerData ?? new PlayerPositionData();
+            _currentSaves.Position.Value = position;
+            _currentSaves.Position.HasValue = true;
         }
 
-        public void LoadSettings(SettingsData defaultSettings = null)
+        public void SaveTempPosition(Vector3 position)
         {
-            CurrentSettings = PlayerPrefs.HasKey(SettingsKey)
-                ? JsonUtility.FromJson<SettingsData>(PlayerPrefs.GetString(SettingsKey))
-                : defaultSettings ?? new SettingsData();
+            _currentSaves.TempPosition.Value = position;
+            _currentSaves.TempPosition.HasValue = true;
+        }
+
+        public void SaveAdsState(bool disabled) => _currentSaves.AdsDisabled = disabled;
+
+        public SavedVector3 TryGetTempPosition()
+        {
+            return _currentSaves.TempPosition;
+        }
+
+        public SavedVector3 TryGetPosition()
+        {
+            return _currentSaves.Position;
+        }
+
+        public void ResetTempPosition()
+        {
+            _currentSaves.TempPosition.HasValue = false;
         }
 
         public void DeleteAll()
         {
             PlayerPrefs.DeleteAll();
-            CurrentPlayerPosition = new PlayerPositionData();
-            CurrentSettings = new SettingsData();
+            _currentSaves = new SavesData();
         }
     }
 }

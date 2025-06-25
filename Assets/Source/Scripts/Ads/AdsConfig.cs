@@ -17,9 +17,5 @@ namespace Source.Scripts.Ads
         return "unexpected_platform";
 #endif
         }
-
-        public string GetInterstitialAdUnitId() => AndroidInterstitial;
-
-        public string GetRewardedAdUnitId() => AndroidRewarded;
     }
 }

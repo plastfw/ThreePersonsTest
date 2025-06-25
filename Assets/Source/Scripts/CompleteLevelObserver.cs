@@ -3,6 +3,7 @@ using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
+using Unity.VisualScripting;
 
 namespace Source.Scripts
 {
@@ -38,7 +39,7 @@ namespace Source.Scripts
 
         private void TryShowLoseScreen()
         {
-            if (_saves.CurrentSettings.AdsDisabled)
+            if (_saves.LoadSettings())
                 _adsPresenter.ModeIsDeath();
             else
                 _adsPresenter.Show();
@@ -56,9 +57,6 @@ namespace Source.Scripts
         {
             _analytic.CompleteLevel();
             _menuModel.Show();
-
-            _saves.CurrentPlayerPosition.Position = default;
-            _saves.SavePlayerPosition();
         }
     }
 }

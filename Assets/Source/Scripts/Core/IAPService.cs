@@ -1,22 +1,30 @@
+using Cysharp.Threading.Tasks;
 using R3;
 using Source.Scripts.UI;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using Zenject;
 
 namespace Source.Scripts.Core
 {
-    public class IAPService : IStoreListener, IIAPService
+    public class IAPService : IStoreListener, IIAPService, IInitializable
     {
         private IStoreController _storeController;
         private IExtensionProvider _extensions;
         private MainMenuModel _mainMenuModel;
         private readonly Subject<bool> _purchaseCompleted = new();
+        private SavesManager _saves;
 
         public Observable<bool> PurchaseCompleted => _purchaseCompleted;
         public bool IsInitialized => _storeController != null && _extensions != null;
 
+        [Inject]
+        public IAPService(SavesManager saves) => _saves = saves;
+
         public void Initialize()
         {
+            UnityServices.InitializeAsync().AsUniTask();
             var module = StandardPurchasingModule.Instance();
             module.useFakeStoreAlways = true;
 
@@ -53,11 +61,13 @@ namespace Source.Scripts.Core
                 return false;
             }
 
+            _saves.SaveAdsState(true);
+            _saves.SaveAll();
             _storeController.InitiatePurchase(product);
             return true;
         }
 
-        
+
         //unity сам вызывает этот метод после InitiatePurchase, поэтому ссылок на метод ни у кого нет
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
         {

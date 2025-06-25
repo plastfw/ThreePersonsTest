@@ -36,7 +36,7 @@ namespace Source.Scripts.UI
                 .Subscribe(_ => _model.OnAdsPurchaseCompleted().Forget())
                 .AddTo(_disposables);
 
-            if (_model.Saves.CurrentSettings.AdsDisabled)
+            if (_model.Saves.LoadSettings())
             {
                 _view.HideAdsButton();
                 _model.AdsDisabled.Value = true;

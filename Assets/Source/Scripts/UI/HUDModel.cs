@@ -12,12 +12,7 @@ namespace Source.Scripts.UI
         {
             _view = view;
         }
-
-        // public HUDModel(HUDView view)
-        // {
-        //     _view = view;
-        // }
-
+        
         public void SetHealth(int value)
         {
             _health = value;

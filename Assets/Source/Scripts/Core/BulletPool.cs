@@ -1,21 +1,31 @@
 using Source.Scripts.Enemies;
 using UnityEngine;
+using Zenject;
 
 namespace Source.Scripts.Core
 {
-    public class BulletPool : MonoBehaviour
+    public class BulletPool
     {
-        [SerializeField] private Bullet _bullet;
-        [SerializeField] private int _initialPoolSize = 5;
+        private Bullet _bullet;
+        private readonly int _initialPoolSize = 5;
+        private IInstantiator _instantiator;
+        private readonly BulletsContainer _container;
 
         private ObjectPool<Bullet> _bulletPool;
 
-        public void Start()
+        public BulletPool(Bullet bullet, IInstantiator instantiator, BulletsContainer container)
+        {
+            _bullet = bullet;
+            _instantiator = instantiator;
+            _container = container;
+        }
+
+        public void Init()
         {
             _bulletPool = new ObjectPool<Bullet>(
                 () =>
                 {
-                    var bullet = Instantiate(_bullet);
+                    var bullet = _instantiator.InstantiatePrefabForComponent<Bullet>(_bullet, _container.transform);
                     return bullet;
                 },
                 bullet => { bullet.OnHit += ReturnBullet; },

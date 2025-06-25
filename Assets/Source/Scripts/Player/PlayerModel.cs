@@ -36,10 +36,14 @@ namespace Source.Scripts.Player
             DistanceToExit.Value = Vector3.Distance(transform.position, _exit.transform.position);
         }
 
-        public void SaveDate()
+        private void OnDisable() => SavePosition();
+
+        public void SaveTempPosition() => _saves.SaveTempPosition(transform.position);
+
+        private void SavePosition()
         {
-            _saves.CurrentPlayerPosition.Position = transform.position;
-            _saves.SavePlayerPosition();
+            _saves.SavePlayerPosition(transform.position);
+            _saves.SaveAll();
         }
 
         public void ChangeMoveState(bool state) => _currentActive = state;
@@ -67,8 +71,22 @@ namespace Source.Scripts.Player
 
         public void InitializeStats(Transform parent, float speed)
         {
-            _saves.LoadPlayerPosition(new PlayerPositionData { Position = parent.position });
-            transform.position = _saves.CurrentPlayerPosition.Position;
+            var tempPosition = _saves.TryGetTempPosition();
+
+            if (tempPosition.HasValue)
+            {
+                transform.position = tempPosition.Value;
+                _saves.ResetTempPosition();
+            }
+            else
+            {
+                var savesPosition = _saves.TryGetPosition();
+
+                if (savesPosition.HasValue)
+                    transform.position = savesPosition.Value;
+                else
+                    transform.position = parent.position;
+            }
 
             _speed = speed;
             _health = new Health(_playerData.Health);

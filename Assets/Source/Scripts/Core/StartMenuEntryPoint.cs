@@ -39,12 +39,7 @@ namespace Source.Scripts.Core
         {
             try
             {
-                await UnityServices.InitializeAsync().AsUniTask();
                 await UniTask.WaitUntil(() => UnityServices.State == ServicesInitializationState.Initialized);
-
-                UniTask.Delay(5000);
-
-                _iap.Initialize();
                 _model = await _menuFactory.Create();
 
 #if !UNITY_EDITOR

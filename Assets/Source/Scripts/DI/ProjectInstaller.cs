@@ -9,20 +9,20 @@ namespace Source.Scripts.DI
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<SavesManager>().FromNew().AsSingle();
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
             Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.Bind<IIAPService>().To<IAPService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<IAPService>().AsSingle();
 
-            Container.BindInterfacesTo<AdsInitializer>().AsSingle().NonLazy();
-            Container.BindInterfacesTo<InterstitialAds>().AsSingle().NonLazy();
-            Container.BindInterfacesTo<RewardedAds>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<AdsInitializer>().AsSingle();
+            Container.BindInterfacesTo<InterstitialAds>().AsSingle();
+            Container.BindInterfacesTo<RewardedAds>().AsSingle();
 
-            Container.Bind<IAddressableLoader>().To<AddressableLoader>().AsSingle().NonLazy();
+            Container.Bind<IAddressableLoader>().To<AddressableLoader>().AsSingle();
 
-            Container.Bind<SavesManager>().FromNew().AsSingle().NonLazy();
-            Container.Bind<SceneService>().AsSingle().NonLazy();
-            Container.Bind<LevelManager>().AsSingle().NonLazy();
-            Container.Bind<IAnalytic>().To<FirebaseCustomAnalytics>().AsSingle().NonLazy();
+            Container.Bind<SceneService>().AsSingle();
+            Container.Bind<LevelManager>().AsSingle();
+            Container.Bind<IAnalytic>().To<FirebaseCustomAnalytics>().AsSingle();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Source.Scripts.Ads
             interstitialAd.ShowAd();
 
             bool result = await completionSource.Task;
-            LoadInterstitial(); // Загружаем следующий баннер
+            LoadInterstitial();
             return result;
         }
 

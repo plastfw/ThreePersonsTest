@@ -30,13 +30,14 @@ namespace Source.Scripts.Core
         private IAdsInitializer _adsInitializer;
         private FireBaseInitializer _fireBaseInitializer;
         private List<PlayerModel> _playerModels;
+        private BulletPool _bulletPool;
 
         public GameplayEntryPoint(HUDFactory factory, GameMenuFactory menuFactory,
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
             EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager,
             AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, IAdsInitializer adsInitializer,
-            FireBaseInitializer fireBaseInitializer)
+            FireBaseInitializer fireBaseInitializer, BulletPool bulletPool)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;
@@ -52,6 +53,7 @@ namespace Source.Scripts.Core
             _completeLevelObserver = completeLevelObserver;
             _adsInitializer = adsInitializer;
             _fireBaseInitializer = fireBaseInitializer;
+            _bulletPool = bulletPool;
             _enemiesStatsInitializer = enemiesStatsInitializer;
         }
 
@@ -62,6 +64,7 @@ namespace Source.Scripts.Core
             await _hudFactory.Create();
             await _menuFactory.Create();
             var adsPresenter = await _adsFactory.Create();
+            _bulletPool.Init();
 
             _playerModels = await _playerModelsFactory.Create();
 
@@ -77,7 +80,7 @@ namespace Source.Scripts.Core
             _playerInput.Construct(_playerModels);
             await _enemiesFactory.Create();
             _enemiesStatsInitializer.InitializeEnemies(_fireBaseInitializer.GetConfig());
-            _completeLevelObserver.Init(_playerModels,adsPresenter);
+            _completeLevelObserver.Init(_playerModels, adsPresenter);
             _adsInitializer.Init();
         }
     }

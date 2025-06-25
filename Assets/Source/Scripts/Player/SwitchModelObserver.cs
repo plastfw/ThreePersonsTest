@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using ObservableCollections;
 using Source.Scripts.Analytics;
 using Source.Scripts.Core;
-using UnityEngine;
 
 namespace Source.Scripts.Player
 {
@@ -52,10 +51,10 @@ namespace Source.Scripts.Player
                 model.InSafeZone -= RemoveModel;
         }
 
-        public void SaveData()
+        public void SaveTempPositions()
         {
             foreach (var model in _playerModels)
-                model.SaveDate();
+                model.SaveTempPosition();
         }
 
         private void RemoveModel(PlayerModel model)
