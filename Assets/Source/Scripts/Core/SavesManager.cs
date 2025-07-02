@@ -1,74 +1,136 @@
 using System;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Source.Scripts.Remote;
 using Source.Scripts.SaveTypes;
+using Unity.Services.Authentication;
+using Unity.Services.CloudSave;
 using UnityEngine;
 using Zenject;
+using Time = Source.Scripts.SaveTypes.Time;
 
 namespace Source.Scripts.Core
 {
-    public class SavesManager : IInitializable, IDisposable
+    public class SavesManager : IDisposable, IInitializable
     {
-        private const string SavesKey = "SettingsData";
-        private SavesData _currentSaves;
+        private const string LocalSavesKey = "Local";
+        private const string CloudSavesKey = "Cloud";
 
-        public void Initialize() => LoadAll();
-        public void Dispose() => SaveAll();
+        private SavesData _localSaves;
+        private SavesData _cloudSaves;
 
-        public void SaveAll()
+        public bool IsReady;
+
+        public void Initialize() => Init().Forget();
+
+        private async UniTaskVoid Init()
         {
-            var json = JsonUtility.ToJson(_currentSaves);
-            PlayerPrefs.SetString(SavesKey, json);
+            await AuthenticationService.Instance.SignInAnonymouslyAsync().AsUniTask();
+            await LoadAll();
+            IsReady = true;
+        }
+
+        public void Dispose() => SaveAll().Forget();
+
+        public async UniTaskVoid SaveAll()
+        {
+            _localSaves.Time = Time.From(DateTime.Now);
+            SaveLocal();
+
+            if (await NetworkChecker.HasInternet())
+                await SaveCloud(_localSaves);
+        }
+
+        private void SaveLocal()
+        {
+            var json = JsonUtility.ToJson(_localSaves);
+            PlayerPrefs.SetString(LocalSavesKey, json);
             PlayerPrefs.Save();
         }
 
-        private void LoadAll()
+        private async UniTask SaveCloud(SavesData data)
         {
-            if (PlayerPrefs.HasKey(SavesKey))
-                _currentSaves = JsonUtility.FromJson<SavesData>(PlayerPrefs.GetString(SavesKey));
-            else
+            try
             {
-                _currentSaves = new SavesData();
-                _currentSaves.InitDefaults();
+                var json = JsonUtility.ToJson(data);
+                var dict = new Dictionary<string, object> { { CloudSavesKey, json } };
+                await CloudSaveService.Instance.Data.Player.SaveAsync(dict);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Cloud save failed: {e}");
             }
         }
 
-        public bool LoadSettings()
+        private async UniTask LoadAll()
         {
-            return _currentSaves.AdsDisabled;
+            _localSaves = LoadLocal();
+
+            if (!await NetworkChecker.HasInternet())
+                return;
+
+            var cloud = await LoadCloud();
+            if (cloud == null) return;
+
+            _cloudSaves = cloud;
+
+            if (_cloudSaves.Time.ToDateTime() > _localSaves.Time.ToDateTime())
+                _localSaves = _cloudSaves;
         }
+
+        private SavesData LoadLocal()
+        {
+            if (PlayerPrefs.HasKey(LocalSavesKey))
+                return JsonUtility.FromJson<SavesData>(PlayerPrefs.GetString(LocalSavesKey));
+
+            var data = new SavesData();
+            data.InitDefaults();
+            return data;
+        }
+
+        private async UniTask<SavesData?> LoadCloud()
+        {
+            try
+            {
+                var result =
+                    await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { CloudSavesKey });
+                if (result.TryGetValue(CloudSavesKey, out var cloudJson))
+                    return JsonUtility.FromJson<SavesData>(cloudJson.Value.GetAs<string>());
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Cloud load failed: {e}");
+            }
+
+            return null;
+        }
+
+        public bool LoadSettings() => _localSaves.AdsDisabled;
 
         public void SavePlayerPosition(Vector3 position)
         {
-            _currentSaves.Position.Value = position;
-            _currentSaves.Position.HasValue = true;
+            _localSaves.Position.Value = position;
+            _localSaves.Position.HasValue = true;
         }
 
         public void SaveTempPosition(Vector3 position)
         {
-            _currentSaves.TempPosition.Value = position;
-            _currentSaves.TempPosition.HasValue = true;
+            _localSaves.TempPosition.Value = position;
+            _localSaves.TempPosition.HasValue = true;
         }
 
-        public void SaveAdsState(bool disabled) => _currentSaves.AdsDisabled = disabled;
+        public void SaveAdsState(bool disabled) => _localSaves.AdsDisabled = disabled;
 
-        public SavedVector3 TryGetTempPosition()
-        {
-            return _currentSaves.TempPosition;
-        }
+        public SavedVector3 TryGetTempPosition() => _localSaves.TempPosition;
 
-        public SavedVector3 TryGetPosition()
-        {
-            return _currentSaves.Position;
-        }
+        public SavedVector3 TryGetPosition() => _localSaves.Position;
 
-        public void ResetTempPosition()
-        {
-            _currentSaves.TempPosition.HasValue = false;
-        }
+        public void ResetTempPosition() => _localSaves.TempPosition.HasValue = false;
 
         public void DeleteAll()
         {
             PlayerPrefs.DeleteAll();
-            _currentSaves = new SavesData();
+            _localSaves = new SavesData();
         }
     }
 }

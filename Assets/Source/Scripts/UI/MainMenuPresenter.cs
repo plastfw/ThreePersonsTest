@@ -10,9 +10,14 @@ namespace Source.Scripts.UI
         private MainMenuModel _model;
         private MainMenuView _view;
         private IIAPService _iap;
+        private SavesManager _saves;
         private readonly CompositeDisposable _disposables = new();
 
-        public MainMenuPresenter(IIAPService service) => _iap = service;
+        public MainMenuPresenter(IIAPService service, SavesManager saves)
+        {
+            _iap = service;
+            _saves = saves;
+        }
 
         public async UniTask Init(MainMenuView view, MainMenuModel model)
         {
@@ -35,6 +40,8 @@ namespace Source.Scripts.UI
             _iap.PurchaseCompleted
                 .Subscribe(_ => _model.OnAdsPurchaseCompleted().Forget())
                 .AddTo(_disposables);
+
+            await UniTask.WaitUntil(() => _saves.IsReady);
 
             if (_model.Saves.LoadSettings())
             {

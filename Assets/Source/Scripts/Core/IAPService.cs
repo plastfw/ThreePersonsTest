@@ -62,7 +62,7 @@ namespace Source.Scripts.Core
             }
 
             _saves.SaveAdsState(true);
-            _saves.SaveAll();
+            _saves.SaveAll().Forget();
             _storeController.InitiatePurchase(product);
             return true;
         }

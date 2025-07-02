@@ -33,7 +33,12 @@ namespace Source.Scripts.UI
             _iapService = iapService;
         }
 
-        public async UniTask Init() => AdsDisabled.Value = _saves.LoadSettings();
+        public async UniTask Init()
+        {
+            await UniTask.WaitUntil(() => _saves.IsReady);
+
+            AdsDisabled.Value = _saves.LoadSettings();
+        }
 
         public async UniTask StartGameAsync()
         {

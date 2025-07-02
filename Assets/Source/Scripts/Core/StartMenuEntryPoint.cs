@@ -17,17 +17,19 @@ namespace Source.Scripts.Core
         private MainMenuModel _model;
         private IAdsInitializer _adsInitializer;
         private IIAPService _iap;
+        private SavesManager _saves;
 
         public StartMenuEntryPoint(
             MenuSystemFactory menuFactory,
             FireBaseInitializer firebaseInitializer,
             IAdsInitializer adsInitializer,
-            IIAPService iap)
+            IIAPService iap, SavesManager saves)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
             _adsInitializer = adsInitializer;
             _iap = iap;
+            _saves = saves;
         }
 
         public void Initialize()
@@ -55,7 +57,6 @@ namespace Source.Scripts.Core
                 if (!_iap.IsInitialized)
                 {
                     await UniTask.WaitUntil(() => _iap.IsInitialized);
-                    UniTask.Delay(5000);
                     _model.UpdateIAPStatus(true);
                 }
 

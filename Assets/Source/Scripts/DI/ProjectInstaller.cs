@@ -9,10 +9,10 @@ namespace Source.Scripts.DI
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<IAPService>().AsSingle();
             Container.BindInterfacesAndSelfTo<SavesManager>().FromNew().AsSingle();
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
             Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.BindInterfacesAndSelfTo<IAPService>().AsSingle();
 
             Container.BindInterfacesTo<AdsInitializer>().AsSingle();
             Container.BindInterfacesTo<InterstitialAds>().AsSingle();
