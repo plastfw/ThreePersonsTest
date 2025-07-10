@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: 3a1c83ebadc277d499a9a04b6f49795e
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: e476af8976e8b4f6f3a498c99882d1f8
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: <default settings path>
+  m_ContentStateBuildPathProfileVariableName: Remote.LoadPath
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -71,6 +71,20 @@ MonoBehaviour:
       m_Values:
       - m_Id: 0a6adc2efe30b8a469f7eaa4af147127
         m_Value: <undefined>
+      - m_Id: 78a37d7a3a7057f4f9ec12275c8dc8da
+        m_Value: 'ServerData/[BuildTarget]'
+      - m_Id: 9731d4a3c9a5df64fad6b03a065b9433
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: f22c3070bef62ca459170e69977fa797
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: f61a77df22948384b8af77a6260251d9
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: dfc4cb1ef00af1a438e090cf389a8518
+      m_ProfileName: RemoteProfile
+      m_Values:
+      - m_Id: 0a6adc2efe30b8a469f7eaa4af147127
+        m_Value: 'https://storage.yandexcloud.net/threepersons/[BuildTarget]'
       - m_Id: 78a37d7a3a7057f4f9ec12275c8dc8da
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 9731d4a3c9a5df64fad6b03a065b9433
@@ -111,4 +125,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 253b3659b1588e14ebc058919ccdfcc1, type: 2}
   - {fileID: 11400000, guid: fc8340b0ee2b63348b455883f50ea40e, type: 2}
   - {fileID: 11400000, guid: bdc6b786be5d9014b9ff3b225d4a188e, type: 2}
-  m_ActiveProfileId: d51ad748363968e4ea0b43d0f41269fb
+  m_ActiveProfileId: dfc4cb1ef00af1a438e090cf389a8518

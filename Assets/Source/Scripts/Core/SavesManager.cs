@@ -29,7 +29,6 @@ namespace Source.Scripts.Core
             _cloud = cloud;
         }
 
-
         public void Initialize() => Init().Forget();
 
         private async UniTaskVoid Init()

@@ -37,7 +37,7 @@ namespace Source.Scripts.Core
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
             EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager,
             AdsFactory adsFactory, CompleteLevelControler completeLevelControler, IAdsInitializer adsInitializer,
-            FireBaseInitializer fireBaseInitializer, BulletPool bulletPool)
+            FireBaseInitializer fireBaseInitializer, BulletPool bulletPool, GameStateManager gameStateManager)
         {
             _hudFactory = factory;
             _menuFactory = menuFactory;
@@ -55,6 +55,7 @@ namespace Source.Scripts.Core
             _fireBaseInitializer = fireBaseInitializer;
             _bulletPool = bulletPool;
             _enemiesStatsInitializer = enemiesStatsInitializer;
+            _gameStateManager = gameStateManager;
         }
 
         public void Initialize() => Init().Forget();

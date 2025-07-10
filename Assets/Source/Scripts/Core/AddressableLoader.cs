@@ -45,7 +45,8 @@ namespace Source.Scripts.Core
             return null;
         }
 
-        public async UniTask<HUDView> LoadHudMenu(Transform parent) => await InstantiateAssetAsync<HUDView>(HudKey, parent);
+        public async UniTask<HUDView> LoadHudMenu(Transform parent) =>
+            await InstantiateAssetAsync<HUDView>(HudKey, parent);
 
         public async UniTask<List<PlayerModel>> LoadPlayerModels(Transform parent)
         {

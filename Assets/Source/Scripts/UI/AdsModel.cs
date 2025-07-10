@@ -25,40 +25,14 @@ namespace Source.Scripts.UI
             _interstitialAds = interstitial;
         }
 
-        public async void ConfirmClickedEvent()
+        public void ConfirmClickedEvent()
         {
-#if !UNITY_EDITOR
-            try
-            {
-                bool adCompleted = await _rewardedAds.ShowRewardedAdAsync();
-                ConfirmEvent();
-                Debug.Log($"Rewarded ad completed: {adCompleted}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Error showing rewarded ad: {e}");
-            }
-#else
             ConfirmEvent();
-#endif
         }
 
-        public async void RejectClicked()
+        public void RejectClicked()
         {
-#if !UNITY_EDITOR
-            try
-            {
-                bool adShown = await _interstitialAds.ShowInterstitialAsync();
-                RejectEvent();
-                Debug.Log($"Interstitial ad shown: {adShown}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Error showing interstitial ad: {e}");
-            }
-#else
             RejectEvent();
-#endif
         }
 
         private void ConfirmEvent()
