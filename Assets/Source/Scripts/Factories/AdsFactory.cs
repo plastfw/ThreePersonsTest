@@ -15,6 +15,8 @@ namespace Source.Scripts.Factories
         private readonly IAddressableLoader _loader;
         private readonly Canvas _canvas;
 
+        public AdsPresenter AdsPresenter { get; private set; }
+        public AdsModel AdsModel { get; private set; }
 
         public AdsFactory(IInstantiator instantiator, IAddressableLoader loader, Canvas canvas)
         {
@@ -23,7 +25,7 @@ namespace Source.Scripts.Factories
             _canvas = canvas;
         }
 
-        public async UniTask<AdsPresenter> Create()
+        public async UniTask Create()
         {
             var presenter = _instantiator.Instantiate<AdsPresenter>();
             var model = _instantiator.Instantiate<AdsModel>();
@@ -31,8 +33,6 @@ namespace Source.Scripts.Factories
 
             view.Init(presenter);
             presenter.Init(model, view);
-
-            return presenter;
         }
     }
 }

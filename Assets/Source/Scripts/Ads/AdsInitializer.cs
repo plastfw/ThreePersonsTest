@@ -40,7 +40,7 @@ namespace Source.Scripts.Ads
             IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
 
             // Enable ads
-            _interstitialAds.EnableAds(_config.AndroidInterstitial);
+            _interstitialAds.EnableAds(_config.GetInterstitial());
             _rewardedAds.EnableAds();
         }
 

@@ -16,7 +16,7 @@ namespace Source.Scripts.Analytics
 
         public bool IsInitialized { get; private set; }
 
-        private async UniTaskVoid Start()
+        private async void Start()
         {
             await InitializeFirebase();
             if (_firebaseInitialized)

@@ -12,7 +12,6 @@ namespace Source.Scripts.UI
         private readonly IAnalytic _analytic;
         private readonly SavesManager _saves;
         private readonly IIAPService _iapService;
-        private MainMenuPresenter _menuPresenter;
 
         public readonly ReactiveProperty<bool> IsFirebaseReady = new();
         public readonly ReactiveProperty<bool> IsIAPReady = new();

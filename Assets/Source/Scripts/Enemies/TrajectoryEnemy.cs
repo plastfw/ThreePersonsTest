@@ -14,15 +14,12 @@ namespace Source.Scripts.Enemies
         [SerializeField] private float _moveDuration;
         [SerializeField] private PathType _pathType;
 
-        private GameStateManager _gameStateManager;
         private Tween _tween;
 
         private int _damage;
 
-        public void Construct(GameStateManager manager, BulletPool pool = null)
+        public void Construct(BulletPool pool = null)
         {
-            _gameStateManager = manager;
-            _gameStateManager.AddListener(this);
         }
 
         private void Awake()

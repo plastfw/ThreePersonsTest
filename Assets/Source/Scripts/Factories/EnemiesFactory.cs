@@ -27,9 +27,13 @@ namespace Source.Scripts.Factories
                 await _loader.LoadTrajectoryEnemy(_enemiesStatsInitializer.transform);
             var shootEnemy = await _loader.LoadShootEnemy(_enemiesStatsInitializer.transform);
 
-            fovEnemy.Construct(_gameStateManager);
-            trajectoryEnemy.Construct(_gameStateManager);
-            shootEnemy.Construct(_gameStateManager, _bulletPool);
+            fovEnemy.Construct();
+            trajectoryEnemy.Construct();
+            shootEnemy.Construct(_bulletPool);
+            
+            _gameStateManager.AddListener(fovEnemy);
+            _gameStateManager.AddListener(trajectoryEnemy);
+            _gameStateManager.AddListener(shootEnemy);
 
             _enemiesStatsInitializer.AddEnemies(fovEnemy, trajectoryEnemy, shootEnemy);
         }

@@ -25,16 +25,20 @@ namespace Source.Scripts.Enemies
             }
         }
 
-        public void Shoot(Vector3 targetPosition)
+        public void Shoot(Vector3 position,Transform target,int damage)
         {
-            Vector3 direction = (targetPosition - transform.position).normalized;
+            transform.position = position;
+            transform.LookAt(target);
+            SetDamage(damage);
+            
+            Vector3 direction = (target.position - transform.position).normalized;
             _rigidbody.linearVelocity = direction * _speed;
             _returnCoroutine = StartCoroutine(ReturnToPoolAfterDelay());
         }
 
         public void Reset() => StopCoroutine(_returnCoroutine);
 
-        public void SetDamage(int damage) => _damage = damage;
+        private void SetDamage(int damage) => _damage = damage;
 
         private IEnumerator ReturnToPoolAfterDelay()
         {

@@ -3,33 +3,33 @@ using Source.Scripts.Analytics;
 using Source.Scripts.Core;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
-using Unity.VisualScripting;
 
 namespace Source.Scripts
 {
-    public class CompleteLevelObserver : IGameListener, IGameDisposeListener
+    public class CompleteLevelControler : IGameListener, IGameDisposeListener
     {
         private IAnalytic _analytic;
         private SwitchModelObserver _switchModelObserver;
         private List<PlayerModel> _playerModels;
         private GameMenuModel _menuModel;
+        private AdsModel _adsModel;
         private AdsPresenter _adsPresenter;
         private SavesManager _saves;
 
-        public CompleteLevelObserver(SwitchModelObserver switchModelObserver,
-            GameStateManager gameStateManager, GameMenuModel gameMenuModel, IAnalytic analytic, SavesManager saves)
+        public CompleteLevelControler(SwitchModelObserver switchModelObserver, GameMenuModel gameMenuModel,
+            IAnalytic analytic, SavesManager saves)
         {
             _switchModelObserver = switchModelObserver;
             _menuModel = gameMenuModel;
             _analytic = analytic;
             _saves = saves;
-            gameStateManager.AddListener(this);
         }
 
-        public void Init(List<PlayerModel> models, AdsPresenter adsPresenter)
+        public void Init(List<PlayerModel> models, AdsModel adsModel, AdsPresenter adsPresenter)
         {
             _playerModels = models;
             _adsPresenter = adsPresenter;
+            _adsModel = adsModel;
 
             foreach (var model in _playerModels)
                 model.Death += TryShowLoseScreen;
@@ -40,7 +40,7 @@ namespace Source.Scripts
         private void TryShowLoseScreen()
         {
             if (_saves.LoadSettings())
-                _adsPresenter.ModeIsDeath();
+                _adsModel.RejectClicked();
             else
                 _adsPresenter.Show();
         }

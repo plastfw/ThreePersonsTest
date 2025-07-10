@@ -23,13 +23,12 @@ namespace Source.Scripts.Core
             MenuSystemFactory menuFactory,
             FireBaseInitializer firebaseInitializer,
             IAdsInitializer adsInitializer,
-            IIAPService iap, SavesManager saves)
+            IIAPService iap)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
             _adsInitializer = adsInitializer;
             _iap = iap;
-            _saves = saves;
         }
 
         public void Initialize()

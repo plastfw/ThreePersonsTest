@@ -10,6 +10,8 @@ namespace Source.Scripts.Core
 {
     public class IAPService : IStoreListener, IIAPService, IInitializable
     {
+        private const string TestProductId = "test.noad";
+
         private IStoreController _storeController;
         private IExtensionProvider _extensions;
         private MainMenuModel _mainMenuModel;
@@ -22,14 +24,14 @@ namespace Source.Scripts.Core
         [Inject]
         public IAPService(SavesManager saves) => _saves = saves;
 
-        public void Initialize()
+        public async void Initialize()
         {
-            UnityServices.InitializeAsync().AsUniTask();
+            await UnityServices.InitializeAsync().AsUniTask();
             var module = StandardPurchasingModule.Instance();
             module.useFakeStoreAlways = true;
 
             var builder = ConfigurationBuilder.Instance(module);
-            builder.AddProduct("test.noads", ProductType.NonConsumable);
+            builder.AddProduct(TestProductId, ProductType.NonConsumable);
 
             UnityPurchasing.Initialize(this, builder);
         }
@@ -53,7 +55,7 @@ namespace Source.Scripts.Core
 
         public bool DisableAds()
         {
-            var product = _storeController.products.WithID("test.noads");
+            var product = _storeController.products.WithID(TestProductId);
 
             if (product == null || !product.availableToPurchase)
             {
@@ -71,7 +73,7 @@ namespace Source.Scripts.Core
         //unity сам вызывает этот метод после InitiatePurchase, поэтому ссылок на метод ни у кого нет
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
         {
-            if (args.purchasedProduct.definition.id == "test.noads")
+            if (args.purchasedProduct.definition.id == TestProductId)
                 _purchaseCompleted.OnNext(true);
 
             return PurchaseProcessingResult.Complete;

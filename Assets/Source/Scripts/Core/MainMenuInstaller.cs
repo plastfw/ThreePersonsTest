@@ -1,5 +1,4 @@
 using Source.Scripts.Factories;
-using Source.Scripts.UI;
 using Zenject;
 
 namespace Source.Scripts.Core

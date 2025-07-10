@@ -46,7 +46,7 @@ namespace Source.Scripts.Core
             Container.Bind<IInputService>().To<StandardInputService>().AsSingle();
             Container.Bind<PlayerInput>().AsSingle();
             Container.Bind<SwitchModelObserver>().AsSingle();
-            Container.Bind<CompleteLevelObserver>().AsSingle();
+            Container.Bind<CompleteLevelControler>().AsSingle();
         }
     }
 }

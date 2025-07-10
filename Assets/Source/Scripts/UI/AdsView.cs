@@ -10,14 +10,11 @@ namespace Source.Scripts.UI
         [SerializeField] private Button _confirmAds;
         [SerializeField] private Button _rejectAds;
         [SerializeField] private CanvasGroup _canvas;
-
-        private AdsPresenter _presenter;
-
-        public void Init(AdsPresenter presenter)
+        
+        public void Init(IAdsViewOutput output)
         {
-            _presenter = presenter;
-            _confirmAds.OnClickAsObservable().Subscribe(_ => _presenter.OnConfirmClicked()).AddTo(this);
-            _rejectAds.OnClickAsObservable().Subscribe(_ => _presenter.OnRejectClicked()).AddTo(this);
+            _confirmAds.OnClickAsObservable().Subscribe(_ => output.OnConfirmClicked()).AddTo(this);
+            _rejectAds.OnClickAsObservable().Subscribe(_ => output.OnRejectClicked()).AddTo(this);
         }
 
         public void Show()

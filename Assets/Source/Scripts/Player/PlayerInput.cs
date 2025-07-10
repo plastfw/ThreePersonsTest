@@ -11,17 +11,13 @@ namespace Source.Scripts.Player
 
         private readonly List<PlayerModel> _playerModels = new();
 
-        private readonly GameStateManager _gameStateManager;
         private Vector3 _direction;
 
         public event Action SwitchButtonIsPressed;
 
-        public PlayerInput(GameStateManager gameStateManager,
-            IInputService inputService)
+        public PlayerInput(IInputService inputService)
         {
-            _gameStateManager = gameStateManager;
             _inputService = inputService;
-            _gameStateManager.AddListener(this);
         }
 
         public void Construct(List<PlayerModel> models)

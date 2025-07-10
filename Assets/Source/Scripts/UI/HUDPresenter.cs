@@ -7,21 +7,20 @@ namespace Source.Scripts.UI
 {
     public class HUDPresenter : IGameListener, IGameDisposeListener
     {
-        private GameStateManager _gameStateManager;
         private SwitchModelObserver _switchModelObserver;
         private HUDModel _model;
+        private HUDView _view;
 
         private CompositeDisposable _statsDisposables = new();
         private CompositeDisposable _currentModel = new();
 
-        public HUDPresenter(HUDModel model, SwitchModelObserver switchModelObserver, GameStateManager gameStateManager)
+        public void Construct(HUDView view, HUDModel model, SwitchModelObserver switchModelObserver)
         {
-            _gameStateManager = gameStateManager;
-            _switchModelObserver = switchModelObserver;
+            _view = view;
             _model = model;
-            _gameStateManager.AddListener(this);
+            _switchModelObserver = switchModelObserver;
         }
-
+        
         public void StartInit()
         {
             _switchModelObserver.CurrentModel
@@ -50,17 +49,26 @@ namespace Source.Scripts.UI
             if (model == null) return;
 
             model.Health
-                .Subscribe(value => _model.SetHealth(value))
+                .Subscribe(value =>
+                {
+                    _model.SetHealth(value);
+                    _view.SetHealth(value);
+                })
                 .AddTo(_statsDisposables);
 
             model.DistanceToExit
-                .Subscribe(value => _model.SetDistance(value))
+                .Subscribe(value =>
+                {
+                    _view.SetDistance(value);
+                    _model.SetDistance(value);
+                })
                 .AddTo(_statsDisposables);
         }
 
         private void OnCountChange(int value)
         {
             _model.SetModelCount(value);
+            _view.SetCounter(value);
         }
     }
 }

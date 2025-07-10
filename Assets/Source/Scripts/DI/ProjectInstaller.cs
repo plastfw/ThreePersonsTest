@@ -10,6 +10,10 @@ namespace Source.Scripts.DI
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<IAPService>().AsSingle();
+            Container.Bind<ISaveStorage>().WithId("Local").To<LocalSaveStorage>().AsSingle();
+            Container.Bind<ISaveStorage>().WithId("Cloud").To<CloudSaveStorage>().AsSingle();
+
+
             Container.BindInterfacesAndSelfTo<SavesManager>().FromNew().AsSingle();
             Container.Bind<AdsConfig>().FromScriptableObjectResource("IronSourceConfig").AsSingle();
             Container.Bind<FireBaseInitializer>().FromNewComponentOnNewGameObject().AsSingle();

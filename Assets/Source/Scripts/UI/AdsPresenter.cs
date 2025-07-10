@@ -1,18 +1,15 @@
 ﻿namespace Source.Scripts.UI
 {
-    public class AdsPresenter
+    public class AdsPresenter : IAdsViewOutput
     {
         private AdsModel _model;
         private AdsView _view;
-
 
         public void Init(AdsModel model, AdsView adsView)
         {
             _view = adsView;
             _model = model;
         }
-
-        public void ModeIsDeath() => _model.RejectClicked();
 
         public void OnConfirmClicked() => _model.ConfirmClickedEvent();
 

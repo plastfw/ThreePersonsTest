@@ -4,6 +4,6 @@ namespace Source.Scripts.Enemies
 {
     public interface IEnemy
     {
-        void Construct(GameStateManager manager, BulletPool pool = null);
+        void Construct(BulletPool pool = null);
     }
 }

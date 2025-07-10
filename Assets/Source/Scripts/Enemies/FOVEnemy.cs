@@ -10,21 +10,13 @@ namespace Source.Scripts.Enemies
         [SerializeField] private ViewArea _viewArea;
         [SerializeField] private Rigidbody _rigidbody;
 
-        private GameStateManager _gameStateManager;
         private Transform _target;
         private bool _haveTarget;
         private float _speed = 5f;
         private int _damage;
 
-        public void Construct(GameStateManager manager, BulletPool pool = null)
+        public void Construct(BulletPool pool = null)
         {
-            _gameStateManager = manager;
-            _gameStateManager.AddListener(this);
-        }
-
-        private void Start()
-        {
-            _viewArea.SeePlayer += MoveToPlayer;
         }
 
         public void Initialize(int damage, float speed)
@@ -33,15 +25,9 @@ namespace Source.Scripts.Enemies
             _speed = speed;
         }
 
-        private void OnDestroy() => _viewArea.SeePlayer -= MoveToPlayer;
-
-        private void OnCollisionEnter(Collision collision)
+        private void Start()
         {
-            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
-            {
-                playerModel.TakeDamage(_damage);
-                gameObject.SetActive(false);
-            }
+            _viewArea.SeePlayer += MoveToPlayer;
         }
 
         public void OnUpdate()
@@ -53,6 +39,17 @@ namespace Source.Scripts.Enemies
         }
 
         public void OnPause() => _rigidbody.linearVelocity = Vector3.zero;
+        
+        private void OnDestroy() => _viewArea.SeePlayer -= MoveToPlayer;
+        
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.TryGetComponent(out PlayerModel playerModel))
+            {
+                playerModel.TakeDamage(_damage);
+                gameObject.SetActive(false);
+            }
+        }
 
         private void MoveToPlayer(Transform player)
         {

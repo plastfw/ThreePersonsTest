@@ -26,7 +26,7 @@ namespace Source.Scripts.Core
         private EnemiesStatsInitializer _enemiesStatsInitializer;
         private Transform _startPosition;
         private SavesManager _saveManager;
-        private CompleteLevelObserver _completeLevelObserver;
+        private CompleteLevelControler _completeLevelControler;
         private IAdsInitializer _adsInitializer;
         private FireBaseInitializer _fireBaseInitializer;
         private List<PlayerModel> _playerModels;
@@ -36,7 +36,7 @@ namespace Source.Scripts.Core
             PlayerModelsFactory playerModelsFactory, SwitchModelObserver observer, ExitZone exitZone,
             SavesManager saves, PlayerInput playerInput, EnemiesFactory enemiesFactory,
             EnemiesStatsInitializer enemiesStatsInitializer, Transform startPosition, SavesManager saveManager,
-            AdsFactory adsFactory, CompleteLevelObserver completeLevelObserver, IAdsInitializer adsInitializer,
+            AdsFactory adsFactory, CompleteLevelControler completeLevelControler, IAdsInitializer adsInitializer,
             FireBaseInitializer fireBaseInitializer, BulletPool bulletPool)
         {
             _hudFactory = factory;
@@ -50,7 +50,7 @@ namespace Source.Scripts.Core
             _startPosition = startPosition;
             _saveManager = saveManager;
             _adsFactory = adsFactory;
-            _completeLevelObserver = completeLevelObserver;
+            _completeLevelControler = completeLevelControler;
             _adsInitializer = adsInitializer;
             _fireBaseInitializer = fireBaseInitializer;
             _bulletPool = bulletPool;
@@ -63,7 +63,8 @@ namespace Source.Scripts.Core
         {
             await _hudFactory.Create();
             await _menuFactory.Create();
-            var adsPresenter = await _adsFactory.Create();
+            await _adsFactory.Create();
+
             _bulletPool.Init();
 
             _playerModels = await _playerModelsFactory.Create();
@@ -80,7 +81,10 @@ namespace Source.Scripts.Core
             _playerInput.Construct(_playerModels);
             await _enemiesFactory.Create();
             _enemiesStatsInitializer.InitializeEnemies(_fireBaseInitializer.GetConfig());
-            _completeLevelObserver.Init(_playerModels, adsPresenter);
+            _completeLevelControler.Init(_playerModels, _adsFactory.AdsModel, _adsFactory.AdsPresenter);
+            _gameStateManager.AddListener(_completeLevelControler);
+            _gameStateManager.AddListener(_playerInput);
+            _gameStateManager.AddListener(_observer);
             _adsInitializer.Init();
         }
     }

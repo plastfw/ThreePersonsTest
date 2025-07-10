@@ -10,18 +10,15 @@ namespace Source.Scripts.Enemies
         [SerializeField] private SphereCollider _sphereCollider;
 
         private BulletPool _bulletPool;
-        private GameStateManager _gameStateManager;
         private int _damage;
         private Transform _currentTarget;
         private float _coolDown = 2f;
 
         private float _lastShootTime;
 
-        public void Construct(GameStateManager manager, BulletPool pool = null)
+        public void Construct(BulletPool pool = null)
         {
             _bulletPool = pool;
-            _gameStateManager = manager;
-            _gameStateManager.AddListener(this);
         }
 
         private void OnTriggerEnter(Collider collider)
@@ -52,10 +49,7 @@ namespace Source.Scripts.Enemies
         private void ShootAtTarget()
         {
             Bullet bullet = _bulletPool.GetBullet();
-            bullet.transform.position = transform.position;
-            bullet.transform.LookAt(_currentTarget);
-            bullet.SetDamage(_damage);
-            bullet.Shoot(_currentTarget.position);
+            bullet.Shoot(transform.position, _currentTarget, _damage);
             _lastShootTime = Time.time;
         }
     }

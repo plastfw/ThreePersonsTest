@@ -12,7 +12,6 @@ namespace Source.Scripts.Player
         private int _currentControllerIndex;
         private readonly PlayerInput _playerInput;
         private readonly CameraController _cameraController;
-        private readonly GameStateManager _gameStateManager;
 
         public IObservableCollection<PlayerModel> ObservablePlayerModels => _playerModels;
 
@@ -21,13 +20,10 @@ namespace Source.Scripts.Player
         public ReactiveProperty<PlayerModel> CurrentModel { get; } = new();
         public event Action AllModelsInSafe;
 
-        public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController,
-            GameStateManager gameStateManager, IAnalytic analytic)
+        public SwitchModelObserver(PlayerInput playerInput, CameraController cameraController)
         {
             _playerInput = playerInput;
             _cameraController = cameraController;
-            _gameStateManager = gameStateManager;
-            _gameStateManager.AddListener(this);
         }
 
         public void Construct(List<PlayerModel> playerModels)

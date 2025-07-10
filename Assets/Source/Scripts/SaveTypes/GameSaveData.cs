@@ -8,13 +8,8 @@ namespace Source.Scripts.SaveTypes
     {
         public SavedVector3 Position;
         public SavedVector3 TempPosition;
-        public bool AdsDisabled;
+        public bool AdsDisabled = false;
         public Time Time;
-        
-        public void InitDefaults()
-        {
-            AdsDisabled = false;
-        }
     }
 
     [Serializable]
