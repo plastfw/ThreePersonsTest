@@ -1,7 +1,6 @@
 ﻿using R3;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace Source.Scripts.UI
 {

@@ -6,6 +6,7 @@ using Source.Scripts.Factories;
 using Source.Scripts.UI;
 using Unity.Services.Core;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Zenject;
 
 namespace Source.Scripts.Core
@@ -18,17 +19,19 @@ namespace Source.Scripts.Core
         private IAdsInitializer _adsInitializer;
         private IIAPService _iap;
         private SavesManager _saves;
+        private IAddressableLoader _loader;
 
         public StartMenuEntryPoint(
             MenuSystemFactory menuFactory,
             FireBaseInitializer firebaseInitializer,
             IAdsInitializer adsInitializer,
-            IIAPService iap)
+            IIAPService iap, IAddressableLoader loader)
         {
             _menuFactory = menuFactory;
             _firebaseInitializer = firebaseInitializer;
             _adsInitializer = adsInitializer;
             _iap = iap;
+            _loader = loader;
         }
 
         public void Initialize()
@@ -43,12 +46,13 @@ namespace Source.Scripts.Core
                 await UniTask.WaitUntil(() => UnityServices.State == ServicesInitializationState.Initialized);
                 _model = await _menuFactory.Create();
 
-#if !UNITY_EDITOR
-            _adsInitializer.Init();
+#if UNITY_ANDROID
+                _adsInitializer.Init();
 
-            if (!_adsInitializer.IsInitialized)
-                await UniTask.WaitUntil(() => _adsInitializer.IsInitialized);
+                if (!_adsInitializer.IsInitialized)
+                    await UniTask.WaitUntil(() => _adsInitializer.IsInitialized);
 #endif
+
 
                 _model.UpdateFirebaseStatus(_firebaseInitializer.IsInitialized);
                 _model.UpdateIAPStatus(_iap.IsInitialized);

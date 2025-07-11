@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using R3;
 using Source.Scripts.Enemies;
 using Source.Scripts.Player;
 using Source.Scripts.UI;
@@ -23,7 +24,7 @@ namespace Source.Scripts.Core
         private const string AdsKey = "AdsScreen";
 
         private AsyncOperationHandle<GameObject> _handle;
-
+        
         public async UniTask<T> InstantiateAssetAsync<T>(string key, Transform parent = null) where T : Component
         {
             _handle = Addressables.LoadAssetAsync<GameObject>(key);

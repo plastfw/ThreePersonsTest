@@ -12,11 +12,13 @@ namespace Source.Scripts.UI
         private IIAPService _iap;
         private SavesManager _saves;
         private readonly CompositeDisposable _disposables = new();
+        private IAddressableLoader _loader;
 
-        public MainMenuPresenter(IIAPService service, SavesManager saves)
+        public MainMenuPresenter(IIAPService service, SavesManager saves, IAddressableLoader loader)
         {
             _iap = service;
             _saves = saves;
+            _loader = loader;
         }
 
         public async UniTask Init(MainMenuView view, MainMenuModel model)
@@ -41,7 +43,10 @@ namespace Source.Scripts.UI
                 .Subscribe(_ => _model.OnAdsPurchaseCompleted().Forget())
                 .AddTo(_disposables);
 
-            await UniTask.WaitUntil(() => _saves.IsReady);
+            await UniTask.WhenAll(
+                UniTask.WaitUntil(() => _saves.IsReady)
+                // UniTask.WaitUntil(() => _loader.IsReady)
+            );
 
             if (_model.Saves.LoadSettings())
             {

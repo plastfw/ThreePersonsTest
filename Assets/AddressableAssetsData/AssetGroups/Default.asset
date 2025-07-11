@@ -10,55 +10,64 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Default
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Default
   m_GUID: 3a1c83ebadc277d499a9a04b6f49795e
   m_SerializeEntries:
   - m_GUID: 1cc282492a827aa49ae842fab2f8b15c
     m_Address: PlayerSphere
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2efe7c67922463342a2c9b06c125cd80
     m_Address: InGameScreenMenu
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 47d7fcd45c6a3e944ad4a62df48e0111
     m_Address: FOVEnemy
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 638ee3214199eac4aa6c249ad40fd67a
     m_Address: GameplayHUD
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 74d7bd9b724348b4c814a167167a67d6
     m_Address: PlayerCube
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88401bca34e535843bfa3b24949172df
     m_Address: AdsScreen
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 907adc432db5da44787c412f08ee7306
     m_Address: TrakectoryEnemy
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d4b59b6cbcedfc4438488d50d112e995
     m_Address: ShootEnemy
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcd9fc6c11e1db34792c007745af7fd9
     m_Address: MainMenuScreen
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Gameplay
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ef682b31d0854854e8705144800e614a, type: 2}
