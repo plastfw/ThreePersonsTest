@@ -2,19 +2,19 @@
 
 namespace Source.Scripts.Ads
 {
-    [CreateAssetMenu(fileName = "IronSourceConfig", menuName = "ScriptableObjects/IronSource Config")]
-    public class AdsConfig : ScriptableObject
+    public class AdsConfig : MonoBehaviour
     {
-        private string AndroidAppKey = "85460dcd";
-        private string AndroidRewarded = "5cpemg8qrqfqwncx";
-        private string AndroidInterstitial = "vcpo4oh8w53qf9ze";
+        [SerializeField] private string AndroidAppKey = "85460dcd";
+        [SerializeField] private string AndroidRewarded = "5cpemg8qrqfqwncx";
+        [SerializeField] private string AndroidInterstitial = "vcpo4oh8w53qf9ze";
+        [SerializeField] private string Unexpected = "unexpected_platform";
 
         public string GetAppKey()
         {
 #if UNITY_ANDROID
             return AndroidAppKey;
 #else
-        return "unexpected_platform";
+            return Unexpected;
 #endif
         }
 

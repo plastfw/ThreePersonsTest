@@ -46,12 +46,10 @@ namespace Source.Scripts.Core
                 await UniTask.WaitUntil(() => UnityServices.State == ServicesInitializationState.Initialized);
                 _model = await _menuFactory.Create();
 
-#if UNITY_ANDROID
                 _adsInitializer.Init();
 
                 if (!_adsInitializer.IsInitialized)
                     await UniTask.WaitUntil(() => _adsInitializer.IsInitialized);
-#endif
 
 
                 _model.UpdateFirebaseStatus(_firebaseInitializer.IsInitialized);

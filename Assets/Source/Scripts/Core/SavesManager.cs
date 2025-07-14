@@ -42,11 +42,14 @@ namespace Source.Scripts.Core
 
         public async UniTaskVoid SaveAll()
         {
+            if (await NetworkChecker.HasInternet())
+            {
+                await _cloud.Save(_localSaves);
+                return;
+            }
+
             _localSaves.Time = Time.From(DateTime.Now);
             await _local.Save(_localSaves);
-
-            if (await NetworkChecker.HasInternet())
-                await _cloud.Save(_localSaves);
         }
 
         public bool LoadSettings() => _localSaves.AdsDisabled;

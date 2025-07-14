@@ -25,8 +25,6 @@ namespace Source.Scripts.Ads
             LevelPlay.Init(_config.GetAppKey());
             LevelPlay.OnInitSuccess += OnInitializationComplete;
             LevelPlay.OnInitFailed += OnInitializationFailed;
-
-            // IronSource.Agent.setMetaData("is_test_suite", "enable");
         }
 
         private void OnInitializationComplete(LevelPlayConfiguration config)
@@ -34,12 +32,8 @@ namespace Source.Scripts.Ads
             Debug.Log("Initialization completed successfully with config: " + config);
             IsInitialized = true;
 
-            //delete
-            // IronSource.Agent.launchTestSuite();
-
             IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
 
-            // Enable ads
             _interstitialAds.EnableAds(_config.GetInterstitial());
             _rewardedAds.EnableAds();
         }
@@ -64,6 +58,8 @@ namespace Source.Scripts.Ads
         {
             _rewardedAds?.Dispose();
             _interstitialAds?.Dispose();
+            LevelPlay.OnInitSuccess -= OnInitializationComplete;
+            LevelPlay.OnInitFailed -= OnInitializationFailed;
         }
 
         public void OnPause() => OnApplicationPause(true);
